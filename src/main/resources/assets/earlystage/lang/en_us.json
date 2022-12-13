@@ -1,0 +1,13 @@
+{
+    "item.earlystage.flint_sword": "Flint Sword",
+    "item.earlystage.flint_shovel": "Flint Shovel",
+    "item.earlystage.flint_pickaxe": "Flint Pickaxe",
+    "item.earlystage.flint_axe": "Flint Axe",
+    "item.earlystage.flint_hoe": "Flint Hoe",
+
+    "block.earlystage.rock": "Rock",
+    "block.earlystage.sieve": "Sieve",
+
+    "text.autoconfig.earlystage.title": "EarlyStage Config",
+    "text.autoconfig.earlystage.option.generateRocks": "Generate Rocks"
+}

@@ -1,0 +1,22 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:cobblestone_from_rock"
+        ]
+    },
+    "criteria": {
+        "got_the_rock": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "earlystage:rock"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

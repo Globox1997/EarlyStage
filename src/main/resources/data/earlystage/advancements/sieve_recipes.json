@@ -1,0 +1,22 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:sieve"
+        ]
+    },
+    "criteria": {
+        "got_the_string": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:string"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

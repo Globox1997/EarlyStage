@@ -1,0 +1,64 @@
+{
+    "variants": {
+        "type=extra_large,facing=east": {
+            "model": "earlystage:block/rock_extra_large",
+            "y": 90
+        },
+        "type=extra_large,facing=north": {
+            "model": "earlystage:block/rock_extra_large"
+        },
+        "type=extra_large,facing=south": {
+            "model": "earlystage:block/rock_extra_large",
+            "y": 180
+        },
+        "type=extra_large,facing=west": {
+            "model": "earlystage:block/rock_extra_large",
+            "y": 270
+        },
+        "type=large,facing=east": {
+            "model": "earlystage:block/rock_large",
+            "y": 90
+        },
+        "type=large,facing=north": {
+            "model": "earlystage:block/rock_large"
+        },
+        "type=large,facing=south": {
+            "model": "earlystage:block/rock_large",
+            "y": 180
+        },
+        "type=large,facing=west": {
+            "model": "earlystage:block/rock_large",
+            "y": 270
+        },
+        "type=medium,facing=east": {
+            "model": "earlystage:block/rock_medium",
+            "y": 90
+        },
+        "type=medium,facing=north": {
+            "model": "earlystage:block/rock_medium"
+        },
+        "type=medium,facing=south": {
+            "model": "earlystage:block/rock_medium",
+            "y": 180
+        },
+        "type=medium,facing=west": {
+            "model": "earlystage:block/rock_medium",
+            "y": 270
+        },
+        "type=small,facing=east": {
+            "model": "earlystage:block/rock_small",
+            "y": 90
+        },
+        "type=small,facing=north": {
+            "model": "earlystage:block/rock_small"
+        },
+        "type=small,facing=south": {
+            "model": "earlystage:block/rock_small",
+            "y": 180
+        },
+        "type=small,facing=west": {
+            "model": "earlystage:block/rock_small",
+            "y": 270
+        }
+    }
+}

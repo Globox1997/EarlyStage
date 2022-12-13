@@ -1,0 +1,350 @@
+{
+    "drops": [
+        {
+            "replace": false,
+            "block_id": "minecraft:dirt",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:grass_block",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:podzol",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:coarse_dirt",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:mycelium",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:rooted_dirt",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:moss_block",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:string",
+                    "chance": 0.05,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.02,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:bone",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.3,
+                    "rolls": 3
+                },
+                {
+                    "item_id": "minecraft:stick",
+                    "chance": 0.2,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:feather",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:gravel",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:flint",
+                    "chance": 0.3,
+                    "rolls": 2
+                },
+                {
+                    "item_id": "minecraft:gold_nugget",
+                    "chance": 0.05,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:sand",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:leather_boots",
+                    "chance": 0.005,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:dried_kelp",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.03,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:diamond",
+                    "chance": 0.001,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:red_sand",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:leather_boots",
+                    "chance": 0.005,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:dried_kelp",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.03,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:diamond",
+                    "chance": 0.001,
+                    "rolls": 1
+                }
+            ]
+        },
+        {
+            "replace": false,
+            "block_id": "minecraft:clay",
+            "block_drops": [
+                {
+                    "item_id": "minecraft:clay_ball",
+                    "chance": 0.9,
+                    "rolls": 4
+                },
+                {
+                    "item_id": "minecraft:iron_nugget",
+                    "chance": 0.1,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:gold_nugget",
+                    "chance": 0.01,
+                    "rolls": 1
+                },
+                {
+                    "item_id": "minecraft:diamond",
+                    "chance": 0.001,
+                    "rolls": 1
+                }
+            ]
+        }
+    ]
+}

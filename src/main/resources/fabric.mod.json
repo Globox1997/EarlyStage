@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "earlystage",
+  "version": "${version}",
+  "name": "EarlyStage",
+  "description": "This mod adds a couple of early features",
+  "authors": [
+    "Globox_Z"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/earlystage",
+    "sources": "https://github.com/Globox1997/EarlyStage",
+    "issues": "https://github.com/Globox1997/EarlyStage/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/earlystage/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.earlystage.EarlyStageMain"
+    ],
+    "client": [
+      "net.earlystage.EarlyStageClient"
+    ],
+    "modmenu": [
+      "net.earlystage.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "earlystage.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric-api": "*",
+    "minecraft": "~1.19",
+    "java": ">=17",
+    "cloth-config2": ">=8.0.75"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
