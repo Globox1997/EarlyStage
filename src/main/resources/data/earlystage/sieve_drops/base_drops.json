@@ -6,7 +6,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -16,17 +16,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -42,7 +42,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -52,17 +52,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -78,7 +78,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -88,17 +88,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -114,7 +114,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -124,17 +124,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -150,7 +150,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -160,17 +160,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -186,7 +186,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -196,17 +196,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
@@ -222,7 +222,7 @@
             "block_drops": [
                 {
                     "item_id": "minecraft:string",
-                    "chance": 0.05,
+                    "chance": 0.03,
                     "rolls": 2
                 },
                 {
@@ -232,17 +232,17 @@
                 },
                 {
                     "item_id": "minecraft:bone",
-                    "chance": 0.1,
+                    "chance": 0.07,
                     "rolls": 1
                 },
                 {
                     "item_id": "minecraft:clay_ball",
-                    "chance": 0.3,
-                    "rolls": 3
+                    "chance": 0.06,
+                    "rolls": 2
                 },
                 {
                     "item_id": "minecraft:stick",
-                    "chance": 0.2,
+                    "chance": 0.08,
                     "rolls": 2
                 },
                 {
