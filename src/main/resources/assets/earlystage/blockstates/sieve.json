@@ -1,7 +1,19 @@
 {
     "variants": {
-        "": {
+        "facing=east": {
+            "model": "earlystage:block/sieve",
+            "y": 90
+        },
+        "facing=north": {
             "model": "earlystage:block/sieve"
+        },
+        "facing=south": {
+            "model": "earlystage:block/sieve",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "earlystage:block/sieve",
+            "y": 270
         }
     }
 }
