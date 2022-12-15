@@ -12,6 +12,7 @@ public class RenderInit {
 
     public static void init() {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.SIEVE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.REDSTONE_SIEVE, RenderLayer.getCutout());
         BlockEntityRendererRegistry.register(BlockInit.SIEVE_ENTITY, SieveBlockRenderer::new);
     }
 

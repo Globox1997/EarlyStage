@@ -3,6 +3,7 @@ package net.earlystage.block.entity;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.BlockInit;
+import net.earlystage.init.ConfigInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -17,8 +18,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class SieveBlockEntity extends BlockEntity implements Inventory {
+
+    private int tick;
     private DefaultedList<ItemStack> inventory;
     private int sieveCount;
 
@@ -40,6 +44,25 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
         nbt.putInt("SieveCount", sieveCount);
+    }
+
+    public static void clientTick(World world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
+        blockEntity.update();
+    }
+
+    public static void serverTick(World world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
+        blockEntity.update();
+    }
+
+    private void update() {
+        if (!this.isEmpty() && world.isReceivingRedstonePower(pos)) {
+            this.tick++;
+            if (this.tick >= ConfigInit.CONFIG.redstoneSieveTicks) {
+                this.sieve();
+                this.tick = 0;
+            }
+        } else if (this.tick != 0)
+            this.tick = 0;
     }
 
     public int getSieveCount() {
@@ -134,7 +157,17 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     @Override
     public void setStack(int slot, ItemStack stack) {
         this.inventory.set(0, stack);
+        this.refreshSieveCount();
         this.markDirty();
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        if (this.isEmpty() && this.world.getBlockState(pos.up()).isAir())
+            for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
+                if (stack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem()))
+                    return true;
+        return false;
     }
 
     @Override

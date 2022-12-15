@@ -16,5 +16,7 @@ public class EarlyStageConfig implements ConfigData {
     @Comment("Generate rocks in the overworld")
     @ConfigEntry.Gui.RequiresRestart
     public boolean generateRocks = true;
+    @Comment("Time in ticks")
+    public int redstoneSieveTicks = 30;
 
 }

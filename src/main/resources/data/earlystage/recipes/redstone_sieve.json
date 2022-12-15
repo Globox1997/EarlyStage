@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ded",
+        "eee",
+        "dfd"
+    ],
+    "key": {
+        "d": {
+            "tag": "minecraft:stone_crafting_materials"
+        },
+        "e": {
+            "item": "minecraft:string"
+        },
+        "f": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "earlystage:redstone_sieve"
+    }
+}

@@ -20,6 +20,7 @@ public class BlockInit {
     public static final Block ROCK = register("rock", new RockBlock(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).breakInstantly()), ItemGroup.DECORATIONS);
 
     public static final Block SIEVE = register("sieve", new SieveBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS)), ItemGroup.DECORATIONS);
+    public static final Block REDSTONE_SIEVE = register("redstone_sieve", new RedstoneSieveBlock(FabricBlockSettings.copy(Blocks.COBBLESTONE)), ItemGroup.DECORATIONS);
     public static BlockEntityType<SieveBlockEntity> SIEVE_ENTITY;
 
     private static Block register(String id, Block block, ItemGroup itemGroup) {
@@ -33,6 +34,6 @@ public class BlockInit {
     }
 
     public static void init() {
-        SIEVE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", FabricBlockEntityTypeBuilder.create(SieveBlockEntity::new, SIEVE).build(null));
+        SIEVE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", FabricBlockEntityTypeBuilder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
     }
 }

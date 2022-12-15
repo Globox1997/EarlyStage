@@ -1,6 +1,5 @@
 package net.earlystage.block;
 
-import net.earlystage.EarlyStageMain;
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -66,18 +65,15 @@ public class SieveBlock extends Block implements BlockEntityProvider {
             Inventory inventory = (Inventory) world.getBlockEntity(pos);
             ItemStack blockStack = inventory.getStack(0);
             if (blockStack.isEmpty()) {
-                if (world.getBlockState(pos.up()).isAir())
-                    for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
-                        if (itemStack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem())) {
-                            ((SieveBlockEntity) blockEntity).refreshSieveCount();
-                            if (!world.isClient) {
-                                inventory.setStack(0, new ItemStack(itemStack.getItem(), 1));
-                                if (!player.isCreative())
-                                    itemStack.decrement(1);
-                            }
-                            return ActionResult.success(world.isClient);
-                        }
-                return ActionResult.CONSUME;
+                if (inventory.isValid(0, itemStack)) {
+                    if (!world.isClient) {
+                        inventory.setStack(0, new ItemStack(itemStack.getItem(), 1));
+                        if (!player.isCreative())
+                            itemStack.decrement(1);
+                    }
+                    return ActionResult.success(world.isClient);
+                }
+                return ActionResult.FAIL;
             } else {
                 ((SieveBlockEntity) blockEntity).sieve();
                 return ActionResult.success(world.isClient);
