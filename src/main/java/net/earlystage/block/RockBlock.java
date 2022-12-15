@@ -28,7 +28,7 @@ public class RockBlock extends Block {
 
     public RockBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState) ((BlockState) ((BlockState) this.stateManager.getDefaultState()).with(FACING, Direction.NORTH).with(ROCK_TYPE, RockVariants.LARGE)));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(ROCK_TYPE, RockVariants.LARGE));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RockBlock extends Block {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState) ((BlockState) this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()));
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
     @SuppressWarnings("deprecation")
