@@ -6,6 +6,7 @@ import java.util.List;
 import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.BlockInit;
 import net.earlystage.init.ConfigInit;
+import net.earlystage.init.EventInit;
 import net.earlystage.init.ItemInit;
 import net.earlystage.init.JsonReaderInit;
 import net.earlystage.init.TagInit;
@@ -22,6 +23,7 @@ public class EarlyStageMain implements ModInitializer {
         BlockInit.init();
         ItemInit.init();
         TagInit.init();
+        EventInit.init();
         JsonReaderInit.init();
         WorldInit.init();
     }
