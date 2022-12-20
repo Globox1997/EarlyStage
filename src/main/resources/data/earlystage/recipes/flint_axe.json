@@ -2,8 +2,7 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "dd ",
-        "de ",
-        " e "
+        "de "
     ],
     "key": {
         "d": {
