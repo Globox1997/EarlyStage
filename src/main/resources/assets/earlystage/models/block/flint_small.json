@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "earlystage:block/flint",
+		"particle": "earlystage:block/flint"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 7],
+			"to": [11, 1, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 1], "texture": "#1"},
+				"east": {"uv": [7, 0, 11, 1], "texture": "#1"},
+				"south": {"uv": [9, 8, 13, 9], "texture": "#1"},
+				"west": {"uv": [0, 2, 4, 3], "texture": "#1"},
+				"up": {"uv": [2, 7, 6, 10], "texture": "#1"},
+				"down": {"uv": [12, 3, 16, 6], "texture": "#1"}
+			}
+		}
+	]
+}

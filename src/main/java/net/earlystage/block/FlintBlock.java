@@ -1,6 +1,6 @@
 package net.earlystage.block;
 
-import net.earlystage.block.enums.RockVariants;
+import net.earlystage.block.enums.FlintVariants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,22 +20,19 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class RockBlock extends Block {
+public class FlintBlock extends Block {
 
-    public static final EnumProperty<RockVariants> ROCK_TYPE = EnumProperty.of("type", RockVariants.class);
+    public static final EnumProperty<FlintVariants> FLINT_TYPE = EnumProperty.of("type", FlintVariants.class);
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    private static final VoxelShape SHAPE = Block.createCuboidShape(3.0, 0.0, 3.0, 13.0, 5.0, 13.0);
+    private static final VoxelShape SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 3.0, 12.0);
 
-    public RockBlock(Settings settings) {
+    public FlintBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(ROCK_TYPE, RockVariants.LARGE));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(FLINT_TYPE, FlintVariants.MEDIUM));
     }
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        // Requires new SHAPEs and blockstates
-        // if (state.isOf(BlockInit.ROCK_SMALL))
-        // return world.getBlockState(pos.offset(state.get(FACING))).isSideSolidFullSquare(world, pos.offset(state.get(FACING)), state.get(FACING));
         return world.getBlockState(pos.down()).isFullCube(world, pos.down()) && world.getBlockState(pos.down()).isSolidBlock(world, pos.down());
     }
 
@@ -70,11 +67,11 @@ public class RockBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, ROCK_TYPE);
+        builder.add(FACING, FLINT_TYPE);
     }
 
     public void cycleState(BlockState state, World world, BlockPos pos) {
-        world.setBlockState(pos, state.cycle(ROCK_TYPE), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, state.cycle(FLINT_TYPE), Block.NOTIFY_LISTENERS);
     }
 
 }

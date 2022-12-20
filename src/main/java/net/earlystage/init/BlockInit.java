@@ -18,6 +18,7 @@ import net.minecraft.util.registry.Registry;
 public class BlockInit {
 
     public static final Block ROCK = register("rock", new RockBlock(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).breakInstantly()), ItemGroup.DECORATIONS);
+    public static final Block FLINT = register("flint", new FlintBlock(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).breakInstantly()), ItemGroup.DECORATIONS);
 
     public static final Block SIEVE = register("sieve", new SieveBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS)), ItemGroup.DECORATIONS);
     public static final Block REDSTONE_SIEVE = register("redstone_sieve", new RedstoneSieveBlock(FabricBlockSettings.copy(Blocks.COBBLESTONE)), ItemGroup.DECORATIONS);

@@ -1,0 +1,34 @@
+{
+    "variants": {
+        "type=medium,facing=east": {
+            "model": "earlystage:block/flint_medium",
+            "y": 90
+        },
+        "type=medium,facing=north": {
+            "model": "earlystage:block/flint_medium"
+        },
+        "type=medium,facing=south": {
+            "model": "earlystage:block/flint_medium",
+            "y": 180
+        },
+        "type=medium,facing=west": {
+            "model": "earlystage:block/flint_medium",
+            "y": 270
+        },
+        "type=small,facing=east": {
+            "model": "earlystage:block/flint_small",
+            "y": 90
+        },
+        "type=small,facing=north": {
+            "model": "earlystage:block/flint_small"
+        },
+        "type=small,facing=south": {
+            "model": "earlystage:block/flint_small",
+            "y": 180
+        },
+        "type=small,facing=west": {
+            "model": "earlystage:block/flint_small",
+            "y": 270
+        }
+    }
+}
