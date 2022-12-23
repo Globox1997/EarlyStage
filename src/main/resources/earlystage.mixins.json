@@ -6,7 +6,8 @@
   "mixins": [
     "AxeItemMixin",
     "BlocksMixin",
-    "ShovelItemMixin"
+    "ShovelItemMixin",
+    "access.BlockLootTableGeneratorAccessor"
   ],
   "client": [],
   "injectors": {

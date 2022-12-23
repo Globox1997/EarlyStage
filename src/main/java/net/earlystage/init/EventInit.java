@@ -3,6 +3,8 @@ package net.earlystage.init;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.earlystage.mixin.access.BlockLootTableGeneratorAccessor;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
@@ -20,12 +22,19 @@ public class EventInit {
             if (block.getLootTableId().getPath().contains("leaves"))
                 leavesBlockList.add(block.getLootTableId());
         });
+        RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, id, block) -> {
+            if (block.getLootTableId().getPath().contains("leaves"))
+                leavesBlockList.add(block.getLootTableId());
+        });
+
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, supplier, setter) -> {
             if (leavesBlockList.contains(id)) {
-                LootPool pool = LootPool.builder().with(ItemEntry.builder(Items.STICK).build()).rolls(BinomialLootNumberProvider.create(2, 0.05F)).build();
+                LootPool pool = LootPool.builder().with(ItemEntry.builder(Items.STICK).build()).rolls(BinomialLootNumberProvider.create(2, 0.05F))
+                        .conditionally(BlockLootTableGeneratorAccessor.getWithoutSilkTouchNorShears()).build();
                 supplier.pool(pool);
             }
         });
+
     }
 
 }
