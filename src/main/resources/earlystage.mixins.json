@@ -3,10 +3,12 @@
   "minVersion": "0.8",
   "package": "net.earlystage.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "net.earlystage.mixin.EarlyStageMixinPlugin",
   "mixins": [
     "AxeItemMixin",
     "BlocksMixin",
     "ShovelItemMixin",
+    "compat.BYGBlocksMixin",
     "access.BlockLootTableGeneratorAccessor"
   ],
   "client": [],
