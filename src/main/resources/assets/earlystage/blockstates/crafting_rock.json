@@ -1,0 +1,19 @@
+{
+    "variants": {
+        "facing=east": {
+            "model": "earlystage:block/crafting_rock",
+            "y": 90
+        },
+        "facing=north": {
+            "model": "earlystage:block/crafting_rock"
+        },
+        "facing=south": {
+            "model": "earlystage:block/crafting_rock",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "earlystage:block/crafting_rock",
+            "y": 270
+        }
+    }
+}

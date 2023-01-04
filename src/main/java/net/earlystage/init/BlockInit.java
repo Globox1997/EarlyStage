@@ -1,6 +1,7 @@
 package net.earlystage.init;
 
 import net.earlystage.block.*;
+import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -22,7 +23,12 @@ public class BlockInit {
 
     public static final Block SIEVE = register("sieve", new SieveBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS)), ItemGroup.DECORATIONS);
     public static final Block REDSTONE_SIEVE = register("redstone_sieve", new RedstoneSieveBlock(FabricBlockSettings.copy(Blocks.COBBLESTONE)), ItemGroup.DECORATIONS);
+
+    public static final Block CRAFTING_ROCK = register("crafting_rock", new CraftingRockBlock(FabricBlockSettings.of(Material.STONE, MapColor.STONE_GRAY).requiresTool().strength(1.5f, 6.0f)),
+            ItemGroup.DECORATIONS);
+
     public static BlockEntityType<SieveBlockEntity> SIEVE_ENTITY;
+    public static BlockEntityType<CraftingRockBlockEntity> CRAFTING_ROCK_ENTITY;
 
     private static Block register(String id, Block block, ItemGroup itemGroup) {
         return register(new Identifier("earlystage", id), block, itemGroup);
@@ -36,5 +42,7 @@ public class BlockInit {
 
     public static void init() {
         SIEVE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", FabricBlockEntityTypeBuilder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
+        CRAFTING_ROCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "earlystage:crafting_rock_entity",
+                FabricBlockEntityTypeBuilder.create(CraftingRockBlockEntity::new, CRAFTING_ROCK).build(null));
     }
 }
