@@ -90,7 +90,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
         if (blockEntity != null) {
             Inventory inventory = (Inventory) world.getBlockEntity(pos);
 
-            if (hit.getPos().getY() % 1 < 0.505D && hit.getPos().getY() % 1 > 0.495D) {
+            if (Math.abs(hit.getPos().getY() % 1) < 0.505D && Math.abs(hit.getPos().getY() % 1) > 0.495D) {
                 if (itemStack.isOf(BlockInit.ROCK.asItem())) {
                     if (!inventory.isEmpty()) {
                         if (!world.isClient) {

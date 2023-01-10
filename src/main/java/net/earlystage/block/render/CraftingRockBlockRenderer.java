@@ -1,6 +1,7 @@
 package net.earlystage.block.render;
 
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +43,7 @@ public class CraftingRockBlockRenderer implements BlockEntityRenderer<CraftingRo
                         // matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(blockEntity.getCachedState().get(CraftingRockBlock.FACING).asRotation()));
                         // matrices.translate(ConfigInit.CONFIG.test1, 0D, ConfigInit.CONFIG.test2);
 
-                        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(90));
+                        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(90.0f));
                         // matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(ConfigInit.CONFIG.test5));
                         // matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(90));
 
@@ -54,11 +55,23 @@ public class CraftingRockBlockRenderer implements BlockEntityRenderer<CraftingRo
                         // matrices.translate(i == 0 ? ConfigInit.CONFIG.test1 : i == 2 ? ConfigInit.CONFIG.test1xx : ConfigInit.CONFIG.test1x,
                         // u == 0 ? ConfigInit.CONFIG.test2 : u == 2 ? ConfigInit.CONFIG.test2xx : ConfigInit.CONFIG.test2x, ConfigInit.CONFIG.test3);
 
-                        if (isBlockItem) {
-                            matrices.translate(i == 0 ? 0.23D : i == 2 ? 1.02D : 0.63D, u == 0 ? -0.42D : u == 2 ? -1.2D : -0.81D, 0.75D);
+                        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                            if (isBlockItem) {
+                                matrices.translate(i == 0 ? 0.23D : i == 2 ? 1.02D : 0.63D, u == 0 ? -0.42D : u == 2 ? -1.2D : -0.81D, 0.75D);
+                            } else {
+                                matrices.translate(i == 0 ? 0.36D : i == 2 ? 1.63D : 1.0D, u == 0 ? -0.5D : u == 2 ? -1.75D : -1.12D, 1.02D);
+                            }
                         } else {
-                            matrices.translate(i == 0 ? 0.36D : i == 2 ? 1.63D : 1.0D, u == 0 ? -0.5D : u == 2 ? -1.75D : -1.12D, 1.02D);
+                            if (isBlockItem) {
+                                matrices.translate(i == 0 ? -0.42D : i == 2 ? -1.2D : -0.81D, u == 0 ? 0.23D : u == 2 ? 1.02D : 0.63D, 0.75D);
+                                matrices.translate(1.43D, -1.43D, 0.0D);
+                            } else {
+                                matrices.translate(i == 0 ? -0.5D : i == 2 ? -1.75D : -1.12D, u == 0 ? 0.36D : u == 2 ? 1.63D : 1.0D, 1.02D);
+                                matrices.translate(2.1D, -2.1D, 0.0D);
+                            }
+
                         }
+
                         MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getStack(slot), ModelTransformation.Mode.GROUND,
                                 WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up()), overlay, matrices, vertexConsumers, (int) blockEntity.getPos().asLong());
                         matrices.pop();

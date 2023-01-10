@@ -11,6 +11,7 @@ public class EarlyStageConfig implements ConfigData {
 
     // public double test1 = 0.0D;
     // public double test2 = 0.0D;
+    // public double test3 = 0.0D;
     // public double test1x = 0.0D;
     // public double test2x = 0.0D;
     // public double test1xx = 0.0D;
