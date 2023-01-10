@@ -64,7 +64,7 @@ public class Features {
 
     // PlacedFeature
     public static PlacedFeature ROCK_PLACED_FEATURE = new PlacedFeature(RegistryEntry.of(ROCK_FEATURE),
-            List.of(CountPlacementModifier.of(4), RarityFilterPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of(),
+            List.of(CountPlacementModifier.of(5), RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP, BiomePlacementModifier.of(),
                     BlockFilterPlacementModifier.of(BlockPredicate.bothOf(BlockPredicate.IS_AIR, BlockPredicate.matchingBlockTag(new Vec3i(0, -1, 0), TagInit.ROCK_FEATURE_BLOCKS)))));
 
     public static PlacedFeature FLINT_PLACED_FEATURE = new PlacedFeature(RegistryEntry.of(FLINT_FEATURE),
