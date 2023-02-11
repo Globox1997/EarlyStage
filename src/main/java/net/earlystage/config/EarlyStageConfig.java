@@ -32,5 +32,6 @@ public class EarlyStageConfig implements ConfigData {
     public int craftRockCraftHits = 5;
     @Comment("Max hits before breaking rock ")
     public int craftRockMaxCraftHits = 70;
+    public boolean info_tooltips = true;
 
 }

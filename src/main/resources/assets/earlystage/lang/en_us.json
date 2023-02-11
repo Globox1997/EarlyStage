@@ -10,11 +10,15 @@
     "block.earlystage.sieve": "Sieve",
     "block.earlystage.redstone_sieve": "Redstone Sieve",
     "block.earlystage.crafting_rock": "Crafting Rock",
+    "block.earlystage.crafting_rock.tooltip": "Hit it with a rock a few times to craft items",
+
+    "earlystage.moreinfo.tooltip": "§8Hold §6Shift §8For More Info",
 
     "text.autoconfig.earlystage.title": "EarlyStage Config",
     "text.autoconfig.earlystage.option.generateRocks": "Generate Rocks",
     "text.autoconfig.earlystage.option.generateFlint": "Generate Flint",
     "text.autoconfig.earlystage.option.redstoneSieveTicks": "Redstone Sieve Ticks",
     "text.autoconfig.earlystage.option.craftRockCraftHits": "Craft Rock Craft Hits",
-    "text.autoconfig.earlystage.option.craftRockMaxCraftHits": "Craft Rock Max Craft Hits"
+    "text.autoconfig.earlystage.option.craftRockMaxCraftHits": "Craft Rock Max Craft Hits",
+    "text.autoconfig.earlystage.option.info_tooltips": "Info Tooltips"
 }

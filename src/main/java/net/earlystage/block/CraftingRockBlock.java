@@ -1,17 +1,24 @@
 package net.earlystage.block;
 
+import java.util.List;
 import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.inventory.CraftingRockInventory;
 import net.earlystage.init.BlockInit;
 import net.earlystage.init.ConfigInit;
+import net.earlystage.init.TagInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -24,6 +31,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -107,7 +115,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 }
 
                 int slot = getSlot(Math.abs(hit.getPos().getX() % 1), Math.abs(hit.getPos().getZ() % 1));
-                if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty()) {
+                if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && !itemStack.isIn(TagInit.UNUSABLE_CRAFTING_ROCK_ITEMS)) {
                     if (!world.isClient) {
                         inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
@@ -171,6 +179,17 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             ItemScatterer.spawn(world, pos, (Inventory) ((CraftingRockBlockEntity) blockEntity));
         }
         super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        if (ConfigInit.CONFIG.info_tooltips) {
+            tooltip.add(Text.translatable("earlystage.moreinfo.tooltip"));
+            if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), 340)) {
+                tooltip.remove(Text.translatable("earlystage.moreinfo.tooltip"));
+                tooltip.add(Text.translatable("block.earlystage.crafting_rock.tooltip"));
+            }
+        }
     }
 
 }
