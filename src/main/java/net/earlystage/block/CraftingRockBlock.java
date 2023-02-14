@@ -73,7 +73,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
     @Override
@@ -115,7 +115,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 }
 
                 int slot = getSlot(Math.abs(hit.getPos().getX() % 1), Math.abs(hit.getPos().getZ() % 1));
-                if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && !itemStack.isIn(TagInit.UNUSABLE_CRAFTING_ROCK_ITEMS)) {
+                if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && itemStack.isIn(TagInit.USABLE_CRAFTING_ROCK_ITEMS)) {
                     if (!world.isClient) {
                         inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
