@@ -9,6 +9,7 @@
     "BlocksMixin",
     "ShovelItemMixin",
     "compat.BYGBlocksMixin",
+    "compat.ChopResultMixin",
     "access.BlockLootTableGeneratorAccessor"
   ],
   "client": [],

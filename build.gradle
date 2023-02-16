@@ -37,6 +37,14 @@ dependencies {
 	modCompileOnly ('curse.maven:oh-the-biomes-youll-go-fabric-391378:4027262') {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	// FallingTree
+	modCompileOnly ('curse.maven:falling-tree-349559:3968312'),{
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	// TreeChop
+	modCompileOnly ('curse.maven:treechop-421377:4147540'),{
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
 
 processResources {

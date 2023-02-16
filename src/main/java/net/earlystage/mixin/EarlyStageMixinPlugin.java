@@ -24,6 +24,8 @@ public class EarlyStageMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains("BYGBlocksMixin") && !FabricLoader.getInstance().isModLoaded("byg"))
             return false;
+        if (mixinClassName.contains("ChopResultMixin") && !FabricLoader.getInstance().isModLoaded("treechop"))
+            return false;
 
         return true;
     }
