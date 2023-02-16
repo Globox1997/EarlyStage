@@ -19,6 +19,7 @@ public class EarlyStageConfig implements ConfigData {
     // public double test3 = 0.0D;
     // public float test4 = 0f;
     // public float test5 = 0f;
+    // public float test6 = 0f;
 
     @Comment("Generate rocks in the overworld")
     @ConfigEntry.Gui.RequiresRestart
