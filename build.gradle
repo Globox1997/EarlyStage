@@ -45,6 +45,10 @@ dependencies {
 	modCompileOnly ('curse.maven:treechop-421377:4147540'),{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	// Missing Wilds
+	modCompileOnly ('curse.maven:missing-wilds-622590:3891602'),{
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
 
 processResources {

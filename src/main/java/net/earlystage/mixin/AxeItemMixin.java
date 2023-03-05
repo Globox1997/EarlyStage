@@ -19,8 +19,9 @@ public abstract class AxeItemMixin extends MiningToolItem {
 
     @Override
     public boolean isSuitableFor(BlockState state) {
-        if (state.getMaterial().equals(Material.WOOD))
+        if (state.getMaterial().equals(Material.WOOD) || state.getMaterial().equals(Material.NETHER_WOOD)) {
             return true;
+        }
         return super.isSuitableFor(state);
     }
 

@@ -20,5 +20,6 @@
     "text.autoconfig.earlystage.option.redstoneSieveTicks": "Redstone Sieve Ticks",
     "text.autoconfig.earlystage.option.craftRockCraftHits": "Craft Rock Craft Hits",
     "text.autoconfig.earlystage.option.craftRockMaxCraftHits": "Craft Rock Max Craft Hits",
-    "text.autoconfig.earlystage.option.info_tooltips": "Info Tooltips"
+    "text.autoconfig.earlystage.option.info_tooltips": "Info Tooltips",
+    "text.autoconfig.earlystage.option.extraStickDropChance": "Extra Stick Drop Chance"
 }

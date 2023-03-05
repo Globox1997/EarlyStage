@@ -9,18 +9,6 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class EarlyStageConfig implements ConfigData {
 
-    // public double test1 = 0.0D;
-    // public double test2 = 0.0D;
-    // public double test3 = 0.0D;
-    // public double test1x = 0.0D;
-    // public double test2x = 0.0D;
-    // public double test1xx = 0.0D;
-    // public double test2xx = 0.0D;
-    // public double test3 = 0.0D;
-    // public float test4 = 0f;
-    // public float test5 = 0f;
-    // public float test6 = 0f;
-
     @Comment("Generate rocks in the overworld")
     @ConfigEntry.Gui.RequiresRestart
     public boolean generateRocks = true;
@@ -34,5 +22,6 @@ public class EarlyStageConfig implements ConfigData {
     @Comment("Max hits before breaking rock ")
     public int craftRockMaxCraftHits = 70;
     public boolean info_tooltips = true;
+    public float extraStickDropChance = 0.05f;
 
 }

@@ -26,6 +26,8 @@ public class EarlyStageMixinPlugin implements IMixinConfigPlugin {
             return false;
         if (mixinClassName.contains("ChopResultMixin") && !FabricLoader.getInstance().isModLoaded("treechop"))
             return false;
+        if (mixinClassName.contains("FallenLogBlockMixin") && !FabricLoader.getInstance().isModLoaded("missingwilds"))
+            return false;
 
         return true;
     }

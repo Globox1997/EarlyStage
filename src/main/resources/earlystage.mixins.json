@@ -8,8 +8,10 @@
     "AxeItemMixin",
     "BlocksMixin",
     "ShovelItemMixin",
+    "PillarBlockMixin",
     "compat.BYGBlocksMixin",
     "compat.ChopResultMixin",
+    "compat.FallenLogBlockMixin",
     "access.BlockLootTableGeneratorAccessor"
   ],
   "client": [],
