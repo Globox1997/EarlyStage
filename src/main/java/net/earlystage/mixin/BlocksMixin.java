@@ -17,7 +17,7 @@ import net.minecraft.util.math.Direction;
 public class BlocksMixin {
 
     @Inject(method = "createLogBlock", at = @At("HEAD"), cancellable = true)
-    private static void createLogBlock(MapColor topMapColor, MapColor sideMapColor, CallbackInfoReturnable<PillarBlock> info) {
+    private static void createLogBlockMixin(MapColor topMapColor, MapColor sideMapColor, CallbackInfoReturnable<PillarBlock> info) {
         info.setReturnValue(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, state -> state.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).requiresTool()
                 .strength(2.0f).sounds(BlockSoundGroup.WOOD)));
     }
