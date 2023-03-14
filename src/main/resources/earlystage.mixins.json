@@ -9,6 +9,8 @@
     "BlocksMixin",
     "ShovelItemMixin",
     "PillarBlockMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
     "compat.BYGBlocksMixin",
     "compat.ChopResultMixin",
     "compat.FallenLogBlockMixin",
