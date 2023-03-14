@@ -14,6 +14,7 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/" }
 	maven { url "https://www.cursemaven.com" }
+	maven {url = "https://api.modrinth.com/maven"}
 }
 
 dependencies {
@@ -47,6 +48,10 @@ dependencies {
 	}
 	// Missing Wilds
 	modCompileOnly ('curse.maven:missing-wilds-622590:3891602'),{
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	//Fabric Shield Lib 
+	modImplementation ('curse.maven:fabric-shield-lib-380649:4430356'),{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 }

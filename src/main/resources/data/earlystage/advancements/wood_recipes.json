@@ -1,0 +1,22 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:wooden_shield"
+        ]
+    },
+    "criteria": {
+        "got_the_oak_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:oak_planks"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

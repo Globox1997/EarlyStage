@@ -1,0 +1,7 @@
+{
+    "parent": "fabricshieldlib:item/fabric_shield_blocking",
+    "gui_light": "front",
+    "textures": {
+        "shield": "earlystage:item/wooden_shield"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ddd",
+        "ddd",
+        " d "
+    ],
+    "key": {
+        "d": {
+            "tag": "minecraft:planks"
+        }
+    },
+    "result": {
+        "item": "earlystage:wooden_shield"
+    }
+}

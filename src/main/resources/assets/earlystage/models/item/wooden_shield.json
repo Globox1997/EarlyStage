@@ -1,0 +1,15 @@
+{
+    "parent": "fabricshieldlib:item/fabric_shield",
+    "gui_light": "front",
+    "textures": {
+        "shield": "earlystage:item/wooden_shield"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "blocking": 1
+            },
+            "model": "earlystage:item/wooden_shield_blocking"
+        }
+    ]
+}
