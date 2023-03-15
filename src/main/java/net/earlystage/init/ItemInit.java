@@ -4,6 +4,7 @@ import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShieldItem;
 
 import net.earlystage.item.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -24,6 +25,10 @@ public class ItemInit {
 
     public static final Item WOODEN_SHIELD = register("wooden_shield",
             new FabricShieldItem(new FabricItemSettings().maxDamage(59).group(ItemGroup.COMBAT), 100, 0, Items.OAK_PLANKS, Items.DARK_OAK_PLANKS, Items.SPRUCE_PLANKS, Items.JUNGLE_PLANKS));
+
+    public static final Item WOODEN_BUCKET = register("wooden_bucket", new WoodenBucketItem(Fluids.EMPTY, new Item.Settings().maxCount(16).group(ItemGroup.MISC)));
+    public static final Item WATER_WOODEN_BUCKET = register("water_wooden_bucket",
+            new WoodenBucketItem(Fluids.WATER, new Item.Settings().recipeRemainder(WOODEN_BUCKET).maxCount(1).group(ItemGroup.MISC)));
 
     private static Item register(String id, Item item) {
         return register(new Identifier("earlystage", id), item);
