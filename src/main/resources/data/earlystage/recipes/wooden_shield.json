@@ -1,13 +1,16 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "ddd",
+        "ded",
         "ddd",
         " d "
     ],
     "key": {
         "d": {
             "tag": "minecraft:planks"
+        },
+        "e": {
+            "tag": "minecraft:logs"
         }
     },
     "result": {
