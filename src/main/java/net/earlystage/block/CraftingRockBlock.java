@@ -113,8 +113,9 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                     }
                     return ActionResult.FAIL;
                 }
-
-                int slot = getSlot(Math.abs(hit.getPos().getX() % 1), Math.abs(hit.getPos().getZ() % 1));
+                double xPos = hit.getPos().getX() < 0D ? 1.0D + hit.getPos().getX() % 1 : hit.getPos().getX() % 1;
+                double zPos = hit.getPos().getZ() < 0D ? 1.0D + hit.getPos().getZ() % 1 : hit.getPos().getZ() % 1;
+                int slot = getSlot(xPos, zPos);
                 if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && itemStack.isIn(TagInit.USABLE_CRAFTING_ROCK_ITEMS)) {
                     if (!world.isClient) {
                         inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
