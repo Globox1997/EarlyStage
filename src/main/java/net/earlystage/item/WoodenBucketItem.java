@@ -104,7 +104,9 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
 
     @Override
     public void onEmptied(@Nullable PlayerEntity player, World world, ItemStack stack, BlockPos pos) {
-        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f, false);
+        if (!player.isCreative()) {
+            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f, false);
+        }
     }
 
     @Override
