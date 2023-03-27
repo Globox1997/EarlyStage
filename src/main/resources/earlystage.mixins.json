@@ -11,6 +11,7 @@
     "PillarBlockMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
+    "RecipeManagerMixin",
     "compat.BYGBlocksMixin",
     "compat.ChopResultMixin",
     "compat.FallenLogBlockMixin",

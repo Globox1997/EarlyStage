@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "earlystage:rock"
+        },
+        {
+            "item": "earlystage:rock"
+        },
+        {
+            "item": "earlystage:rock"
+        },
+        {
+            "item": "earlystage:rock"
+        }
+    ],
+    "result": {
+        "item": "environmentz:heating_stones"
+    }
+}
