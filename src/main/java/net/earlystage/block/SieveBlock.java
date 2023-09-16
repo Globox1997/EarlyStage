@@ -39,7 +39,7 @@ public class SieveBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override
@@ -66,17 +66,17 @@ public class SieveBlock extends Block implements BlockEntityProvider {
             ItemStack blockStack = inventory.getStack(0);
             if (blockStack.isEmpty()) {
                 if (inventory.isValid(0, itemStack)) {
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         inventory.setStack(0, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
                             itemStack.decrement(1);
                     }
-                    return ActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient());
                 }
                 return ActionResult.FAIL;
             } else {
                 ((SieveBlockEntity) blockEntity).sieve();
-                return ActionResult.success(world.isClient);
+                return ActionResult.success(world.isClient());
             }
         }
         return ActionResult.FAIL;
@@ -96,7 +96,7 @@ public class SieveBlock extends Block implements BlockEntityProvider {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient && !world.getBlockState(pos.up()).isAir() && world.getBlockEntity(pos) != null) {
+        if (!world.isClient() && !world.getBlockState(pos.up()).isAir() && world.getBlockEntity(pos) != null) {
             ItemScatterer.spawn(world, pos, (Inventory) ((SieveBlockEntity) world.getBlockEntity(pos)));
             ((SieveBlockEntity) world.getBlockEntity(pos)).clear();
         }

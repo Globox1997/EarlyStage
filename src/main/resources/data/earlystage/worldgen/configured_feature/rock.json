@@ -1,0 +1,180 @@
+{
+    "type": "minecraft:simple_random_selector",
+    "config": {
+        "features": [
+            {
+                "feature": {
+                    "type": "minecraft:simple_block",
+                    "config": {
+                        "to_place": {
+                            "type": "minecraft:weighted_state_provider",
+                            "entries": [
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 6
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 6
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 6
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 6
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 4
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 4
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 4
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 4
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "large"
+                                        }
+                                    },
+                                    "weight": 3
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "large"
+                                        }
+                                    },
+                                    "weight": 3
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "large"
+                                        }
+                                    },
+                                    "weight": 3
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "large"
+                                        }
+                                    },
+                                    "weight": 3
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "extra_large"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "extra_large"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "extra_large"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:rock",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "extra_large"
+                                        }
+                                    },
+                                    "weight": 1
+                                }
+                            ]
+                        }
+                    }
+                },
+                "placement": []
+            }
+        ]
+    }
+}

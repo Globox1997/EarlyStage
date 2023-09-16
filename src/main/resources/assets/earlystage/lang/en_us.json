@@ -1,4 +1,5 @@
 {
+    "item.earlystage.item_group": "EarlyStage",
     "item.earlystage.flint_sword": "Flint Sword",
     "item.earlystage.flint_shovel": "Flint Shovel",
     "item.earlystage.flint_pickaxe": "Flint Pickaxe",
@@ -13,7 +14,7 @@
     "block.earlystage.sieve": "Sieve",
     "block.earlystage.redstone_sieve": "Redstone Sieve",
     "block.earlystage.crafting_rock": "Crafting Rock",
-    "block.earlystage.crafting_rock.tooltip": "Hit it with a rock a few times to craft items",
+    "block.earlystage.crafting_rock.tooltip": "§7Hit it with a rock a few times to craft items",
 
     "earlystage.moreinfo.tooltip": "§8Hold §6Shift §8For More Info",
 

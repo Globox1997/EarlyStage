@@ -15,10 +15,10 @@ import net.earlystage.EarlyStageMain;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
 
 public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
@@ -40,12 +40,12 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
                 for (int u = 0; u < data.getAsJsonArray("drops").size(); u++) {
                     JsonObject data2 = (JsonObject) data.getAsJsonArray("drops").get(u);
-                    if (Registry.BLOCK.get(new Identifier(data2.get("block_id").getAsString())) == Blocks.AIR) {
+                    if (Registries.BLOCK.get(new Identifier(data2.get("block_id").getAsString())) == Blocks.AIR) {
                         LOGGER.warn("Block Id: " + data2.get("block_id").getAsString() + " is not a valid block id");
                         continue;
                     }
 
-                    Item blockItem = Registry.BLOCK.get(new Identifier(data2.get("block_id").getAsString())).asItem();
+                    Item blockItem = Registries.BLOCK.get(new Identifier(data2.get("block_id").getAsString())).asItem();
 
                     List<Item> blockDrops = new ArrayList<Item>();
                     List<Float> dropChances = new ArrayList<Float>();
@@ -71,7 +71,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
                     for (int i = 0; i < data2.getAsJsonArray("block_drops").size(); i++) {
                         JsonObject data3 = (JsonObject) data2.getAsJsonArray("block_drops").get(i);
-                        blockDrops.add(Registry.ITEM.get(new Identifier(data3.get("item_id").getAsString())));
+                        blockDrops.add(Registries.ITEM.get(new Identifier(data3.get("item_id").getAsString())));
                         dropChances.add(data3.get("chance").getAsFloat());
                         rollCount.add(data3.get("rolls").getAsInt());
                     }

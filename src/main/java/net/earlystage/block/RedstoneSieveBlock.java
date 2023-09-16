@@ -36,22 +36,22 @@ public class RedstoneSieveBlock extends SieveBlock {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos())).with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos())).with(FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockInit.SIEVE_ENTITY, world.isClient ? SieveBlockEntity::clientTick : SieveBlockEntity::serverTick);
+        return checkType(type, BlockInit.SIEVE_ENTITY, world.isClient() ? SieveBlockEntity::clientTick : SieveBlockEntity::serverTick);
     }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             boolean bl = state.get(POWERED);
             if (bl != world.isReceivingRedstonePower(pos)) {
                 if (bl) {
-                    world.createAndScheduleBlockTick(pos, this, 4);
+                    world.scheduleBlockTick(pos, this, 4);
                 } else {
                     world.setBlockState(pos, state.cycle(POWERED), Block.NOTIFY_LISTENERS);
                 }
@@ -84,21 +84,21 @@ public class RedstoneSieveBlock extends SieveBlock {
             if (blockStack.isEmpty()) {
                 if (inventory.isValid(0, itemStack)) {
                     ((SieveBlockEntity) blockEntity).refreshSieveCount();
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         inventory.setStack(0, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
                             itemStack.decrement(1);
                     }
-                    return ActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient());
                 }
                 return ActionResult.FAIL;
             } else {
                 if (itemStack.isEmpty()) {
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         player.setStackInHand(hand, blockStack);
                         inventory.clear();
                     }
-                    return ActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient());
                 }
             }
         }

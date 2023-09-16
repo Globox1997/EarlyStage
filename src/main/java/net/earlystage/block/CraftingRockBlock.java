@@ -73,7 +73,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             if (Math.abs(hit.getPos().getY() % 1) < 0.505D && Math.abs(hit.getPos().getY() % 1) > 0.495D) {
                 if (itemStack.isOf(BlockInit.ROCK.asItem())) {
                     if (!inventory.isEmpty()) {
-                        if (!world.isClient) {
+                        if (!world.isClient()) {
                             if (((CraftingRockBlockEntity) blockEntity).getCraftHits() - 1 == 0) {
                                 tryCraftItem(world, player, (CraftingRockBlockEntity) blockEntity);
                                 ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
@@ -109,7 +109,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                                 ((CraftingRockBlockEntity) blockEntity).decreaseCraftHits(player);
                         }
                         world.playSound(player, pos, SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                        return ActionResult.success(world.isClient);
+                        return ActionResult.success(world.isClient());
                     }
                     return ActionResult.FAIL;
                 }
@@ -117,21 +117,21 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 double zPos = hit.getPos().getZ() < 0D ? 1.0D + hit.getPos().getZ() % 1 : hit.getPos().getZ() % 1;
                 int slot = getSlot(xPos, zPos);
                 if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && itemStack.isIn(TagInit.USABLE_CRAFTING_ROCK_ITEMS)) {
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
                             itemStack.decrement(1);
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
-                    return ActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient());
                 } else if (!inventory.getStack(slot).isEmpty()) {
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         if (!player.isCreative())
                             player.getInventory().offerOrDrop(inventory.getStack(slot));
                         inventory.setStack(slot, new ItemStack(Items.AIR));
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
-                    return ActionResult.success(world.isClient);
+                    return ActionResult.success(world.isClient());
                 }
             }
         }
@@ -152,7 +152,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     }
 
     private void tryCraftItem(World world, PlayerEntity player, CraftingRockBlockEntity blockEntity) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             CraftingRockInventory craftingInventory = null;
             Optional<CraftingRecipe> optional = null;
             for (int i = 0; i < 4; i++) {
@@ -165,7 +165,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             if (optional != null && optional.isPresent() && (optional.get().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING)
                     || ((ServerPlayerEntity) player).getRecipeBook().contains(optional.get()))) {
                 blockEntity.clear();
-                blockEntity.setStack(4, optional.get().craft(craftingInventory));
+                blockEntity.setStack(4, optional.get().craft(craftingInventory, world.getRegistryManager()));
             }
         }
     }

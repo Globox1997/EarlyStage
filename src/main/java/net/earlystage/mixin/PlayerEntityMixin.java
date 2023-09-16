@@ -22,7 +22,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"), cancellable = true)
     protected void dropInventoryMixin(CallbackInfo info) {
-        if (!this.world.isClient && !((PlayerEntity) (Object) this).isCreative() && ConfigInit.CONFIG.beginnerDeathCount != 0
+        if (!this.getWorld().isClient() && !((PlayerEntity) (Object) this).isCreative() && ConfigInit.CONFIG.beginnerDeathCount != 0
                 && ((ServerPlayerEntity) (Object) this).getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)) < ConfigInit.CONFIG.beginnerDeathCount) {
             info.cancel();
         }

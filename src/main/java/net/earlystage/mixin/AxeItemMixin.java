@@ -4,11 +4,11 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 @Mixin(AxeItem.class)
 public abstract class AxeItemMixin extends MiningToolItem {
@@ -19,7 +19,7 @@ public abstract class AxeItemMixin extends MiningToolItem {
 
     @Override
     public boolean isSuitableFor(BlockState state) {
-        if (state.getMaterial().equals(Material.WOOD) || state.getMaterial().equals(Material.NETHER_WOOD)) {
+        if (state.isIn(BlockTags.LOGS)) {
             return true;
         }
         return super.isSuitableFor(state);

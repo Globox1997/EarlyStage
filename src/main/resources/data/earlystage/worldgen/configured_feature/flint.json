@@ -1,0 +1,100 @@
+{
+    "type": "minecraft:simple_random_selector",
+    "config": {
+        "features": [
+            {
+                "feature": {
+                    "type": "minecraft:simple_block",
+                    "config": {
+                        "to_place": {
+                            "type": "minecraft:weighted_state_provider",
+                            "entries": [
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "small"
+                                        }
+                                    },
+                                    "weight": 1
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "east",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 2
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "west",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 2
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "north",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 2
+                                },
+                                {
+                                    "data": {
+                                        "Name": "earlystage:flint",
+                                        "Properties": {
+                                            "facing": "south",
+                                            "type": "medium"
+                                        }
+                                    },
+                                    "weight": 2
+                                }
+                            ]
+                        }
+                    }
+                },
+                "placement": []
+            }
+        ]
+    }
+}
