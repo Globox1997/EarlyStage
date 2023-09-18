@@ -1,7 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- 
+- Fixed block placement crash
 ### Changed:
-- Updated to mc 1.20.1
-- Disabled wooden shield (fabricshieldlib missing)
+- 
