@@ -11,6 +11,7 @@
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
     "RecipeManagerMixin",
+    "MobEntityMixin",
     "compat.FallenLogBlockMixin",
     "access.BlockLootTableGeneratorAccessor"
   ],

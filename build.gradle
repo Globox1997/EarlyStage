@@ -30,12 +30,6 @@ dependencies {
     modCompileOnly modRuntimeOnly("com.terraformersmc:modmenu:${project.mod_menu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-
-    // fabric.mod.json: depends: "fabricshieldlib": "*"
-	//Fabric Shield Lib 
-	// modImplementation ('maven.modrinth:fabricshieldlib:1.7-1.19.3') {
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// }
 	// FallingTree
 	modCompileOnly ('maven.modrinth:fallingtree:1.20-4.0.0') {
 		exclude(group: "net.fabricmc.fabric-api")
