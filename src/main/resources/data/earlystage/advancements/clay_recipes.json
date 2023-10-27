@@ -1,0 +1,22 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:clay_bucket"
+        ]
+    },
+    "criteria": {
+        "got_the_clay_ball": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:clay_ball"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

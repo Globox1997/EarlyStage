@@ -8,7 +8,12 @@
     "item.earlystage.wooden_shield": "Wooden Shield",
     "item.earlystage.wooden_bucket": "Wooden Bucket",
     "item.earlystage.water_wooden_bucket": "Water Wooden Bucket",
-    
+    "item.earlystage.brick_bucket": "Brick Bucket",
+    "item.earlystage.water_brick_bucket": "Water Brick Bucket",
+    "item.earlystage.lava_brick_bucket": "Lava Brick Bucket",
+    "item.earlystage.clay_bucket": "Clay Bucket",
+    "item.earlystage.stone_shears": "Stone Shears",
+
     "block.earlystage.rock": "Rock",
     "block.earlystage.flint": "Flint",
     "block.earlystage.sieve": "Sieve",

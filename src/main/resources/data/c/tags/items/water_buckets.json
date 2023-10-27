@@ -1,7 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:wooden_bucket",
+        "earlystage:water_brick_bucket",
         "earlystage:water_wooden_bucket"
     ]
 }

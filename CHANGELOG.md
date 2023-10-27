@@ -1,6 +1,9 @@
 ### Added:
-- 
+- Readded wooden shield
+- Added clay bucket
+- Added brick bucket
+- Added stone shears
 ### Fixed:
-- Fixed block placement crash
+- 
 ### Changed:
 - 

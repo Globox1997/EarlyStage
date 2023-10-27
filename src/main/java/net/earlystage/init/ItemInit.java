@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
@@ -32,8 +33,14 @@ public class ItemInit {
 
     public static final Item WOODEN_SHIELD = register("wooden_shield", new ShieldItem(new Item.Settings().maxDamage(69)));
 
+    public static final Item STONE_SHEARS = register("stone_shears", new ShearsItem(new Item.Settings().maxDamage(24)));
+
     public static final Item WOODEN_BUCKET = register("wooden_bucket", new WoodenBucketItem(Fluids.EMPTY, new Item.Settings().maxCount(16)));
     public static final Item WATER_WOODEN_BUCKET = register("water_wooden_bucket", new WoodenBucketItem(Fluids.WATER, new Item.Settings().recipeRemainder(WOODEN_BUCKET).maxCount(1)));
+    public static final Item CLAY_BUCKET = register("clay_bucket", new ClayBucketItem(new Item.Settings().maxCount(16)));
+    public static final Item BRICK_BUCKET = register("brick_bucket", new BrickBucketItem(Fluids.EMPTY, new Item.Settings().maxCount(16)));
+    public static final Item WATER_BRICK_BUCKET = register("water_brick_bucket", new BrickBucketItem(Fluids.WATER, new Item.Settings().recipeRemainder(BRICK_BUCKET).maxCount(1)));
+    public static final Item LAVA_BRICK_BUCKET = register("lava_brick_bucket", new BrickBucketItem(Fluids.LAVA, new Item.Settings().recipeRemainder(BRICK_BUCKET).maxCount(1)));
 
     private static Item register(String id, Item item) {
         return register(new Identifier("earlystage", id), item);

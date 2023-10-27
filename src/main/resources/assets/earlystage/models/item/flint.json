@@ -1,3 +1,6 @@
 {
-    "parent": "earlystage:block/flint_medium"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "earlystage:item/flint"
+    }
 }

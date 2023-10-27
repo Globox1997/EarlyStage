@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "#": {
+            "tag": "minecraft:stone_crafting_materials"
+        }
+    },
+    "pattern": [
+        " #",
+        "# "
+    ],
+    "result": {
+        "item": "earlystage:stone_shears"
+    },
+    "show_notification": true
+}

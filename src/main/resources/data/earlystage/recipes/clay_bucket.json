@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "d d",
+        " d "
+    ],
+    "key": {
+        "d": {
+            "item": "minecraft:clay_ball"
+        }
+    },
+    "result": {
+        "item": "earlystage:clay_bucket"
+    }
+}

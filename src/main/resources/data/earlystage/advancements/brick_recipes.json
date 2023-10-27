@@ -1,0 +1,24 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:brick_bucket",
+            "earlystage:brick_bucket_from_smelting",
+            "earlystage:brick_bucket_from_campfire_cooking"
+        ]
+    },
+    "criteria": {
+        "got_the_brick": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:brick"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}
