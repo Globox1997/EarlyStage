@@ -11,8 +11,7 @@ public class TagInit {
 
     // Item
     public static final TagKey<Item> USABLE_CRAFTING_ROCK_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier("earlystage", "usable_crafting_rock_items"));
-    // Item
-    public static final TagKey<Item> SHIELD_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "shields"));
+    public static final TagKey<Item> BARK_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier("earlystage", "bark_items"));
     // Block
     public static final TagKey<Block> ROCK_FEATURE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, new Identifier("earlystage", "rock_feature_blocks"));
     // Biome

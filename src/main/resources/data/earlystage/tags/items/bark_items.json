@@ -1,0 +1,16 @@
+{
+    "replace": false,
+    "values": [
+        "earlystage:oak_bark",
+        "earlystage:dark_oak_bark",
+        "earlystage:acacia_bark",
+        "earlystage:cherry_bark",
+        "earlystage:birch_bark",
+        "earlystage:jungle_bark",
+        "earlystage:spruce_bark",
+        "earlystage:warped_bark",
+        "earlystage:crimson_bark",
+        "earlystage:mangrove_bark",
+        "earlystage:bamboo_bark"
+    ]
+}

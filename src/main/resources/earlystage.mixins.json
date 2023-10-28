@@ -12,8 +12,10 @@
     "ServerPlayerEntityMixin",
     "RecipeManagerMixin",
     "MobEntityMixin",
+    "CampfireBlockMixin",
     "compat.FallenLogBlockMixin",
-    "access.BlockLootTableGeneratorAccessor"
+    "access.BlockLootTableGeneratorAccessor",
+    "access.AxeItemAccessor"
   ],
   "client": [],
   "injectors": {

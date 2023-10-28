@@ -3,6 +3,7 @@ package net.earlystage.init;
 import net.earlystage.item.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
@@ -41,6 +42,18 @@ public class ItemInit {
     public static final Item BRICK_BUCKET = register("brick_bucket", new BrickBucketItem(Fluids.EMPTY, new Item.Settings().maxCount(16)));
     public static final Item WATER_BRICK_BUCKET = register("water_brick_bucket", new BrickBucketItem(Fluids.WATER, new Item.Settings().recipeRemainder(BRICK_BUCKET).maxCount(1)));
     public static final Item LAVA_BRICK_BUCKET = register("lava_brick_bucket", new BrickBucketItem(Fluids.LAVA, new Item.Settings().recipeRemainder(BRICK_BUCKET).maxCount(1)));
+
+    public static final Item OAK_BARK = register("oak_bark", new BarkItem(new Item.Settings(), Blocks.OAK_LOG, Blocks.OAK_WOOD, 150));
+    public static final Item DARK_OAK_BARK = register("dark_oak_bark", new BarkItem(new Item.Settings(), Blocks.DARK_OAK_LOG, Blocks.DARK_OAK_WOOD, 150));
+    public static final Item ACACIA_BARK = register("acacia_bark", new BarkItem(new Item.Settings(), Blocks.ACACIA_LOG, Blocks.ACACIA_WOOD, 150));
+    public static final Item CHERRY_BARK = register("cherry_bark", new BarkItem(new Item.Settings(), Blocks.CHERRY_LOG, Blocks.CHERRY_WOOD, 150));
+    public static final Item BIRCH_BARK = register("birch_bark", new BarkItem(new Item.Settings(), Blocks.BIRCH_LOG, Blocks.BIRCH_WOOD, 150));
+    public static final Item JUNGLE_BARK = register("jungle_bark", new BarkItem(new Item.Settings(), Blocks.JUNGLE_LOG, Blocks.JUNGLE_WOOD, 150));
+    public static final Item SPRUCE_BARK = register("spruce_bark", new BarkItem(new Item.Settings(), Blocks.SPRUCE_LOG, Blocks.SPRUCE_WOOD, 150));
+    public static final Item WARPED_BARK = register("warped_bark", new BarkItem(new Item.Settings(), Blocks.WARPED_STEM, Blocks.WARPED_HYPHAE, 150));
+    public static final Item CRIMSON_BARK = register("crimson_bark", new BarkItem(new Item.Settings(), Blocks.CRIMSON_STEM, Blocks.CRIMSON_HYPHAE, 200));
+    public static final Item MANGROVE_BARK = register("mangrove_bark", new BarkItem(new Item.Settings(), Blocks.MANGROVE_LOG, Blocks.MANGROVE_WOOD, 200));
+    public static final Item BAMBOO_BARK = register("bamboo_bark", new BarkItem(new Item.Settings(), Blocks.BAMBOO_BLOCK, null, 100));
 
     private static Item register(String id, Item item) {
         return register(new Identifier("earlystage", id), item);
