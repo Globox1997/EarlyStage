@@ -2,6 +2,7 @@ package net.earlystage.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import net.earlystage.init.RenderInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -17,8 +18,6 @@ import net.minecraft.util.Identifier;
 @Mixin(BlastFurnaceScreen.class)
 public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<BlastFurnaceScreenHandler> {
 
-    private static final Identifier EXTRA_SLOT_TEXTURE = new Identifier("earlystage", "textures/gui/blast_furnace_extra_slot.png");
-
     public BlastFurnaceScreenMixin(BlastFurnaceScreenHandler handler, AbstractFurnaceRecipeBookScreen recipeBook, PlayerInventory inventory, Text title, Identifier background) {
         super(handler, recipeBook, inventory, title, background);
     }
@@ -26,7 +25,7 @@ public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<Blas
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         super.drawBackground(context, delta, mouseX, mouseY);
-        context.drawTexture(EXTRA_SLOT_TEXTURE, this.x + 75, this.y + 16, 0, 0, 18, 18);
+        context.drawTexture(RenderInit.GUI_ICON_TEXTURES, this.x + 75, this.y + 16, 0, 0, 18, 18);
     }
 
 }

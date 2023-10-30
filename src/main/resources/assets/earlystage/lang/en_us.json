@@ -61,5 +61,9 @@
     "text.autoconfig.earlystage.option.extraStickDropChance": "Extra Stick Drop Chance",
     "text.autoconfig.earlystage.option.beginnerDeathCount": "Beginner Death Count",
 
+    "emi.category.earlystage.crafting_rock": "Crafting Rock",
+    "emi.crafting_rock.info": "%s Hits",
+    "emi.crafting_rock.tooltip": "Hit it with a rock!",
+
     "tag.earlystage.bark_items": "Bark Items"
 }

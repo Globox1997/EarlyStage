@@ -67,6 +67,7 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
         widgets.addSlot(input.get(0), 0, 4);
         widgets.addSlot(input.get(1), 20, 4);
         widgets.addSlot(output.get(0), 74, 0).large(true).recipeContext(this);
+        widgets.addTooltipText(List.of(Text.translatable("emi.cooking.time", this.cookTime / 20)), 43, 5, 24, 17);
     }
 
 }

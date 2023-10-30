@@ -7,9 +7,12 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class RenderInit {
+
+    public static final Identifier GUI_ICON_TEXTURES = new Identifier("earlystage", "textures/gui/blast_furnace_extra_slot.png");
 
     public static void init() {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.SIEVE, RenderLayer.getCutout());
