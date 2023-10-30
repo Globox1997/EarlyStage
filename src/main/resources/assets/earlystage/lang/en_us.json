@@ -1,10 +1,25 @@
 {
     "item.earlystage.item_group": "EarlyStage",
+
     "item.earlystage.flint_sword": "Flint Sword",
     "item.earlystage.flint_shovel": "Flint Shovel",
     "item.earlystage.flint_pickaxe": "Flint Pickaxe",
     "item.earlystage.flint_axe": "Flint Axe",
     "item.earlystage.flint_hoe": "Flint Hoe",
+
+    "item.earlystage.steel_sword": "Steel Sword",
+    "item.earlystage.steel_shovel": "Steel Shovel",
+    "item.earlystage.steel_pickaxe": "Steel Pickaxe",
+    "item.earlystage.steel_axe": "Steel Axe",
+    "item.earlystage.steel_hoe": "Steel Hoe",
+    "item.earlystage.steel_helmet": "Steel Helmet",
+    "item.earlystage.steel_chestplate": "Steel Chestplate",
+    "item.earlystage.steel_leggings": "Steel Leggings",
+    "item.earlystage.steel_boots": "Steel Boots",
+    "item.earlystage.steel_ingot": "Steel Ingot",
+    "item.earlystage.steel_nugget": "Steel Nugget",
+    "item.earlystage.steel_horse_armor": "Steel Horse Armor",
+
     "item.earlystage.wooden_shield": "Wooden Shield",
     "item.earlystage.wooden_bucket": "Wooden Bucket",
     "item.earlystage.water_wooden_bucket": "Water Wooden Bucket",
@@ -13,6 +28,7 @@
     "item.earlystage.lava_brick_bucket": "Lava Brick Bucket",
     "item.earlystage.clay_bucket": "Clay Bucket",
     "item.earlystage.stone_shears": "Stone Shears",
+
     "item.earlystage.oak_bark": "Oak Bark",
     "item.earlystage.dark_oak_bark": "Dark Oak Bark",
     "item.earlystage.acacia_bark": "Acacia Bark",
@@ -31,6 +47,7 @@
     "block.earlystage.redstone_sieve": "Redstone Sieve",
     "block.earlystage.crafting_rock": "Crafting Rock",
     "block.earlystage.crafting_rock.tooltip": "§7Hit it with a rock a few times to craft items",
+    "block.earlystage.steel_block": "Block of Steel",
 
     "earlystage.moreinfo.tooltip": "§8Hold §6Shift §8For More Info",
 
@@ -42,5 +59,7 @@
     "text.autoconfig.earlystage.option.craftRockMaxCraftHits": "Craft Rock Max Craft Hits",
     "text.autoconfig.earlystage.option.info_tooltips": "Info Tooltips",
     "text.autoconfig.earlystage.option.extraStickDropChance": "Extra Stick Drop Chance",
-    "text.autoconfig.earlystage.option.beginnerDeathCount": "Beginner Death Count"
+    "text.autoconfig.earlystage.option.beginnerDeathCount": "Beginner Death Count",
+
+    "tag.earlystage.bark_items": "Bark Items"
 }

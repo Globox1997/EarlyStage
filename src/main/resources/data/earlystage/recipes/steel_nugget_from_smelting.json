@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "earlystage:steel_pickaxe"
+    },
+    {
+      "item": "earlystage:steel_shovel"
+    },
+    {
+      "item": "earlystage:steel_axe"
+    },
+    {
+      "item": "earlystage:steel_hoe"
+    },
+    {
+      "item": "earlystage:steel_sword"
+    },
+    {
+      "item": "earlystage:steel_helmet"
+    },
+    {
+      "item": "earlystage:steel_chestplate"
+    },
+    {
+      "item": "earlystage:steel_leggings"
+    },
+    {
+      "item": "earlystage:steel_boots"
+    },
+    {
+      "item": "earlystage:steel_horse_armor"
+    },
+    {
+      "item": "minecraft:chainmail_helmet"
+    },
+    {
+      "item": "minecraft:chainmail_chestplate"
+    },
+    {
+      "item": "minecraft:chainmail_leggings"
+    },
+    {
+      "item": "minecraft:chainmail_boots"
+    }
+  ],
+  "result": "earlystage:steel_nugget"
+}

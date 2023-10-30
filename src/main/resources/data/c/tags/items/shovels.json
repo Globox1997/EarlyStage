@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:flint_shovel"
+        "earlystage:flint_shovel",
+        "earlystage:steel_shovel"
     ]
 }

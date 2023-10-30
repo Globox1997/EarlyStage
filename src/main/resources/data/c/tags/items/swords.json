@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:flint_sword"
+        "earlystage:flint_sword",
+        "earlystage:steel_sword"
     ]
 }

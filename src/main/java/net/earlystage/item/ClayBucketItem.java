@@ -2,7 +2,9 @@ package net.earlystage.item;
 
 import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -53,7 +55,8 @@ public class ClayBucketItem extends Item {
                 world.emitGameEvent((Entity) user, GameEvent.FLUID_PICKUP, blockPos);
                 ItemStack itemStack2 = new ItemStack(ItemInit.LAVA_BRICK_BUCKET);
                 ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
-                if (!world.isClient) {
+                if (!world.isClient()) {
+                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     Criteria.FILLED_BUCKET.trigger((ServerPlayerEntity) user, itemStack2);
                 }
                 return TypedActionResult.success(itemStack3, world.isClient());

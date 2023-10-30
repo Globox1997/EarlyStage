@@ -1,39 +1,40 @@
-package net.earlystage.item;
+package net.earlystage.item.material;
 
-import net.minecraft.item.Items;
+import net.earlystage.init.ItemInit;
+import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
-public class FlintToolMaterial implements ToolMaterial {
+public class SteelToolMaterial implements ToolMaterial {
 
     @Override
     public int getDurability() {
-        return 29;
+        return 500;
     }
 
     @Override
     public float getMiningSpeedMultiplier() {
-        return 1.5f;
+        return 7.0f;
     }
 
     @Override
     public float getAttackDamage() {
-        return 0;
+        return 2.0f;
     }
 
     @Override
     public int getMiningLevel() {
-        return 0;
+        return MiningLevels.IRON;
     }
 
     @Override
     public int getEnchantability() {
-        return 0;
+        return 14;
     }
 
     @Override
     public Ingredient getRepairIngredient() {
-        return Ingredient.ofItems(Items.FLINT);
+        return Ingredient.ofItems(ItemInit.STEEL_INGOT);
     }
 
 }

@@ -26,6 +26,8 @@ public class BlockInit {
 
     public static final Block CRAFTING_ROCK = register("crafting_rock", new CraftingRockBlock(FabricBlockSettings.create().mapColor(MapColor.STONE_GRAY).requiresTool().strength(1.5f, 6.0f)));
 
+    public static final Block STEEL_BLOCK = register("steel_block", new Block(FabricBlockSettings.copy(Blocks.IRON_BLOCK)));
+
     public static BlockEntityType<SieveBlockEntity> SIEVE_ENTITY;
     public static BlockEntityType<CraftingRockBlockEntity> CRAFTING_ROCK_ENTITY;
 

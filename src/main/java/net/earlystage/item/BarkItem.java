@@ -55,7 +55,7 @@ public class BarkItem extends Item {
             if (playerEntity instanceof ServerPlayerEntity) {
                 Criteria.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) playerEntity, blockPos, itemStack);
             }
-            world.playSound(playerEntity, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
             if (!world.isClient()) {
                 BlockState blockState2 = AxeItemAccessor.getStrippedBlocks().get(logBlock) == block ? logBlock.getDefaultState().with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS))

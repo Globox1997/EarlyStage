@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:flint_pickaxe"
+        "earlystage:flint_pickaxe",
+        "earlystage:steel_pickaxe"
     ]
 }

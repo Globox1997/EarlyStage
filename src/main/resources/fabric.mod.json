@@ -24,6 +24,9 @@
     ],
     "modmenu": [
       "net.earlystage.config.ModMenuIntegration"
+    ],
+    "emi": [
+      "net.earlystage.compat.EarlyStageEmiPlugin"
     ]
   },
   "mixins": [

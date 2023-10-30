@@ -1,11 +1,14 @@
 package net.earlystage.init;
 
 import net.earlystage.item.*;
+import net.earlystage.item.material.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.HorseArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -26,11 +29,24 @@ public class ItemInit {
     // Item Group
     public static final RegistryKey<ItemGroup> EARLYSTAGE_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier("earlystage", "item_group"));
 
+    public static final Item STEEL_INGOT = register("steel_ingot", new Item(new Item.Settings()));
+    public static final Item STEEL_NUGGET = register("steel_nugget", new Item(new Item.Settings()));
+    public static final Item STEEL_HELMET = register("steel_helmet", new ArmorItem(new SteelArmorMaterial(), ArmorItem.Type.HELMET, new Item.Settings()));
+    public static final Item STEEL_CHESTPLATE = register("steel_chestplate", new ArmorItem(new SteelArmorMaterial(), ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+    public static final Item STEEL_LEGGINGS = register("steel_leggings", new ArmorItem(new SteelArmorMaterial(), ArmorItem.Type.LEGGINGS, new Item.Settings()));
+    public static final Item STEEL_BOOTS = register("steel_boots", new ArmorItem(new SteelArmorMaterial(), ArmorItem.Type.BOOTS, new Item.Settings()));
+    public static final Item STEEL_SWORD = register("steel_sword", new SwordItem(new SteelToolMaterial(), 3, -2.4f, new Item.Settings()));
+    public static final Item STEEL_SHOVEL = register("steel_shovel", new ShovelItem(new SteelToolMaterial(), 1.5f, -3.0f, new Item.Settings()));
+    public static final Item STEEL_PICKAXE = register("steel_pickaxe", new PickaxeItem(new SteelToolMaterial(), 1, -2.8f, new Item.Settings()));
+    public static final Item STEEL_AXE = register("steel_axe", new AxeItem(new SteelToolMaterial(), 6.0f, -3.1f, new Item.Settings()));
+    public static final Item STEEL_HOE = register("steel_hoe", new EarlyStageHoeItem(new SteelToolMaterial(), -2, -1.0f, new Item.Settings()));
+    public static final Item STEEL_HORSE_ARMOR = register("steel_horse_armor", new HorseArmorItem(6, "steel", new Item.Settings().maxCount(1)));
+
     public static final Item FLINT_SWORD = register("flint_sword", new SwordItem(new FlintToolMaterial(), 1, -2.4f, new Item.Settings()));
     public static final Item FLINT_SHOVEL = register("flint_shovel", new ShovelItem(new FlintToolMaterial(), 0f, -3.0f, new Item.Settings()));
     public static final Item FLINT_PICKAXE = register("flint_pickaxe", new PickaxeItem(new FlintToolMaterial(), 0, -2.8f, new Item.Settings()));
     public static final Item FLINT_AXE = register("flint_axe", new AxeItem(new FlintToolMaterial(), 1f, -3.2f, new Item.Settings()));
-    public static final Item FLINT_HOE = register("flint_hoe", new FlintHoeItem(new FlintToolMaterial(), 0, -3.0f, new Item.Settings()));
+    public static final Item FLINT_HOE = register("flint_hoe", new EarlyStageHoeItem(new FlintToolMaterial(), 0, -3.0f, new Item.Settings()));
 
     public static final Item WOODEN_SHIELD = register("wooden_shield", new ShieldItem(new Item.Settings().maxDamage(69)));
 

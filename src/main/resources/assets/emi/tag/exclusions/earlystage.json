@@ -1,0 +1,6 @@
+{
+    "exclusions": [
+        "c:stripped_logs",
+        "earlystage:usable_crafting_rock_items"
+    ]
+}

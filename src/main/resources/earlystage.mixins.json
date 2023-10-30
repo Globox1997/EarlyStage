@@ -13,11 +13,19 @@
     "RecipeManagerMixin",
     "MobEntityMixin",
     "CampfireBlockMixin",
+    "BlastFurnaceScreenHandlerMixin",
+    "AbstractFurnaceScreenHandlerMixin",
+    "BlastFurnaceBlockEntityMixin",
+    "AbstractFurnaceBlockEntityMixin",
     "compat.FallenLogBlockMixin",
+    "access.AxeItemAccessor",
     "access.BlockLootTableGeneratorAccessor",
-    "access.AxeItemAccessor"
+    "access.AbstractFurnaceBlockEntityAccessor"
   ],
-  "client": [],
+  "client": [
+    "client.BlastFurnaceScreenMixin",
+    "client.ClientRecipeBookMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

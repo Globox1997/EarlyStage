@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:blasting_extra",
+    "category": "misc",
+    "cookingtime": 600,
+    "experience": 0.5,
+    "ingredient": {
+        "item": "minecraft:iron_ingot",
+        "count": 3
+    },
+    "extraingredient": {
+        "item": "minecraft:coal",
+        "count": 1
+    },
+    "result": {
+        "item": "earlystage:steel_ingot",
+        "count": 1
+    }
+}
