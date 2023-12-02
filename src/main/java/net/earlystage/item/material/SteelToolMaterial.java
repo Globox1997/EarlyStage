@@ -37,4 +37,9 @@ public class SteelToolMaterial implements ToolMaterial {
         return Ingredient.ofItems(ItemInit.STEEL_INGOT);
     }
 
+    @Override
+    public String toString() {
+        return "steel";
+    }
+
 }

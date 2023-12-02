@@ -36,4 +36,9 @@ public class FlintToolMaterial implements ToolMaterial {
         return Ingredient.ofItems(Items.FLINT);
     }
 
+    @Override
+    public String toString() {
+        return "flint";
+    }
+
 }
