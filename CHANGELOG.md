@@ -1,10 +1,7 @@
 ### Added:
-- Readded wooden shield
-- Added clay bucket
-- Added brick bucket
-- Added stone shears
-- Added steel gear
-### Fixed:
 - 
+### Fixed:
+- Fixed better third person crash
+- Fixed crafting rock hit 1 config
 ### Changed:
 - 

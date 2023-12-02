@@ -102,11 +102,12 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 if (itemStack.isOf(BlockInit.ROCK.asItem())) {
                     if (!inventory.isEmpty()) {
                         if (!world.isClient()) {
-                            if (((CraftingRockBlockEntity) blockEntity).getCraftHits() - 1 == 0) {
+                            if (((CraftingRockBlockEntity) blockEntity).getCraftHits() - 1 <= 0) {
                                 tryCraftItem(world, player, (CraftingRockBlockEntity) blockEntity);
                                 ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
-                            } else
+                            } else {
                                 ((CraftingRockBlockEntity) blockEntity).decreaseCraftHits(player);
+                            }
                         }
                         world.playSound(player, pos, SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         return ActionResult.success(world.isClient());
@@ -119,15 +120,17 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && itemStack.isIn(TagInit.USABLE_CRAFTING_ROCK_ITEMS)) {
                     if (!world.isClient()) {
                         inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
-                        if (!player.isCreative())
+                        if (!player.isCreative()) {
                             itemStack.decrement(1);
+                        }
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
                     return ActionResult.success(world.isClient());
                 } else if (!inventory.getStack(slot).isEmpty()) {
                     if (!world.isClient()) {
-                        if (!player.isCreative())
+                        if (!player.isCreative()) {
                             player.getInventory().offerOrDrop(inventory.getStack(slot));
+                        }
                         inventory.setStack(slot, new ItemStack(Items.AIR));
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
