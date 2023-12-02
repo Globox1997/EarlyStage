@@ -61,7 +61,8 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
             }
             if (this.fluid == Fluids.EMPTY) {
                 BlockState blockState = world.getBlockState(blockPos);
-                if (blockState.getBlock() instanceof FluidDrainable && blockState.getBlock().getFluidState(blockState).isOf(Fluids.WATER) && blockState.get(FluidBlock.LEVEL) == 0) {
+                if (blockState.getBlock() instanceof FluidDrainable && blockState.getBlock().getFluidState(blockState).isOf(Fluids.WATER) && blockState.contains(FluidBlock.LEVEL)
+                        && blockState.get(FluidBlock.LEVEL) == 0) {
 
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     user.playSound(SoundEvents.ITEM_BUCKET_FILL, SoundCategory.PLAYERS, 1.0f, 1.0f);
