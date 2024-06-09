@@ -12,7 +12,7 @@
     "###"
   ],
   "result": {
-    "item": "earlystage:steel_block"
+    "id": "earlystage:steel_block"
   },
   "show_notification": true
 }

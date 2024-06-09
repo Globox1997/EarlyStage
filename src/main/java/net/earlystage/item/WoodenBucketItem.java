@@ -61,11 +61,11 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
             }
             if (this.fluid == Fluids.EMPTY) {
                 BlockState blockState = world.getBlockState(blockPos);
-                if (blockState.getBlock() instanceof FluidDrainable && blockState.getBlock().getFluidState(blockState).isOf(Fluids.WATER) && blockState.contains(FluidBlock.LEVEL)
+                if (blockState.getBlock() instanceof FluidDrainable && blockState.getFluidState().isOf(Fluids.WATER) && blockState.contains(FluidBlock.LEVEL)
                         && blockState.get(FluidBlock.LEVEL) == 0) {
 
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
-                    user.playSound(SoundEvents.ITEM_BUCKET_FILL, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                    user.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0f, 1.0f);
                     world.emitGameEvent((Entity) user, GameEvent.FLUID_PICKUP, blockPos);
 
                     ItemStack itemStack2 = new ItemStack(ItemInit.WATER_WOODEN_BUCKET, 1);
@@ -116,7 +116,7 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
         boolean bl = blockState.canBucketPlace(this.fluid);
-        boolean bl2 = blockState.isAir() || bl || block instanceof FluidFillable && ((FluidFillable) ((Object) block)).canFillWithFluid(world, pos, blockState, this.fluid);
+        boolean bl2 = blockState.isAir() || bl || block instanceof FluidFillable fluidFillable && fluidFillable.canFillWithFluid(player, world, pos, blockState, this.fluid);
         if (!bl2) {
             return hitResult != null && this.placeFluid(player, world, hitResult.getBlockPos().offset(hitResult.getSide()), null);
         }

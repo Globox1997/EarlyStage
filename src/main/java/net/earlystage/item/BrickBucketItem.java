@@ -119,7 +119,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
         boolean bl = blockState.canBucketPlace(this.fluid);
-        boolean bl2 = blockState.isAir() || bl || block instanceof FluidFillable && ((FluidFillable) ((Object) block)).canFillWithFluid(world, pos, blockState, this.fluid);
+        boolean bl2 = blockState.isAir() || bl || block instanceof FluidFillable fluidFillable && fluidFillable.canFillWithFluid(player, world, pos, blockState, this.fluid);
         if (!bl2) {
             return hitResult != null && this.placeFluid(player, world, hitResult.getBlockPos().offset(hitResult.getSide()), null);
         }

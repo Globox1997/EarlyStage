@@ -3,8 +3,6 @@ package net.earlystage.block;
 import java.util.List;
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.inventory.CraftingRockInventory;
 import net.earlystage.init.BlockInit;
@@ -17,14 +15,16 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -32,10 +32,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +45,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-@SuppressWarnings("deprecation")
 public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
@@ -92,7 +91,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
@@ -110,9 +109,9 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                             }
                         }
                         world.playSound(player, pos, SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                        return ActionResult.success(world.isClient());
+                        return ItemActionResult.success(world.isClient());
                     }
-                    return ActionResult.FAIL;
+                    return ItemActionResult.FAIL;
                 }
                 double xPos = hit.getPos().getX() < 0D ? 1.0D + hit.getPos().getX() % 1 : hit.getPos().getX() % 1;
                 double zPos = hit.getPos().getZ() < 0D ? 1.0D + hit.getPos().getZ() % 1 : hit.getPos().getZ() % 1;
@@ -125,7 +124,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                         }
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
-                    return ActionResult.success(world.isClient());
+                    return ItemActionResult.success(world.isClient());
                 } else if (!inventory.getStack(slot).isEmpty()) {
                     if (!world.isClient()) {
                         if (!player.isCreative()) {
@@ -134,11 +133,11 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                         inventory.setStack(slot, new ItemStack(Items.AIR));
                         ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
-                    return ActionResult.success(world.isClient());
+                    return ItemActionResult.success(world.isClient());
                 }
             }
         }
-        return ActionResult.FAIL;
+        return ItemActionResult.FAIL;
     }
 
     private int getSlot(double x, double z) {
@@ -157,7 +156,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     private void tryCraftItem(World world, PlayerEntity player, CraftingRockBlockEntity blockEntity) {
         if (!world.isClient()) {
             CraftingRockInventory craftingInventory = null;
-            Optional<CraftingRecipe> optional = null;
+            Optional<RecipeEntry<CraftingRecipe>> optional = null;
             for (int i = 0; i < 4; i++) {
                 craftingInventory = new CraftingRockInventory(blockEntity, i);
                 optional = world.getServer().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, craftingInventory, world);
@@ -165,10 +164,10 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                     break;
                 }
             }
-            if (optional != null && optional.isPresent() && (optional.get().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING)
+            if (optional != null && optional.isPresent() && (optional.get().value().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING)
                     || ((ServerPlayerEntity) player).getRecipeBook().contains(optional.get()))) {
                 blockEntity.clear();
-                blockEntity.setStack(4, optional.get().craft(craftingInventory, world.getRegistryManager()));
+                blockEntity.setStack(4, optional.get().value().craft(craftingInventory, world.getRegistryManager()));
             }
         }
     }
@@ -186,7 +185,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
         if (ConfigInit.CONFIG.info_tooltips) {
             tooltip.add(Text.translatable("earlystage.moreinfo.tooltip"));
             if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), 340)) {
@@ -194,6 +193,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 tooltip.add(Text.translatable("block.earlystage.crafting_rock.tooltip"));
             }
         }
+        super.appendTooltip(stack, context, tooltip, options);
     }
 
 }

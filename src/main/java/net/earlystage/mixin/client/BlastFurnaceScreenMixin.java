@@ -18,8 +18,9 @@ import net.minecraft.util.Identifier;
 @Mixin(BlastFurnaceScreen.class)
 public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<BlastFurnaceScreenHandler> {
 
-    public BlastFurnaceScreenMixin(BlastFurnaceScreenHandler handler, AbstractFurnaceRecipeBookScreen recipeBook, PlayerInventory inventory, Text title, Identifier background) {
-        super(handler, recipeBook, inventory, title, background);
+    public BlastFurnaceScreenMixin(BlastFurnaceScreenHandler handler, AbstractFurnaceRecipeBookScreen recipeBook, PlayerInventory inventory, Text title, Identifier background,
+            Identifier litProgressTexture, Identifier burnProgressTexture) {
+        super(handler, recipeBook, inventory, title, background, litProgressTexture, burnProgressTexture);
     }
 
     @Override

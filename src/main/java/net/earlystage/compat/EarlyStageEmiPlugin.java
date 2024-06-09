@@ -12,6 +12,7 @@ import net.earlystage.init.BlockInit;
 import net.earlystage.init.RecipeInit;
 import net.earlystage.init.RenderInit;
 import net.earlystage.misc.ExtraBlastingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.util.Identifier;
@@ -25,8 +26,8 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
     @Override
     public void register(EmiRegistry emiRegistry) {
         RecipeManager manager = emiRegistry.getRecipeManager();
-        for (ExtraBlastingRecipe recipe : manager.listAllOfType(RecipeInit.EXTRA_BLASTING)) {
-            emiRegistry.addRecipe(new ExtraBlastingEmiRecipe(recipe));
+        for (RecipeEntry<ExtraBlastingRecipe> recipe : manager.listAllOfType(RecipeInit.EXTRA_BLASTING)) {
+            emiRegistry.addRecipe(new ExtraBlastingEmiRecipe(recipe.value()));
         }
         emiRegistry.addCategory(CRAFTING_ROCK_CATEGORY);
         emiRegistry.addWorkstation(CRAFTING_ROCK_CATEGORY, CRAFTING_ROCK);
@@ -38,11 +39,11 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
 
     private static final List<ShapedRecipe> getDefaultRockRecipes(RecipeManager manager) {
         List<ShapedRecipe> list = new ArrayList<ShapedRecipe>();
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_axe")).get());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_hoe")).get());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_pickaxe")).get());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_shovel")).get());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_sword")).get());
+        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_axe")).get().value());
+        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_hoe")).get().value());
+        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_pickaxe")).get().value());
+        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_shovel")).get().value());
+        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_sword")).get().value());
         return list;
     }
 

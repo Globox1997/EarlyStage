@@ -1,5 +1,7 @@
 package net.earlystage.mixin;
 
+import java.util.Optional;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,26 +27,26 @@ import net.minecraft.world.World;
 @Mixin(AxeItem.class)
 public abstract class AxeItemMixin extends MiningToolItem {
 
-    public AxeItemMixin(float attackDamage, float attackSpeed, ToolMaterial material, TagKey<Block> effectiveBlocks, Settings settings) {
-        super(attackDamage, attackSpeed, material, effectiveBlocks, settings);
+    public AxeItemMixin(ToolMaterial material, TagKey<Block> effectiveBlocks, Settings settings) {
+        super(material, effectiveBlocks, settings);
     }
 
-    @Inject(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void useOnBlockMixin(ItemUsageContext context, CallbackInfoReturnable<ActionResult> info, World world, BlockPos blockPos, PlayerEntity playerEntity, BlockState blockState) {
-        if (!world.isClient()) {
+    @Inject(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void useOnBlockMixin(ItemUsageContext context, CallbackInfoReturnable<ActionResult> info, World world, BlockPos blockPos, PlayerEntity playerEntity, Optional<BlockState> optional) {
+        if (!world.isClient() && BarkItem.BARK_ITEMS.containsKey(world.getBlockState(blockPos).getBlock())) {
             ItemEntity itemEntity = new ItemEntity(world, context.getHitPos().getX(), context.getHitPos().getY(), context.getHitPos().getZ(),
-                    new ItemStack(BarkItem.BARK_ITEMS.get(blockState.getBlock())));
+                    new ItemStack(BarkItem.BARK_ITEMS.get(world.getBlockState(blockPos).getBlock())));
             itemEntity.setToDefaultPickupDelay();
             world.spawnEntity(itemEntity);
         }
     }
 
     @Override
-    public boolean isSuitableFor(BlockState state) {
+    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
         if (state.isIn(BlockTags.LOGS)) {
             return true;
         }
-        return super.isSuitableFor(state);
+        return super.isCorrectForDrops(stack, state);
     }
 
 }

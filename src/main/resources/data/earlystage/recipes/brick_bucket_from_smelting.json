@@ -6,5 +6,7 @@
     "ingredient": {
         "item": "earlystage:clay_bucket"
     },
-    "result": "earlystage:brick_bucket"
+    "result": {
+        "id": "earlystage:brick_bucket"
+    }
 }

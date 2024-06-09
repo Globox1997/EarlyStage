@@ -20,7 +20,7 @@ public class RecipeManagerMixin {
 
     private static final boolean isEnvironmentZLoaded = FabricLoader.getInstance().isModLoaded("environmentz");
 
-    @Inject(method = "apply", at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap;builder()Lcom/google/common/collect/ImmutableMap$Builder;"))
+    @Inject(method = "apply", at = @At("HEAD"))
     private void applyMixin(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo info) {
         if (!isEnvironmentZLoaded) {
             map.remove(new Identifier("earlystage", "heating_stones_from_rock"));

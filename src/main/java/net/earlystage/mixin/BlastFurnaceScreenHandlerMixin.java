@@ -10,7 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.InputSlotFiller;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
@@ -78,26 +78,22 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
     }
 
     @Override
-    public void fillInputSlots(boolean craftAll, Recipe<?> recipe, ServerPlayerEntity player) {
+    public void fillInputSlots(boolean craftAll, RecipeEntry<?> recipe, ServerPlayerEntity player) {
         new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static class InputSlotFillerExtra extends InputSlotFiller {
 
-        private Recipe<?> recipe = null;
+        private RecipeEntry<?> recipe = null;
 
         public InputSlotFillerExtra(AbstractRecipeScreenHandler handler) {
             super(handler);
         }
 
         @Override
-        public void fillInputSlots(ServerPlayerEntity entity, Recipe recipe, boolean craftAll) {
+        public void fillInputSlots(ServerPlayerEntity entity, RecipeEntry recipe, boolean craftAll) {
             this.recipe = recipe;
-            // Stop filling if not enough material is given (when extra count is set at recipe) - not easy
-            // if (recipe.getType().equals(RecipeInit.EXTRA_BLASTING)) {
-            // return;
-            // }
             super.fillInputSlots(entity, recipe, craftAll);
         }
 
@@ -121,7 +117,7 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
             }
             int requiredCount = 1;
             if (this.recipe != null) {
-                requiredCount = this.recipe.getIngredients().get(slot.getIndex() == 0 ? 0 : 1).getMatchingStacks()[0].getCount();
+                requiredCount = this.recipe.value().getIngredients().get(slot.getIndex() == 0 ? 0 : 1).getMatchingStacks()[0].getCount();
             }
             int oldCount = itemStack.getCount();
             if (oldCount > requiredCount) {

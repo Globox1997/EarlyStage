@@ -47,7 +47,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             if (amount >= 3.0f) {
                 int i = 1 + MathHelper.floor(amount);
                 Hand hand = this.getActiveHand();
-                this.activeItemStack.damage(i, this, player -> player.sendToolBreakStatus(hand));
+                this.activeItemStack.damage(i, this, LivingEntity.getSlotForHand(hand));
                 if (this.activeItemStack.isEmpty()) {
                     if (hand == Hand.MAIN_HAND) {
                         this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -62,8 +62,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
-    @Inject(method = "disableShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;clearActiveItem()V"))
-    private void disableShieldMixin(boolean sprinting, CallbackInfo info) {
+    @Inject(method = "disableShield", at = @At("TAIL"))
+    private void disableShieldMixin(CallbackInfo info) {
         this.getItemCooldownManager().set(ItemInit.WOODEN_SHIELD, 100);
     }
 

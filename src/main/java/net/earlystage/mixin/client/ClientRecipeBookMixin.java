@@ -10,15 +10,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientRecipeBook.class)
 public class ClientRecipeBookMixin {
 
     @Inject(method = "getGroupForRecipe", at = @At(value = "FIELD", target = "Lnet/minecraft/recipe/RecipeType;SMITHING:Lnet/minecraft/recipe/RecipeType;", ordinal = 0), cancellable = true)
-    private static void getGroupForRecipeMixin(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> info) {
-        if (recipe.getType().equals(RecipeInit.EXTRA_BLASTING)) {
+    private static void getGroupForRecipeMixin(RecipeEntry<?> recipe, CallbackInfoReturnable<RecipeBookGroup> info) {
+        if (recipe.value().getType().equals(RecipeInit.EXTRA_BLASTING)) {
             info.setReturnValue(RecipeBookGroup.BLAST_FURNACE_MISC);
         }
     }

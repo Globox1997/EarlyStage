@@ -13,8 +13,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,8 +26,8 @@ public abstract class CampfireBlockMixin extends BlockWithEntity {
         super(settings);
     }
 
-    @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
-    private void onUseMixin(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> info) {
+    @Inject(method = "onUseWithItem", at = @At("HEAD"), cancellable = true)
+    private void onUseWithItemMixin(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ItemActionResult> info) {
         if (!state.get(CampfireBlock.LIT) && player.getStackInHand(hand).isIn(TagInit.BARK_ITEMS)) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(CampfireBlock.LIT, true));
@@ -35,9 +35,9 @@ public abstract class CampfireBlockMixin extends BlockWithEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
                 player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
-                info.setReturnValue(ActionResult.SUCCESS);
+                info.setReturnValue(ItemActionResult.SUCCESS);
             }
-            info.setReturnValue(ActionResult.CONSUME);
+            info.setReturnValue(ItemActionResult.CONSUME);
         }
     }
 

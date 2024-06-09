@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.collection.DefaultedList;
@@ -32,17 +33,17 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         inventory.clear();
-        Inventories.readNbt(nbt, inventory);
+        Inventories.readNbt(nbt, inventory, registryLookup);
         sieveCount = nbt.getInt("SieveCount");
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("SieveCount", sieveCount);
     }
 
@@ -181,7 +182,8 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.createNbt();
+    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
+        return this.createNbt(registryLookup);
     }
+
 }

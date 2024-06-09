@@ -4,8 +4,7 @@ import net.earlystage.block.*;
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
@@ -18,15 +17,15 @@ import net.minecraft.util.Identifier;
 
 public class BlockInit {
 
-    public static final Block ROCK = register("rock", new RockBlock(FabricBlockSettings.create().mapColor(MapColor.STONE_GRAY).breakInstantly()));
-    public static final Block FLINT = register("flint", new FlintBlock(FabricBlockSettings.create().mapColor(MapColor.STONE_GRAY).breakInstantly()));
+    public static final Block ROCK = register("rock", new RockBlock(AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY).breakInstantly()));
+    public static final Block FLINT = register("flint", new FlintBlock(AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY).breakInstantly()));
 
-    public static final Block SIEVE = register("sieve", new SieveBlock(FabricBlockSettings.copy(Blocks.OAK_PLANKS)));
-    public static final Block REDSTONE_SIEVE = register("redstone_sieve", new RedstoneSieveBlock(FabricBlockSettings.copy(Blocks.COBBLESTONE)));
+    public static final Block SIEVE = register("sieve", new SieveBlock(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS)));
+    public static final Block REDSTONE_SIEVE = register("redstone_sieve", new RedstoneSieveBlock(AbstractBlock.Settings.copy(Blocks.COBBLESTONE)));
 
-    public static final Block CRAFTING_ROCK = register("crafting_rock", new CraftingRockBlock(FabricBlockSettings.create().mapColor(MapColor.STONE_GRAY).requiresTool().strength(1.5f, 6.0f)));
+    public static final Block CRAFTING_ROCK = register("crafting_rock", new CraftingRockBlock(AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY).requiresTool().strength(1.5f, 6.0f)));
 
-    public static final Block STEEL_BLOCK = register("steel_block", new Block(FabricBlockSettings.copy(Blocks.IRON_BLOCK)));
+    public static final Block STEEL_BLOCK = register("steel_block", new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
 
     public static BlockEntityType<SieveBlockEntity> SIEVE_ENTITY;
     public static BlockEntityType<CraftingRockBlockEntity> CRAFTING_ROCK_ENTITY;
@@ -42,8 +41,8 @@ public class BlockInit {
     }
 
     public static void init() {
-        SIEVE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", FabricBlockEntityTypeBuilder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
+        SIEVE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", BlockEntityType.Builder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
         CRAFTING_ROCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, "earlystage:crafting_rock_entity",
-                FabricBlockEntityTypeBuilder.create(CraftingRockBlockEntity::new, CRAFTING_ROCK).build(null));
+                BlockEntityType.Builder.create(CraftingRockBlockEntity::new, CRAFTING_ROCK).build(null));
     }
 }

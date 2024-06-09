@@ -1,7 +1,8 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed better third person crash
-- Fixed crafting rock hit 1 config
+- Fixed other logs can be mined by hand
+- Fixed some log breaking compat
+- Fixed bark texture
 ### Changed:
-- 
+- Updated to mc 1.20.6

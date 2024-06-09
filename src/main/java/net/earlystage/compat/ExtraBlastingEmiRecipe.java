@@ -14,16 +14,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ExtraBlastingEmiRecipe implements EmiRecipe {
-    private final Identifier id;
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
     private final int cookTime;
     private final float experience;
 
     public ExtraBlastingEmiRecipe(ExtraBlastingRecipe recipe) {
-        this.id = recipe.getId();
         this.input = List.of(EmiIngredient.of(recipe.getIngredients().get(0)), EmiIngredient.of(recipe.getIngredients().get(1)));
-        this.output = List.of(EmiStack.of(recipe.getOutput(null)));
+        this.output = List.of(EmiStack.of(recipe.getOutput()));
         this.cookTime = recipe.getCookTime();
         this.experience = recipe.getExperience();
     }
@@ -35,7 +33,7 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
 
     @Override
     public Identifier getId() {
-        return id;
+        return null;
     }
 
     @Override

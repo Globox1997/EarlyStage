@@ -22,21 +22,21 @@ public class EventInit {
 
     public static void init() {
         Registries.BLOCK.forEach((block) -> {
-            if (block.getLootTableId().getPath().contains("leaves")) {
-                leavesBlockList.add(block.getLootTableId());
+            if (block.getLootTableKey().getValue().getPath().contains("leaves")) {
+                leavesBlockList.add(block.getLootTableKey().getValue());
             }
         });
         RegistryEntryAddedCallback.event(Registries.BLOCK).register((rawId, id, block) -> {
-            if (block.getLootTableId().getPath().contains("leaves")) {
-                leavesBlockList.add(block.getLootTableId());
+            if (block.getLootTableKey().getValue().getPath().contains("leaves")) {
+                leavesBlockList.add(block.getLootTableKey().getValue());
             }
         });
 
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, supplier, setter) -> {
-            if (leavesBlockList.contains(id) && ConfigInit.CONFIG.extraStickDropChance > 0.0001f) {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
+            if (leavesBlockList.contains(key.getValue()) && ConfigInit.CONFIG.extraStickDropChance > 0.0001f) {
                 LootPool pool = LootPool.builder().with(ItemEntry.builder(Items.STICK).build()).rolls(BinomialLootNumberProvider.create(1, ConfigInit.CONFIG.extraStickDropChance))
                         .conditionally(BlockLootTableGeneratorAccessor.getWithoutSilkTouchNorShears()).build();
-                supplier.pool(pool);
+                tableBuilder.pool(pool);
             }
         });
 

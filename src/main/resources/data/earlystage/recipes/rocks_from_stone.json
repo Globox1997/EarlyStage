@@ -3,6 +3,8 @@
     "ingredient": {
         "item": "minecraft:stone"
     },
-    "result": "earlystage:rock",
-    "count": 4
+    "result": {
+        "id": "earlystage:rock",
+        "count": 4
+    }
 }

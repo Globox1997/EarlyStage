@@ -47,5 +47,7 @@
       "item": "minecraft:chainmail_boots"
     }
   ],
-  "result": "earlystage:steel_nugget"
+  "result": {
+    "id": "earlystage:steel_nugget"
+  }
 }

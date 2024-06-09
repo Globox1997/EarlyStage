@@ -35,5 +35,7 @@
       "item": "earlystage:steel_horse_armor"
     }
   ],
-  "result": "earlystage:steel_nugget"
+  "result": {
+    "id": "earlystage:steel_nugget"
+  }
 }

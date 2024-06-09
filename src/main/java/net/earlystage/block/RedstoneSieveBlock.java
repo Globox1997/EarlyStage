@@ -17,8 +17,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -75,7 +75,7 @@ public class RedstoneSieveBlock extends SieveBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
@@ -89,21 +89,20 @@ public class RedstoneSieveBlock extends SieveBlock {
                         if (!player.isCreative())
                             itemStack.decrement(1);
                     }
-                    return ActionResult.success(world.isClient());
+                    return ItemActionResult.success(world.isClient());
                 }
-                return ActionResult.FAIL;
+                return ItemActionResult.FAIL;
             } else {
                 if (itemStack.isEmpty()) {
                     if (!world.isClient()) {
                         player.setStackInHand(hand, blockStack);
                         inventory.clear();
                     }
-                    return ActionResult.success(world.isClient());
+                    return ItemActionResult.success(world.isClient());
                 }
             }
         }
-        return ActionResult.FAIL;
-
+        return ItemActionResult.FAIL;
     }
 
     @SuppressWarnings("unchecked")

@@ -11,6 +11,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -26,18 +27,18 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         inventory.clear();
-        Inventories.readNbt(nbt, inventory);
+        Inventories.readNbt(nbt, inventory, registryLookup);
         this.craftHits = nbt.getInt("CraftHits");
         this.totalHits = nbt.getInt("TotalHits");
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    public void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("CraftHits", this.craftHits);
         nbt.putInt("TotalHits", this.totalHits);
     }
@@ -131,8 +132,8 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.createNbt();
+    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
+        return this.createNbt(registryLookup);
     }
 
 }
