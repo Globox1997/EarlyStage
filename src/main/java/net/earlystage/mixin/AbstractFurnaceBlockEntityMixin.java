@@ -20,6 +20,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.earlystage.init.RecipeInit;
 import net.earlystage.misc.ExtraBlastingRecipe;
+import net.earlystage.misc.ExtraBlastingRecipeInput;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -54,7 +55,8 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
     @ModifyVariable(method = "tick", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/block/entity/AbstractFurnaceBlockEntity;getMaxCountPerStack()I"))
     private static RecipeEntry<?> tickMixin(RecipeEntry<?> original, World world, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity blockEntity) {
         if (blockEntity.getType().equals(BlockEntityType.BLAST_FURNACE) && !blockEntity.getStack(3).isEmpty()) {
-            RecipeEntry<ExtraBlastingRecipe> extraBlastingRecipe = world.getRecipeManager().getFirstMatch(RecipeInit.EXTRA_BLASTING, blockEntity, world).orElse(null);
+            RecipeEntry<ExtraBlastingRecipe> extraBlastingRecipe = world.getRecipeManager()
+                    .getFirstMatch(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(blockEntity.getStack(0), blockEntity.getStack(3)), world).orElse(null);
             return extraBlastingRecipe;
         }
         return original;
@@ -63,7 +65,8 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
     @Inject(method = "getCookTime", at = @At("HEAD"), cancellable = true)
     private static void getCookTimeMixin(World world, AbstractFurnaceBlockEntity furnace, CallbackInfoReturnable<Integer> info) {
         if (furnace.getType().equals(BlockEntityType.BLAST_FURNACE)) {
-            RecipeEntry<ExtraBlastingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeInit.EXTRA_BLASTING, furnace, world).orElse(null);
+            RecipeEntry<ExtraBlastingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(furnace.getStack(0), furnace.getStack(3)), world)
+                    .orElse(null);
             if (recipe != null) {
                 info.setReturnValue(recipe.value().getCookTime());
             }

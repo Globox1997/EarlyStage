@@ -31,7 +31,7 @@ public class BlockInit {
     public static BlockEntityType<CraftingRockBlockEntity> CRAFTING_ROCK_ENTITY;
 
     private static Block register(String id, Block block) {
-        return register(new Identifier("earlystage", id), block);
+        return register(Identifier.of("earlystage", id), block);
     }
 
     private static Block register(Identifier id, Block block) {

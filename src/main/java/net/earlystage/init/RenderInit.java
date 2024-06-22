@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class RenderInit {
 
-    public static final Identifier GUI_ICON_TEXTURES = new Identifier("earlystage", "textures/gui/blast_furnace_extra_slot.png");
+    public static final Identifier GUI_ICON_TEXTURES = Identifier.of("earlystage", "textures/gui/blast_furnace_extra_slot.png");
 
     public static void init() {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.SIEVE, RenderLayer.getCutout());

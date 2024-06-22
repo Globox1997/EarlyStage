@@ -32,8 +32,7 @@ public class RockEmiRecipe extends EmiShapedRecipe {
 
     @Override
     public Identifier getId() {
-        Identifier newId = new Identifier(super.getId().getPath() + "_rock");
-        return newId;
+        return Identifier.of(super.getId().getPath() + "_rock");
     }
 
 }

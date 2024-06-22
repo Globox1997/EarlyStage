@@ -23,7 +23,7 @@ public class RecipeManagerMixin {
     @Inject(method = "apply", at = @At("HEAD"))
     private void applyMixin(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo info) {
         if (!isEnvironmentZLoaded) {
-            map.remove(new Identifier("earlystage", "heating_stones_from_rock"));
+            map.remove(Identifier.of("earlystage", "heating_stones_from_rock"));
         }
 
     }

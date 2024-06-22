@@ -18,7 +18,6 @@
     "PillarBlockMixin",
     "compat.FallenLogBlockMixin",
     "access.AxeItemAccessor",
-    "access.BlockLootTableGeneratorAccessor",
     "access.AbstractFurnaceBlockEntityAccessor"
   ],
   "client": [

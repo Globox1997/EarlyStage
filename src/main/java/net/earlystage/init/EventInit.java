@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ht.treechop.api.TreeChopEvents;
-import net.earlystage.mixin.access.BlockLootTableGeneratorAccessor;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.condition.MatchToolLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.BinomialLootNumberProvider;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -34,8 +35,9 @@ public class EventInit {
 
         LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
             if (leavesBlockList.contains(key.getValue()) && ConfigInit.CONFIG.extraStickDropChance > 0.0001f) {
+                // Missing Silk Touch check here
                 LootPool pool = LootPool.builder().with(ItemEntry.builder(Items.STICK).build()).rolls(BinomialLootNumberProvider.create(1, ConfigInit.CONFIG.extraStickDropChance))
-                        .conditionally(BlockLootTableGeneratorAccessor.getWithoutSilkTouchNorShears()).build();
+                        .conditionally(MatchToolLootCondition.builder(ItemPredicate.Builder.create().items(Items.SHEARS)).invert()).build();
                 tableBuilder.pool(pool);
             }
         });

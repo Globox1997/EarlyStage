@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.earlystage.init.RecipeInit;
 import net.minecraft.block.Blocks;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -21,7 +20,7 @@ import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class ExtraBlastingRecipe implements Recipe<Inventory> {
+public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
     private final CookingRecipeCategory category;
     private final String group;
     private final Ingredient input;
@@ -50,11 +49,6 @@ public class ExtraBlastingRecipe implements Recipe<Inventory> {
         return RecipeInit.EXTRA_BLASTING_SERIALIZER;
     }
 
-    @Override
-    public boolean matches(Inventory inventory, World world) {
-        return this.input.test(inventory.getStack(0)) && test(inventory.getStack(3), this.extraInput);
-    }
-
     private boolean test(@Nullable ItemStack input, Ingredient ingredient) {
         if (input == null) {
             return false;
@@ -72,11 +66,6 @@ public class ExtraBlastingRecipe implements Recipe<Inventory> {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public ItemStack craft(Inventory inventory, WrapperLookup wrapperLookup) {
-        return this.output.copy();
     }
 
     @Override
@@ -165,6 +154,16 @@ public class ExtraBlastingRecipe implements Recipe<Inventory> {
             buf.writeVarInt(extraBlastingRecipe.cookTime);
         }
 
+    }
+
+    @Override
+    public boolean matches(ExtraBlastingRecipeInput extraBlastingRecipeInput, World world) {
+        return this.input.test(extraBlastingRecipeInput.input()) && test(extraBlastingRecipeInput.extraInput(), this.extraInput);
+    }
+
+    @Override
+    public ItemStack craft(ExtraBlastingRecipeInput extraBlastingRecipeInput, WrapperLookup wrapperLookup) {
+        return this.output.copy();
     }
 
 }

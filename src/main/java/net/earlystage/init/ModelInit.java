@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 public class ModelInit {
 
     public static void init() {
-        ModelPredicateProviderRegistry.register(ItemInit.WOODEN_SHIELD, new Identifier("blocking"),
+        ModelPredicateProviderRegistry.register(ItemInit.WOODEN_SHIELD, Identifier.of("blocking"),
                 (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
     }
 }

@@ -1,5 +1,7 @@
 package net.earlystage.block.inventory;
 
+import java.util.List;
+
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -61,6 +63,11 @@ public class CraftingRockInventory extends CraftingInventory {
     @Override
     public void clear() {
         this.stacks.clear();
+    }
+
+    @Override
+    public List<ItemStack> getHeldStacks() {
+        return List.copyOf(this.stacks);
     }
 
     private int getSlot(int variant, int i) {

@@ -4,9 +4,11 @@ import java.util.function.Predicate;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BiomeTags;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.PlacedFeatures;
 
 public class WorldInit {
 
@@ -15,11 +17,10 @@ public class WorldInit {
 
     public static void init() {
         if (ConfigInit.CONFIG.generateRocks) {
-            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, PlacedFeatures.of("earlystage:rock"));
+            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of("earlystage:rock")));
         }
         if (ConfigInit.CONFIG.generateFlint) {
-            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, PlacedFeatures.of("earlystage:flint"));
+            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of("earlystage:flint")));
         }
     }
-
 }

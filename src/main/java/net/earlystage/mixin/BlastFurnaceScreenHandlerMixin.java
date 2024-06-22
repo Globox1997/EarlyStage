@@ -1,7 +1,5 @@
 package net.earlystage.mixin;
 
-import java.util.Iterator;
-
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -98,39 +96,39 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
         }
 
         @Override
-        public void acceptAlignedInput(Iterator inputs, int slot, int amount, int gridX, int gridY) {
+        public void acceptAlignedInput(Integer integer, int slot, int amount, int gridX, int gridY) {
             if (slot == 1) {
                 slot = 3;
             }
-            super.acceptAlignedInput(inputs, slot, amount, gridX, gridY);
+            super.acceptAlignedInput(integer, slot, amount, gridX, gridY);
         }
 
-        @Override
-        protected void fillInputSlot(Slot slot, ItemStack stack) {
-            int i = this.inventory.indexOf(stack);
-            if (i == -1) {
-                return;
+        protected int fillInputSlot(Slot slot, ItemStack stack, int i) {
+            int k;
+            int j = this.inventory.indexOf(stack);
+            if (j == -1) {
+                return -1;
             }
-            ItemStack itemStack = this.inventory.getStack(i);
-            if (itemStack.isEmpty()) {
-                return;
-            }
+
             int requiredCount = 1;
             if (this.recipe != null) {
                 requiredCount = this.recipe.value().getIngredients().get(slot.getIndex() == 0 ? 0 : 1).getMatchingStacks()[0].getCount();
             }
-            int oldCount = itemStack.getCount();
+            int oldCount = stack.getCount();
             if (oldCount > requiredCount) {
                 this.inventory.removeStack(i, requiredCount);
+                k = i;
             } else {
                 requiredCount = oldCount;
                 this.inventory.removeStack(i);
+                k = this.inventory.getStack(j).getCount();
             }
             if (slot.getStack().isEmpty()) {
-                slot.setStackNoCallbacks(itemStack.copyWithCount(requiredCount));
+                slot.setStackNoCallbacks(stack.copyWithCount(requiredCount));
             } else {
                 slot.getStack().increment(requiredCount);
             }
+            return i - k;
         }
 
     }

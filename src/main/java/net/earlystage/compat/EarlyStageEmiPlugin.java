@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 public class EarlyStageEmiPlugin implements EmiPlugin {
 
     public static final EmiStack CRAFTING_ROCK = EmiStack.of(BlockInit.CRAFTING_ROCK.asItem());
-    public static final EmiRecipeCategory CRAFTING_ROCK_CATEGORY = new EmiRecipeCategory(new Identifier("earlystage", "crafting_rock"), CRAFTING_ROCK,
+    public static final EmiRecipeCategory CRAFTING_ROCK_CATEGORY = new EmiRecipeCategory(Identifier.of("earlystage", "crafting_rock"), CRAFTING_ROCK,
             new EmiTexture(RenderInit.GUI_ICON_TEXTURES, 18, 0, 16, 16));
 
     @Override
@@ -39,11 +39,11 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
 
     private static final List<ShapedRecipe> getDefaultRockRecipes(RecipeManager manager) {
         List<ShapedRecipe> list = new ArrayList<ShapedRecipe>();
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_axe")).get().value());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_hoe")).get().value());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_pickaxe")).get().value());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_shovel")).get().value());
-        list.add((ShapedRecipe) manager.get(new Identifier("earlystage", "flint_sword")).get().value());
+        list.add((ShapedRecipe) manager.get(Identifier.of("earlystage", "flint_axe")).get().value());
+        list.add((ShapedRecipe) manager.get(Identifier.of("earlystage", "flint_hoe")).get().value());
+        list.add((ShapedRecipe) manager.get(Identifier.of("earlystage", "flint_pickaxe")).get().value());
+        list.add((ShapedRecipe) manager.get(Identifier.of("earlystage", "flint_shovel")).get().value());
+        list.add((ShapedRecipe) manager.get(Identifier.of("earlystage", "flint_sword")).get().value());
         return list;
     }
 

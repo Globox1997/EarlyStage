@@ -16,6 +16,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.BlastFurnaceScreenHandler;
@@ -23,7 +24,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
 @Mixin(AbstractFurnaceScreenHandler.class)
-public abstract class AbstractFurnaceScreenHandlerMixin extends AbstractRecipeScreenHandler<Inventory> {
+public abstract class AbstractFurnaceScreenHandlerMixin extends AbstractRecipeScreenHandler<SingleStackRecipeInput, AbstractCookingRecipe> {
 
     @Shadow
     @Mutable
@@ -43,7 +44,6 @@ public abstract class AbstractFurnaceScreenHandlerMixin extends AbstractRecipeSc
         return original;
     }
 
-    // net/minecraft/screen/AbstractFurnaceScreenHandler.addSlot (Lnet/minecraft/screen/slot/Slot;)Lnet/minecraft/screen/slot/Slot;
     @Inject(method = "Lnet/minecraft/screen/AbstractFurnaceScreenHandler;<init>(Lnet/minecraft/screen/ScreenHandlerType;Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/book/RecipeBookCategory;ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/screen/PropertyDelegate;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AbstractFurnaceScreenHandler;addSlot(Lnet/minecraft/screen/slot/Slot;)Lnet/minecraft/screen/slot/Slot;", shift = Shift.AFTER, ordinal = 2))
     private void initTestMixin(CallbackInfo info) {
         if ((Object) this instanceof BlastFurnaceScreenHandler) {

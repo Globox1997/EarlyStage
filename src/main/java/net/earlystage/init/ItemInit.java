@@ -28,7 +28,7 @@ import net.minecraft.util.Identifier;
 public class ItemInit {
 
     // Item Group
-    public static final RegistryKey<ItemGroup> EARLYSTAGE_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier("earlystage", "item_group"));
+    public static final RegistryKey<ItemGroup> EARLYSTAGE_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of("earlystage", "item_group"));
 
     public static final Item STEEL_INGOT = register("steel_ingot", new Item(new Item.Settings()));
     public static final Item STEEL_NUGGET = register("steel_nugget", new Item(new Item.Settings()));
@@ -89,7 +89,7 @@ public class ItemInit {
     public static final Item BAMBOO_BARK = register("bamboo_bark", new BarkItem(new Item.Settings(), Blocks.BAMBOO_BLOCK, null, 100));
 
     private static Item register(String id, Item item) {
-        return register(new Identifier("earlystage", id), item);
+        return register(Identifier.of("earlystage", id), item);
     }
 
     private static Item register(Identifier id, Item item) {

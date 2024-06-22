@@ -15,13 +15,13 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
@@ -96,7 +96,6 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
             Inventory inventory = (Inventory) world.getBlockEntity(pos);
-
             if (Math.abs(hit.getPos().getY() % 1) < 0.505D && Math.abs(hit.getPos().getY() % 1) > 0.495D) {
                 if (itemStack.isOf(BlockInit.ROCK.asItem())) {
                     if (!inventory.isEmpty()) {
@@ -159,7 +158,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             Optional<RecipeEntry<CraftingRecipe>> optional = null;
             for (int i = 0; i < 4; i++) {
                 craftingInventory = new CraftingRockInventory(blockEntity, i);
-                optional = world.getServer().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, craftingInventory, world);
+                optional = world.getServer().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, craftingInventory.createRecipeInput(), world);
                 if (optional.isPresent()) {
                     break;
                 }
@@ -167,7 +166,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             if (optional != null && optional.isPresent() && (optional.get().value().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING)
                     || ((ServerPlayerEntity) player).getRecipeBook().contains(optional.get()))) {
                 blockEntity.clear();
-                blockEntity.setStack(4, optional.get().value().craft(craftingInventory, world.getRegistryManager()));
+                blockEntity.setStack(4, optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()));
             }
         }
     }
