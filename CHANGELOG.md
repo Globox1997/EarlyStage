@@ -1,6 +1,6 @@
 ### Added:
-- 
+- Added stone shears sheep shearing
 ### Fixed:
 -
 ### Changed:
-- Updated to mc 1.21
+- 

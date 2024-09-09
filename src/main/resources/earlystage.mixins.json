@@ -16,6 +16,7 @@
     "BlastFurnaceBlockEntityMixin",
     "AbstractFurnaceBlockEntityMixin",
     "PillarBlockMixin",
+    "SheepEntityMixin",
     "compat.FallenLogBlockMixin",
     "access.AxeItemAccessor",
     "access.AbstractFurnaceBlockEntityAccessor"
