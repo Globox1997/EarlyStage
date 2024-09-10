@@ -52,8 +52,8 @@ public class BarkItem extends Item {
                 && (AxeItemAccessor.getStrippedBlocks().get(logBlock) == block || (woodBlock != null && AxeItemAccessor.getStrippedBlocks().get(woodBlock) == block))) {
             PlayerEntity playerEntity = context.getPlayer();
             ItemStack itemStack = context.getStack();
-            if (playerEntity instanceof ServerPlayerEntity) {
-                Criteria.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) playerEntity, blockPos, itemStack);
+            if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+                Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
             }
             world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
@@ -66,7 +66,7 @@ public class BarkItem extends Item {
                     itemStack.decrement(1);
                 }
             }
-            return ActionResult.success(world.isClient);
+            return ActionResult.success(world.isClient());
         }
         return super.useOnBlock(context);
     }
