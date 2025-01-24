@@ -1,6 +1,6 @@
 ### Added:
-- Added stone shears sheep shearing
+- 
 ### Fixed:
--
+- Fixed polymorph incompat
 ### Changed:
 - 

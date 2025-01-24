@@ -8,9 +8,9 @@ public record ExtraBlastingRecipeInput(ItemStack input, ItemStack extraInput) im
     @Override
     public ItemStack getStackInSlot(int slot) {
         return switch (slot) {
-        case 0 -> this.input;
-        case 1 -> this.extraInput;
-        default -> throw new IllegalArgumentException("Recipe does not contain slot " + slot);
+            case 0 -> this.input;
+            case 1 -> this.extraInput;
+            default -> ItemStack.EMPTY;
         };
     }
 
