@@ -47,6 +47,8 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
     @Mutable
     @Final
     private Object2IntOpenHashMap<Identifier> recipesUsed;
+    @Shadow
+    protected DefaultedList<ItemStack> inventory;
 
     public AbstractFurnaceBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -85,7 +87,7 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
 
     @Inject(method = "setStack", at = @At("TAIL"))
     private void setStackMixin(int slot, ItemStack stack, CallbackInfo info) {
-        if (this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3) {
+        if (this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3 && !stack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(this.inventory.get(slot), stack)) {
             this.cookTimeTotal = getCookTime(this.world, (AbstractFurnaceBlockEntity) (Object) this);
             this.cookTime = 0;
             this.markDirty();
