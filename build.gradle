@@ -39,7 +39,7 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
     // TreeChop
-    modCompileOnly ('maven.modrinth:treechop:0.18.3') {
+	modCompileOnly ('maven.modrinth:treechop:0.19.2') {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 	// Missing Wilds

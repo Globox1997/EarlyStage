@@ -5,7 +5,7 @@ import java.util.List;
 
 import ht.treechop.api.TreeChopEvents;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Items;
@@ -32,8 +32,7 @@ public class EventInit {
                 leavesBlockList.add(block.getLootTableKey().getValue());
             }
         });
-
-        LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (leavesBlockList.contains(key.getValue()) && ConfigInit.CONFIG.extraStickDropChance > 0.0001f) {
                 // Missing Silk Touch check here
                 LootPool pool = LootPool.builder().with(ItemEntry.builder(Items.STICK).build()).rolls(BinomialLootNumberProvider.create(1, ConfigInit.CONFIG.extraStickDropChance))
@@ -43,12 +42,7 @@ public class EventInit {
         });
 
         if (FabricLoader.getInstance().isModLoaded("treechop")) {
-            TreeChopEvents.BEFORE_CHOP.register((world, player, pos, state, chopData) -> {
-                if (player != null && !(player.getMainHandStack().getItem() instanceof AxeItem)) {
-                    return false;
-                }
-                return true;
-            });
+            TreeChopEvents.BEFORE_CHOP.register((world, player, pos, state, chopData) -> player == null || player.getMainHandStack().getItem() instanceof AxeItem);
         }
     }
 
