@@ -6,6 +6,7 @@
   "plugin": "net.earlystage.mixin.EarlyStageMixinPlugin",
   "mixins": [
     "AxeItemMixin",
+    "ItemMixin",
     "ShovelItemMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",

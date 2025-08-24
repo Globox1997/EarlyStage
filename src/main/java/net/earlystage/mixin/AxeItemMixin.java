@@ -1,28 +1,22 @@
 package net.earlystage.mixin;
 
-import java.util.Optional;
-
+import net.earlystage.item.BarkItem;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import net.earlystage.item.BarkItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public abstract class AxeItemMixin extends MiningToolItem {
@@ -39,14 +33,6 @@ public abstract class AxeItemMixin extends MiningToolItem {
             itemEntity.setToDefaultPickupDelay();
             world.spawnEntity(itemEntity);
         }
-    }
-
-    @Override
-    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
-        if (state.isIn(BlockTags.LOGS)) {
-            return true;
-        }
-        return super.isCorrectForDrops(stack, state);
     }
 
 }
