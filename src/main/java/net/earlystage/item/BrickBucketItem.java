@@ -4,7 +4,6 @@ import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
 import net.minecraft.entity.Entity;
@@ -12,11 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.FluidModificationItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,6 +19,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -72,10 +68,14 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.WATER_BRICK_BUCKET);
                     }
-                    world.emitGameEvent((Entity) user, GameEvent.FLUID_PICKUP, blockPos);
+                    world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
                     ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
                     if (!world.isClient()) {
-                        world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                        if (blockState.get(Properties.WATERLOGGED)) {
+                            world.setBlockState(blockPos, blockState.with(Properties.WATERLOGGED, false), Block.NOTIFY_ALL);
+                        }else{
+                            world.setBlockState(blockPos, this.fluid.getDefaultState().getBlockState(), Block.NOTIFY_ALL_AND_REDRAW);
+                        }
                         Criteria.FILLED_BUCKET.trigger((ServerPlayerEntity) user, itemStack2);
                     }
                     return TypedActionResult.success(itemStack3, world.isClient());
@@ -134,7 +134,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
             return true;
         }
         if (block instanceof FluidFillable && this.fluid == Fluids.WATER) {
-            ((FluidFillable) ((Object) block)).tryFillWithFluid(world, pos, blockState, ((FlowableFluid) this.fluid).getStill(false));
+            ((FluidFillable) block).tryFillWithFluid(world, pos, blockState, ((FlowableFluid) this.fluid).getStill(false));
             this.playEmptyingSound(player, world, pos);
             return true;
         }

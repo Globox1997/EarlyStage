@@ -66,12 +66,12 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
 
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     user.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0f, 1.0f);
-                    world.emitGameEvent((Entity) user, GameEvent.FLUID_PICKUP, blockPos);
+                    world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
 
                     ItemStack itemStack2 = new ItemStack(ItemInit.WATER_WOODEN_BUCKET, 1);
                     ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
 
-                    if (!world.isClient) {
+                    if (!world.isClient()) {
                         world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                         Criteria.FILLED_BUCKET.trigger((ServerPlayerEntity) user, itemStack2);
                     }

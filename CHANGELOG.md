@@ -1,7 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed polymorph incompat
-- Fixed resetting cook time
+- Fixed brick bucket deleting waterlogged block
 ### Changed:
 - 

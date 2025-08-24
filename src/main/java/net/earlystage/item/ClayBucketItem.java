@@ -52,7 +52,7 @@ public class ClayBucketItem extends Item {
                 world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 world.playSound(user, blockPos, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
-                world.emitGameEvent((Entity) user, GameEvent.FLUID_PICKUP, blockPos);
+                world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
                 ItemStack itemStack2 = new ItemStack(ItemInit.LAVA_BRICK_BUCKET);
                 ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
                 if (!world.isClient()) {
