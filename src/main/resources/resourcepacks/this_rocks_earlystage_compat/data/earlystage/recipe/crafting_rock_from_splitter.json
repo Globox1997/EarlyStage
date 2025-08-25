@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "dd"
+    ],
+    "key": {
+        "d": {
+            "item": "rocks:cobblestone_splitter"
+        }
+    },
+    "result": {
+        "id": "earlystage:crafting_rock"
+    }
+}

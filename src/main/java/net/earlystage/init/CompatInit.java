@@ -303,5 +303,9 @@ public class CompatInit {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("bigglobe_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
                     ResourcePackActivationType.DEFAULT_ENABLED);
         }
+        if (FabricLoader.getInstance().isModLoaded("rocks")) {
+            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("this_rocks_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    ResourcePackActivationType.DEFAULT_ENABLED);
+        }
     }
 }
