@@ -7,5 +7,6 @@
 - Added bigglobe rock compat
 ### Fixed:
 - Fixed brick bucket deleting waterlogged block
+- Fixed rock z-fighting with snow
 ### Changed:
 - 
