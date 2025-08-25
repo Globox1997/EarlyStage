@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "earlystage:aspen_bark",
+    "earlystage:cedar_bark",
+    "earlystage:coconut_bark",
+    "earlystage:cypress_bark",
+    "earlystage:fir_bark",
+    "earlystage:ghaf_bark",
+    "earlystage:joshua_bark",
+    "earlystage:larch_bark",
+    "earlystage:mahogany_bark",
+    "earlystage:maple_bark",
+    "earlystage:olive_bark",
+    "earlystage:palo_bark",
+    "earlystage:redwood_bark",
+    "earlystage:saxaul_bark",
+    "earlystage:sugi_bark",
+    "earlystage:willow_bark",
+    "earlystage:wisteria_bark"
+  ]
+}

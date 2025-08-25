@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "earlystage:baobab_bark",
+    "earlystage:blackwood_bark",
+    "earlystage:brimwood_bark",
+    "earlystage:cobalt_bark",
+    "earlystage:dead_bark",
+    "earlystage:eucalyptus_bark",
+    "earlystage:kapok_bark",
+    "earlystage:magnolia_bark",
+    "earlystage:mauve_bark",
+    "earlystage:palm_bark",
+    "earlystage:pine_bark",
+    "earlystage:small_oak_bark",
+    "earlystage:socotra_bark",
+    "earlystage:ru_cypress_bark",
+    "earlystage:ru_joshua_bark",
+    "earlystage:ru_larch_bark",
+    "earlystage:ru_maple_bark",
+    "earlystage:ru_redwood_bark",
+    "earlystage:ru_willow_bark",
+    "earlystage:blue_bioshroom_bark",
+    "earlystage:green_bioshroom_bark",
+    "earlystage:pink_bioshroom_bark",
+    "earlystage:yellow_bioshroom_bark"
+  ]
+}

@@ -77,7 +77,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return (BlockState) state.with(FACING, rotation.rotate(state.get(FACING)));
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
         if (blockEntity != null) {
             Inventory inventory = (Inventory) world.getBlockEntity(pos);
             if (Math.abs(hit.getPos().getY() % 1) < 0.505D && Math.abs(hit.getPos().getY() % 1) > 0.495D) {
-                if (itemStack.isOf(BlockInit.ROCK.asItem())) {
+                if (itemStack.isIn(TagInit.ROCK_ITEMS)) {
                     if (!inventory.isEmpty()) {
                         if (!world.isClient()) {
                             if (((CraftingRockBlockEntity) blockEntity).getCraftHits() - 1 <= 0) {

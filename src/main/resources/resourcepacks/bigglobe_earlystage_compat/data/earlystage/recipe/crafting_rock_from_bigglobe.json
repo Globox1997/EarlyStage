@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "dd"
+    ],
+    "key": {
+        "d": {
+            "item": "bigglobe:rock"
+        }
+    },
+    "result": {
+        "id": "earlystage:crafting_rock"
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "earlystage:rune_bark",
+    "earlystage:silver_birch_bark",
+    "earlystage:iron_wood_bark"
+  ]
+}

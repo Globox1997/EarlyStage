@@ -27,6 +27,7 @@ import net.minecraft.world.event.GameEvent;
 public class BarkItem extends Item {
 
     public static final Map<Block, Item> BARK_ITEMS = new HashMap<Block, Item>();
+    public static final Map<Block, Block> STRIPPED_LOG_COMPAT = new HashMap<Block, Block>();
     private final Block logBlock;
     @Nullable
     private final Block woodBlock;
@@ -48,25 +49,30 @@ public class BarkItem extends Item {
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        if (blockState.isIn(BlockTags.LOGS) && AxeItemAccessor.getStrippedBlocks().containsValue(block)
-                && (AxeItemAccessor.getStrippedBlocks().get(logBlock) == block || (woodBlock != null && AxeItemAccessor.getStrippedBlocks().get(woodBlock) == block))) {
-            PlayerEntity playerEntity = context.getPlayer();
-            ItemStack itemStack = context.getStack();
-            if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
-            }
-            world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
-
-            if (!world.isClient()) {
-                BlockState blockState2 = AxeItemAccessor.getStrippedBlocks().get(logBlock) == block ? logBlock.getDefaultState().with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS))
-                        : woodBlock.getDefaultState();
-                world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(playerEntity, blockState2));
-                if (playerEntity != null && !playerEntity.isCreative()) {
-                    itemStack.decrement(1);
+        if (blockState.isIn(BlockTags.LOGS)) {
+            if ((AxeItemAccessor.getStrippedBlocks().containsValue(block)
+                    && (AxeItemAccessor.getStrippedBlocks().get(logBlock) == block || (woodBlock != null && AxeItemAccessor.getStrippedBlocks().get(woodBlock) == block))) ||
+                    (STRIPPED_LOG_COMPAT.containsValue(block)
+                            && (STRIPPED_LOG_COMPAT.get(logBlock) == block || (woodBlock != null && STRIPPED_LOG_COMPAT.get(woodBlock) == block)))) {
+                PlayerEntity playerEntity = context.getPlayer();
+                ItemStack itemStack = context.getStack();
+                if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+                    Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
                 }
+                world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
+
+                if (!world.isClient()) {
+                    BlockState blockState2 = AxeItemAccessor.getStrippedBlocks().get(logBlock) == block ? logBlock.getDefaultState().with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS))
+                            : woodBlock.getDefaultState();
+                    world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(playerEntity, blockState2));
+                    if (playerEntity != null && !playerEntity.isCreative()) {
+                        itemStack.decrement(1);
+                    }
+                }
+                return ActionResult.success(world.isClient());
             }
-            return ActionResult.success(world.isClient());
+
         }
         return super.useOnBlock(context);
     }

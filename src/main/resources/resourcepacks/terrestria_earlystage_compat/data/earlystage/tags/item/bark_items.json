@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "earlystage:hemlock_bark",
+    "earlystage:yucca_palm_bark",
+    "earlystage:sakura_bark",
+    "earlystage:rubber_bark",
+    "earlystage:rainbow_eucalyptus_bark",
+    "earlystage:japanese_maple_bark",
+    "earlystage:te_cypress_bark",
+    "earlystage:te_willow_bark",
+    "earlystage:te_redwood_bark"
+  ]
+}

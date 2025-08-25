@@ -6,6 +6,7 @@ import java.util.List;
 import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.*;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.util.Identifier;
 
 public class EarlyStageMain implements ModInitializer {
 
@@ -16,11 +17,16 @@ public class EarlyStageMain implements ModInitializer {
         ConfigInit.init();
         BlockInit.init();
         ItemInit.init();
+        CompatInit.init();
         TagInit.init();
         EventInit.init();
         JsonReaderInit.init();
         WorldInit.init();
         RecipeInit.init();
+    }
+
+    public static Identifier identifierOf(String name) {
+        return Identifier.of("earlystage", name);
     }
 
 }

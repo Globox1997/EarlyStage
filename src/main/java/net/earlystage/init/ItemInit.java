@@ -88,7 +88,7 @@ public class ItemInit {
     public static final Item MANGROVE_BARK = register("mangrove_bark", new BarkItem(new Item.Settings(), Blocks.MANGROVE_LOG, Blocks.MANGROVE_WOOD, 200));
     public static final Item BAMBOO_BARK = register("bamboo_bark", new BarkItem(new Item.Settings(), Blocks.BAMBOO_BLOCK, null, 100));
 
-    private static Item register(String id, Item item) {
+    public static Item register(String id, Item item) {
         return register(Identifier.of("earlystage", id), item);
     }
 
