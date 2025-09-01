@@ -1,6 +1,15 @@
 {
   "replace": false,
   "values": [
-    "rocks:cobblestone_splitter"
+    "rocks:cobblestone_splitter",
+    "rocks:andesite_splitter",
+    "rocks:granite_splitter",
+    "rocks:sandstone_splitter",
+    "rocks:diorite_splitter",
+    "rocks:red_sandstone_splitter",
+    "rocks:netherrack_splitter",
+    "rocks:soul_soil_splitter",
+    "rocks:end_stone_splitter",
+    "rocks:ice_splitter"
   ]
 }
