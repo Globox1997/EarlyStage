@@ -1,7 +1,5 @@
 package net.earlystage.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -11,19 +9,16 @@ import net.minecraft.recipe.InputSlotFiller;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-import net.minecraft.screen.BlastFurnaceScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BlastFurnaceScreenHandler.class)
 public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScreenHandler {
 
     public BlastFurnaceScreenHandlerMixin(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory,
-            Inventory inventory, PropertyDelegate propertyDelegate) {
+                                          Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, recipeType, category, syncId, playerInventory, inventory, propertyDelegate);
     }
 
@@ -42,8 +37,8 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
                 slot2.onQuickTransfer(itemStack2, itemStack);
             } else if (slot == 1 || slot == 0 || slot == 3 ? !this.insertItem(itemStack2, 4, 40, false)
                     : (this.isSmeltable(itemStack2) ? !this.insertItem(itemStack2, 0, 1, false)
-                            : (this.isFuel(itemStack2) ? !this.insertItem(itemStack2, 1, 2, false)
-                                    : (slot >= 4 && slot < 31 ? !this.insertItem(itemStack2, 31, 40, false) : slot >= 31 && slot < 40 && !this.insertItem(itemStack2, 4, 31, false))))) {
+                    : (this.isFuel(itemStack2) ? !this.insertItem(itemStack2, 1, 2, false)
+                    : (slot >= 4 && slot < 31 ? !this.insertItem(itemStack2, 31, 40, false) : slot >= 31 && slot < 40 && !this.insertItem(itemStack2, 4, 31, false))))) {
                 return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
@@ -80,7 +75,7 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
         new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static class InputSlotFillerExtra extends InputSlotFiller {
 
         private RecipeEntry<?> recipe = null;
