@@ -5,12 +5,9 @@ import net.earlystage.item.BarkItem;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.hibiscus.naturespirit.registration.NSWoods;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.oblivion.init.BlockInit;
-import net.regions_unexplored.block.RuBlocks;
 
 public class CompatInit {
 
@@ -80,186 +77,226 @@ public class CompatInit {
         if (FabricLoader.getInstance().isModLoaded("oblivion")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("oblivion_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
                     ResourcePackActivationType.DEFAULT_ENABLED);
-            // Rune
-            RUNE_BARK = ItemInit.register("rune_bark", new BarkItem(new Item.Settings(), BlockInit.RUNE_WOOD_LOG, BlockInit.RUNE_WOOD, 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.RUNE_WOOD_LOG, BlockInit.STRIPPED_RUNE_WOOD_LOG);
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.RUNE_WOOD, BlockInit.STRIPPED_RUNE_WOOD);
+            // Rune Wood
+            RUNE_BARK = ItemInit.register("rune_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("oblivion:rune_wood_log")), Registries.BLOCK.get(Identifier.of("oblivion:rune_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:rune_wood_log")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_rune_wood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:rune_wood")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_rune_wood")));
+
             // Silver Birch
-            SILVER_BIRCH_BARK = ItemInit.register("silver_birch_bark", new BarkItem(new Item.Settings(), BlockInit.SILVER_BIRCH_LOG, BlockInit.SILVER_BIRCH, 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.SILVER_BIRCH_LOG, BlockInit.STRIPPED_SILVER_BIRCH_LOG);
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.SILVER_BIRCH, BlockInit.STRIPPED_SILVER_BIRCH);
-            // Iron
-            IRON_WOOD_BARK = ItemInit.register("iron_wood_bark", new BarkItem(new Item.Settings(), BlockInit.IRON_WOOD_LOG, BlockInit.IRON_WOOD, 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.IRON_WOOD_LOG, BlockInit.STRIPPED_IRON_WOOD_LOG);
-            BarkItem.STRIPPED_LOG_COMPAT.put(BlockInit.IRON_WOOD, BlockInit.STRIPPED_IRON_WOOD);
+            SILVER_BIRCH_BARK = ItemInit.register("silver_birch_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("oblivion:silver_birch_log")), Registries.BLOCK.get(Identifier.of("oblivion:silver_birch")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:silver_birch_log")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_silver_birch_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:silver_birch")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_silver_birch")));
+
+            // Iron Wood
+            IRON_WOOD_BARK = ItemInit.register("iron_wood_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("oblivion:iron_wood_log")), Registries.BLOCK.get(Identifier.of("oblivion:iron_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:iron_wood_log")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_iron_wood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("oblivion:iron_wood")), Registries.BLOCK.get(Identifier.of("oblivion:stripped_iron_wood")));
         }
         if (FabricLoader.getInstance().isModLoaded("natures_spirit")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("natures_spirit_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
                     ResourcePackActivationType.DEFAULT_ENABLED);
             // Aspen
-            ASPEN_BARK = ItemInit.register("aspen_bark", new BarkItem(new Item.Settings(), NSWoods.ASPEN.getLog(), NSWoods.ASPEN.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.ASPEN.getLog(), NSWoods.ASPEN.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.ASPEN.getWood(), NSWoods.ASPEN.getStrippedWood());
+            ASPEN_BARK = ItemInit.register("aspen_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:aspen_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:aspen_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:aspen_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_aspen_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:aspen_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_aspen_wood")));
+
             // Cedar
-            CEDAR_BARK = ItemInit.register("cedar_bark", new BarkItem(new Item.Settings(), NSWoods.CEDAR.getLog(), NSWoods.CEDAR.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.CEDAR.getLog(), NSWoods.CEDAR.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.CEDAR.getWood(), NSWoods.CEDAR.getStrippedWood());
+            CEDAR_BARK = ItemInit.register("cedar_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:cedar_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:cedar_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:cedar_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_cedar_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:cedar_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_cedar_wood")));
+
             // Coconut
-            COCONUT_BARK = ItemInit.register("coconut_bark", new BarkItem(new Item.Settings(), NSWoods.COCONUT.getLog(), NSWoods.COCONUT.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.COCONUT.getLog(), NSWoods.COCONUT.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.COCONUT.getWood(), NSWoods.COCONUT.getStrippedWood());
+            COCONUT_BARK = ItemInit.register("coconut_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:coconut_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:coconut_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:coconut_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_coconut_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:coconut_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_coconut_wood")));
+
             // Cypress
-            CYPRESS_BARK = ItemInit.register("cypress_bark", new BarkItem(new Item.Settings(), NSWoods.CYPRESS.getLog(), NSWoods.CYPRESS.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.CYPRESS.getLog(), NSWoods.CYPRESS.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.CYPRESS.getWood(), NSWoods.CYPRESS.getStrippedWood());
+            CYPRESS_BARK = ItemInit.register("cypress_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:cypress_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:cypress_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:cypress_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_cypress_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:cypress_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_cypress_wood")));
+
             // Fir
-            FIR_BARK = ItemInit.register("fir_bark", new BarkItem(new Item.Settings(), NSWoods.FIR.getLog(), NSWoods.FIR.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.FIR.getLog(), NSWoods.FIR.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.FIR.getWood(), NSWoods.FIR.getStrippedWood());
+            FIR_BARK = ItemInit.register("fir_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:fir_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:fir_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:fir_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_fir_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:fir_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_fir_wood")));
+
             // Ghaf
-            GHAF_BARK = ItemInit.register("ghaf_bark", new BarkItem(new Item.Settings(), NSWoods.GHAF.getLog(), NSWoods.GHAF.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.GHAF.getLog(), NSWoods.GHAF.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.GHAF.getWood(), NSWoods.GHAF.getStrippedWood());
+            GHAF_BARK = ItemInit.register("ghaf_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:ghaf_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:ghaf_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:ghaf_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_ghaf_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:ghaf_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_ghaf_wood")));
+
             // Joshua
-            JOSHUA_BARK = ItemInit.register("joshua_bark", new BarkItem(new Item.Settings(), NSWoods.JOSHUA.getLog(), NSWoods.JOSHUA.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.JOSHUA.getLog(), NSWoods.JOSHUA.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.JOSHUA.getWood(), NSWoods.JOSHUA.getStrippedWood());
+            JOSHUA_BARK = ItemInit.register("joshua_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:joshua_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:joshua_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:joshua_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_joshua_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:joshua_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_joshua_wood")));
+
             // Larch
-            LARCH_BARK = ItemInit.register("larch_bark", new BarkItem(new Item.Settings(), NSWoods.LARCH.getLog(), NSWoods.LARCH.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.LARCH.getLog(), NSWoods.LARCH.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.LARCH.getWood(), NSWoods.LARCH.getStrippedWood());
+            LARCH_BARK = ItemInit.register("larch_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:larch_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:larch_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:larch_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_larch_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:larch_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_larch_wood")));
+
             // Mahogany
-            MAHOGANY_BARK = ItemInit.register("mahogany_bark", new BarkItem(new Item.Settings(), NSWoods.MAHOGANY.getLog(), NSWoods.MAHOGANY.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.MAHOGANY.getLog(), NSWoods.MAHOGANY.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.MAHOGANY.getWood(), NSWoods.MAHOGANY.getStrippedWood());
+            MAHOGANY_BARK = ItemInit.register("mahogany_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:mahogany_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:mahogany_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:mahogany_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_mahogany_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:mahogany_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_mahogany_wood")));
+
             // Maple
-            MAPLE_BARK = ItemInit.register("maple_bark", new BarkItem(new Item.Settings(), NSWoods.MAPLE.getLog(), NSWoods.MAPLE.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.MAPLE.getLog(), NSWoods.MAPLE.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.MAPLE.getWood(), NSWoods.MAPLE.getStrippedWood());
+            MAPLE_BARK = ItemInit.register("maple_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:maple_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:maple_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:maple_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_maple_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:maple_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_maple_wood")));
+
             // Olive
-            OLIVE_BARK = ItemInit.register("olive_bark", new BarkItem(new Item.Settings(), NSWoods.OLIVE.getLog(), NSWoods.OLIVE.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.OLIVE.getLog(), NSWoods.OLIVE.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.OLIVE.getWood(), NSWoods.OLIVE.getStrippedWood());
-            // Palo
-            PALO_BARK = ItemInit.register("palo_bark", new BarkItem(new Item.Settings(), NSWoods.PALO_VERDE.getLog(), NSWoods.PALO_VERDE.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.PALO_VERDE.getLog(), NSWoods.PALO_VERDE.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.PALO_VERDE.getWood(), NSWoods.PALO_VERDE.getStrippedWood());
+            OLIVE_BARK = ItemInit.register("olive_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:olive_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:olive_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:olive_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_olive_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:olive_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_olive_wood")));
+
+            // Palo Verde
+            PALO_BARK = ItemInit.register("palo_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:palo_verde_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:palo_verde_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:palo_verde_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_palo_verde_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:palo_verde_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_palo_verde_wood")));
+
             // Redwood
-            REDWOOD_BARK = ItemInit.register("redwood_bark", new BarkItem(new Item.Settings(), NSWoods.REDWOOD.getLog(), NSWoods.REDWOOD.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.REDWOOD.getLog(), NSWoods.REDWOOD.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.REDWOOD.getWood(), NSWoods.REDWOOD.getStrippedWood());
+            REDWOOD_BARK = ItemInit.register("redwood_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:redwood_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:redwood_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:redwood_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_redwood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:redwood_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_redwood_wood")));
+
             // Saxaul
-            SAXAUL_BARK = ItemInit.register("saxaul_bark", new BarkItem(new Item.Settings(), NSWoods.SAXAUL.getLog(), NSWoods.SAXAUL.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.SAXAUL.getLog(), NSWoods.SAXAUL.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.SAXAUL.getWood(), NSWoods.SAXAUL.getStrippedWood());
+            SAXAUL_BARK = ItemInit.register("saxaul_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:saxaul_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:saxaul_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:saxaul_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_saxaul_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:saxaul_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_saxaul_wood")));
+
             // Sugi
-            SUGI_BARK = ItemInit.register("sugi_bark", new BarkItem(new Item.Settings(), NSWoods.SUGI.getLog(), NSWoods.SUGI.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.SUGI.getLog(), NSWoods.SUGI.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.SUGI.getWood(), NSWoods.SUGI.getStrippedWood());
+            SUGI_BARK = ItemInit.register("sugi_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:sugi_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:sugi_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:sugi_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_sugi_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:sugi_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_sugi_wood")));
+
             // Willow
-            WILLOW_BARK = ItemInit.register("willow_bark", new BarkItem(new Item.Settings(), NSWoods.WILLOW.getLog(), NSWoods.WILLOW.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.WILLOW.getLog(), NSWoods.WILLOW.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.WILLOW.getWood(), NSWoods.WILLOW.getStrippedWood());
+            WILLOW_BARK = ItemInit.register("willow_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:willow_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:willow_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:willow_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_willow_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:willow_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_willow_wood")));
+
             // Wisteria
-            WISTERIA_BARK = ItemInit.register("wisteria_bark", new BarkItem(new Item.Settings(), NSWoods.WISTERIA.getLog(), NSWoods.WISTERIA.getWood(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.WISTERIA.getLog(), NSWoods.WISTERIA.getStrippedLog());
-            BarkItem.STRIPPED_LOG_COMPAT.put(NSWoods.WISTERIA.getWood(), NSWoods.WISTERIA.getStrippedWood());
+            WISTERIA_BARK = ItemInit.register("wisteria_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("natures_spirit:wisteria_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:wisteria_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:wisteria_log")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_wisteria_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("natures_spirit:wisteria_wood")), Registries.BLOCK.get(Identifier.of("natures_spirit:stripped_wisteria_wood")));
         }
         if (FabricLoader.getInstance().isModLoaded("regions_unexplored")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("regions_unexplored_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
                     ResourcePackActivationType.DEFAULT_ENABLED);
+
             // Baobab
-            BAOBAB_BARK = ItemInit.register("baobab_bark", new BarkItem(new Item.Settings(), RuBlocks.BAOBAB_LOG.get(), RuBlocks.BAOBAB_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BAOBAB_LOG.get(), RuBlocks.STRIPPED_BAOBAB_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BAOBAB_WOOD.get(), RuBlocks.STRIPPED_BAOBAB_WOOD.get());
+            BAOBAB_BARK = ItemInit.register("baobab_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:baobab_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:baobab_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:baobab_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_baobab_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:baobab_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_baobab_wood")));
+
             // Blackwood
-            BLACKWOOD_BARK = ItemInit.register("blackwood_bark", new BarkItem(new Item.Settings(), RuBlocks.BLACKWOOD_LOG.get(), RuBlocks.BLACKWOOD_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BLACKWOOD_LOG.get(), RuBlocks.STRIPPED_BLACKWOOD_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BLACKWOOD_WOOD.get(), RuBlocks.STRIPPED_BLACKWOOD_WOOD.get());
+            BLACKWOOD_BARK = ItemInit.register("blackwood_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:blackwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:blackwood_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:blackwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_blackwood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:blackwood_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_blackwood_wood")));
+
             // Brimwood
-            BRIMWOOD_BARK = ItemInit.register("brimwood_bark", new BarkItem(new Item.Settings(), RuBlocks.BRIMWOOD_LOG.get(), RuBlocks.BRIMWOOD_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BRIMWOOD_LOG.get(), RuBlocks.STRIPPED_BRIMWOOD_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BRIMWOOD_WOOD.get(), RuBlocks.STRIPPED_BRIMWOOD_WOOD.get());
+            BRIMWOOD_BARK = ItemInit.register("brimwood_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:brimwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:brimwood_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:brimwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_brimwood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:brimwood_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_brimwood_wood")));
+
             // Cobalt
-            COBALT_BARK = ItemInit.register("cobalt_bark", new BarkItem(new Item.Settings(), RuBlocks.COBALT_LOG.get(), RuBlocks.COBALT_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.COBALT_LOG.get(), RuBlocks.STRIPPED_COBALT_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.COBALT_WOOD.get(), RuBlocks.STRIPPED_COBALT_WOOD.get());
+            COBALT_BARK = ItemInit.register("cobalt_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:cobalt_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:cobalt_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:cobalt_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_cobalt_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:cobalt_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_cobalt_wood")));
+
             // Dead
-            DEAD_BARK = ItemInit.register("dead_bark", new BarkItem(new Item.Settings(), RuBlocks.DEAD_LOG.get(), RuBlocks.DEAD_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.DEAD_LOG.get(), RuBlocks.STRIPPED_DEAD_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.DEAD_WOOD.get(), RuBlocks.STRIPPED_DEAD_WOOD.get());
+            DEAD_BARK = ItemInit.register("dead_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:dead_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:dead_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:dead_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_dead_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:dead_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_dead_wood")));
+
             // Eucalyptus
-            EUCALYPTUS_BARK = ItemInit.register("eucalyptus_bark", new BarkItem(new Item.Settings(), RuBlocks.EUCALYPTUS_LOG.get(), RuBlocks.EUCALYPTUS_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.EUCALYPTUS_LOG.get(), RuBlocks.STRIPPED_EUCALYPTUS_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.EUCALYPTUS_WOOD.get(), RuBlocks.STRIPPED_EUCALYPTUS_WOOD.get());
+            EUCALYPTUS_BARK = ItemInit.register("eucalyptus_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:eucalyptus_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:eucalyptus_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:eucalyptus_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_eucalyptus_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:eucalyptus_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_eucalyptus_wood")));
+
             // Kapok
-            KAPOK_BARK = ItemInit.register("kapok_bark", new BarkItem(new Item.Settings(), RuBlocks.KAPOK_LOG.get(), RuBlocks.KAPOK_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.KAPOK_LOG.get(), RuBlocks.STRIPPED_KAPOK_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.KAPOK_WOOD.get(), RuBlocks.STRIPPED_KAPOK_WOOD.get());
+            KAPOK_BARK = ItemInit.register("kapok_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:kapok_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:kapok_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:kapok_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_kapok_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:kapok_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_kapok_wood")));
+
             // Magnolia
-            MAGNOLIA_BARK = ItemInit.register("magnolia_bark", new BarkItem(new Item.Settings(), RuBlocks.MAGNOLIA_LOG.get(), RuBlocks.MAGNOLIA_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAGNOLIA_LOG.get(), RuBlocks.STRIPPED_MAGNOLIA_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAGNOLIA_WOOD.get(), RuBlocks.STRIPPED_MAGNOLIA_WOOD.get());
+            MAGNOLIA_BARK = ItemInit.register("magnolia_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:magnolia_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:magnolia_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:magnolia_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_magnolia_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:magnolia_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_magnolia_wood")));
+
             // Mauve
-            MAUVE_BARK = ItemInit.register("mauve_bark", new BarkItem(new Item.Settings(), RuBlocks.MAUVE_LOG.get(), RuBlocks.MAUVE_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAUVE_LOG.get(), RuBlocks.STRIPPED_MAUVE_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAUVE_WOOD.get(), RuBlocks.STRIPPED_MAUVE_WOOD.get());
+            MAUVE_BARK = ItemInit.register("mauve_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:mauve_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:mauve_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:mauve_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_mauve_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:mauve_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_mauve_wood")));
+
             // Palm
-            PALM_BARK = ItemInit.register("palm_bark", new BarkItem(new Item.Settings(), RuBlocks.PALM_LOG.get(), RuBlocks.PALM_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PALM_LOG.get(), RuBlocks.STRIPPED_PALM_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PALM_WOOD.get(), RuBlocks.STRIPPED_PALM_WOOD.get());
+            PALM_BARK = ItemInit.register("palm_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:palm_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:palm_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:palm_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_palm_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:palm_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_palm_wood")));
+
             // Pine
-            PINE_BARK = ItemInit.register("pine_bark", new BarkItem(new Item.Settings(), RuBlocks.PINE_LOG.get(), RuBlocks.PINE_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PINE_LOG.get(), RuBlocks.STRIPPED_PINE_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PINE_WOOD.get(), RuBlocks.STRIPPED_PINE_WOOD.get());
+            PINE_BARK = ItemInit.register("pine_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:pine_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:pine_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:pine_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_pine_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:pine_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_pine_wood")));
+
             // Small Oak
-            SMALL_OAK_BARK = ItemInit.register("small_oak_bark", new BarkItem(new Item.Settings(), RuBlocks.SMALL_OAK_LOG.get(), null, 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.SMALL_OAK_LOG.get(), RuBlocks.STRIPPED_SMALL_OAK_LOG.get());
+            SMALL_OAK_BARK = ItemInit.register("small_oak_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:small_oak_log")), null, 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:small_oak_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_small_oak_log")));
+
             // Socotra
-            SOCOTRA_BARK = ItemInit.register("socotra_bark", new BarkItem(new Item.Settings(), RuBlocks.SOCOTRA_LOG.get(), RuBlocks.SOCOTRA_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.SOCOTRA_LOG.get(), RuBlocks.STRIPPED_SOCOTRA_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.SOCOTRA_WOOD.get(), RuBlocks.STRIPPED_SOCOTRA_WOOD.get());
+            SOCOTRA_BARK = ItemInit.register("socotra_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:socotra_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:socotra_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:socotra_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_socotra_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:socotra_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_socotra_wood")));
+
             // Cypress
-            RU_CYPRESS_BARK = ItemInit.register("ru_cypress_bark", new BarkItem(new Item.Settings(), RuBlocks.CYPRESS_LOG.get(), RuBlocks.CYPRESS_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.CYPRESS_LOG.get(), RuBlocks.STRIPPED_CYPRESS_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.CYPRESS_WOOD.get(), RuBlocks.STRIPPED_CYPRESS_WOOD.get());
+            RU_CYPRESS_BARK = ItemInit.register("ru_cypress_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:cypress_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:cypress_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:cypress_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_cypress_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:cypress_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_cypress_wood")));
+
             // Joshua
-            RU_JOSHUA_BARK = ItemInit.register("ru_joshua_bark", new BarkItem(new Item.Settings(), RuBlocks.JOSHUA_LOG.get(), RuBlocks.JOSHUA_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.JOSHUA_LOG.get(), RuBlocks.STRIPPED_JOSHUA_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.JOSHUA_WOOD.get(), RuBlocks.STRIPPED_JOSHUA_WOOD.get());
+            RU_JOSHUA_BARK = ItemInit.register("ru_joshua_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:joshua_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:joshua_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:joshua_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_joshua_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:joshua_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_joshua_wood")));
+
             // Larch
-            RU_LARCH_BARK = ItemInit.register("ru_larch_bark", new BarkItem(new Item.Settings(), RuBlocks.LARCH_LOG.get(), RuBlocks.LARCH_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.LARCH_LOG.get(), RuBlocks.STRIPPED_LARCH_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.LARCH_WOOD.get(), RuBlocks.STRIPPED_LARCH_WOOD.get());
+            RU_LARCH_BARK = ItemInit.register("ru_larch_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:larch_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:larch_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:larch_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_larch_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:larch_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_larch_wood")));
+
             // Maple
-            RU_MAPLE_BARK = ItemInit.register("ru_maple_bark", new BarkItem(new Item.Settings(), RuBlocks.MAPLE_LOG.get(), RuBlocks.MAPLE_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAPLE_LOG.get(), RuBlocks.STRIPPED_MAPLE_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.MAPLE_WOOD.get(), RuBlocks.STRIPPED_MAPLE_WOOD.get());
+            RU_MAPLE_BARK = ItemInit.register("ru_maple_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:maple_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:maple_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:maple_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_maple_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:maple_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_maple_wood")));
+
             // Redwood
-            RU_REDWOOD_BARK = ItemInit.register("ru_redwood_bark", new BarkItem(new Item.Settings(), RuBlocks.REDWOOD_LOG.get(), RuBlocks.REDWOOD_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.REDWOOD_LOG.get(), RuBlocks.STRIPPED_REDWOOD_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.REDWOOD_WOOD.get(), RuBlocks.STRIPPED_REDWOOD_WOOD.get());
+            RU_REDWOOD_BARK = ItemInit.register("ru_redwood_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:redwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:redwood_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:redwood_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_redwood_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:redwood_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_redwood_wood")));
+
             // Willow
-            RU_WILLOW_BARK = ItemInit.register("ru_willow_bark", new BarkItem(new Item.Settings(), RuBlocks.WILLOW_LOG.get(), RuBlocks.WILLOW_WOOD.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.WILLOW_LOG.get(), RuBlocks.STRIPPED_WILLOW_LOG.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.WILLOW_WOOD.get(), RuBlocks.STRIPPED_WILLOW_WOOD.get());
+            RU_WILLOW_BARK = ItemInit.register("ru_willow_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:willow_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:willow_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:willow_log")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_willow_log")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:willow_wood")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_willow_wood")));
 
             // Blue Bioshroom
-            BLUE_BIOSHROOM_BARK = ItemInit.register("blue_bioshroom_bark", new BarkItem(new Item.Settings(), RuBlocks.BLUE_BIOSHROOM_HYPHAE.get(), RuBlocks.BLUE_BIOSHROOM_STEM.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BLUE_BIOSHROOM_HYPHAE.get(), RuBlocks.STRIPPED_BLUE_BIOSHROOM_HYPHAE.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.BLUE_BIOSHROOM_STEM.get(), RuBlocks.STRIPPED_BLUE_BIOSHROOM_STEM.get());
+            BLUE_BIOSHROOM_BARK = ItemInit.register("blue_bioshroom_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:blue_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:blue_bioshroom_stem")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:blue_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_blue_bioshroom_hyphae")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:blue_bioshroom_stem")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_blue_bioshroom_stem")));
+
             // Green Bioshroom
-            GREEN_BIOSHROOM_BARK = ItemInit.register("green_bioshroom_bark", new BarkItem(new Item.Settings(), RuBlocks.GREEN_BIOSHROOM_HYPHAE.get(), RuBlocks.GREEN_BIOSHROOM_STEM.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.GREEN_BIOSHROOM_HYPHAE.get(), RuBlocks.STRIPPED_GREEN_BIOSHROOM_HYPHAE.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.GREEN_BIOSHROOM_STEM.get(), RuBlocks.STRIPPED_GREEN_BIOSHROOM_STEM.get());
+            GREEN_BIOSHROOM_BARK = ItemInit.register("green_bioshroom_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:green_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:green_bioshroom_stem")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:green_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_green_bioshroom_hyphae")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:green_bioshroom_stem")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_green_bioshroom_stem")));
+
             // Pink Bioshroom
-            PINK_BIOSHROOM_BARK = ItemInit.register("pink_bioshroom_bark", new BarkItem(new Item.Settings(), RuBlocks.PINK_BIOSHROOM_HYPHAE.get(), RuBlocks.PINK_BIOSHROOM_STEM.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PINK_BIOSHROOM_HYPHAE.get(), RuBlocks.STRIPPED_PINK_BIOSHROOM_HYPHAE.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.PINK_BIOSHROOM_STEM.get(), RuBlocks.STRIPPED_PINK_BIOSHROOM_STEM.get());
+            PINK_BIOSHROOM_BARK = ItemInit.register("pink_bioshroom_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:pink_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:pink_bioshroom_stem")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:pink_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_pink_bioshroom_hyphae")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:pink_bioshroom_stem")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_pink_bioshroom_stem")));
+
             // Yellow Bioshroom
-            YELLOW_BIOSHROOM_BARK = ItemInit.register("yellow_bioshroom_bark", new BarkItem(new Item.Settings(), RuBlocks.YELLOW_BIOSHROOM_HYPHAE.get(), RuBlocks.YELLOW_BIOSHROOM_STEM.get(), 150));
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.YELLOW_BIOSHROOM_HYPHAE.get(), RuBlocks.STRIPPED_YELLOW_BIOSHROOM_HYPHAE.get());
-            BarkItem.STRIPPED_LOG_COMPAT.put(RuBlocks.YELLOW_BIOSHROOM_STEM.get(), RuBlocks.STRIPPED_YELLOW_BIOSHROOM_STEM.get());
+            YELLOW_BIOSHROOM_BARK = ItemInit.register("yellow_bioshroom_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("regions_unexplored:yellow_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:yellow_bioshroom_stem")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:yellow_bioshroom_hyphae")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_yellow_bioshroom_hyphae")));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("regions_unexplored:yellow_bioshroom_stem")), Registries.BLOCK.get(Identifier.of("regions_unexplored:stripped_yellow_bioshroom_stem")));
         }
         if (FabricLoader.getInstance().isModLoaded("terrestria")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("terrestria_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
