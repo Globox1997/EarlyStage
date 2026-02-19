@@ -76,6 +76,9 @@ public class CompatInit {
     // Meadow
     public static Item ALPINE_BIRCH_BARK;
 
+    // Beachparty
+    public static Item BP_PALM_BARK;
+
     public static void init() {
         if (FabricLoader.getInstance().isModLoaded("oblivion")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("oblivion_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
@@ -353,6 +356,13 @@ public class CompatInit {
 
             ALPINE_BIRCH_BARK = ItemInit.register("alpine_birch_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("meadow:alpine_birch_log")), null, 150));
             BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("meadow:alpine_birch_log")), Registries.BLOCK.get(Identifier.of("minecraft:stripped_birch_log")));
+        }
+        if (FabricLoader.getInstance().isModLoaded("beachparty")) {
+            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("beachparty_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    ResourcePackActivationType.DEFAULT_ENABLED);
+
+            BP_PALM_BARK = ItemInit.register("bp_palm_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("beachparty:palm_log")), Registries.BLOCK.get(Identifier.of("beachparty:palm_wood")), 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("beachparty:palm_log")), Registries.BLOCK.get(Identifier.of("beachparty:stripped_palm_log")));
         }
     }
 }
