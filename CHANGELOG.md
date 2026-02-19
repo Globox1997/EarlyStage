@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed natures spirit + region unexplored compat
+- Added meadow compat
 ### Changed:
 - 

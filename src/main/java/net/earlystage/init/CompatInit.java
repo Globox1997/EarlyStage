@@ -73,6 +73,9 @@ public class CompatInit {
     public static Item TE_WILLOW_BARK;
     public static Item TE_REDWOOD_BARK;
 
+    // Meadow
+    public static Item ALPINE_BIRCH_BARK;
+
     public static void init() {
         if (FabricLoader.getInstance().isModLoaded("oblivion")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("oblivion_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
@@ -343,6 +346,13 @@ public class CompatInit {
         if (FabricLoader.getInstance().isModLoaded("rocks")) {
             ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("this_rocks_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
                     ResourcePackActivationType.DEFAULT_ENABLED);
+        }
+        if (FabricLoader.getInstance().isModLoaded("meadow")) {
+            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("meadow_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    ResourcePackActivationType.DEFAULT_ENABLED);
+
+            ALPINE_BIRCH_BARK = ItemInit.register("alpine_birch_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("meadow:alpine_birch_log")), null, 150));
+            BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("meadow:alpine_birch_log")), Registries.BLOCK.get(Identifier.of("minecraft:stripped_birch_log")));
         }
     }
 }
