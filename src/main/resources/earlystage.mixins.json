@@ -5,26 +5,27 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "net.earlystage.mixin.EarlyStageMixinPlugin",
   "mixins": [
-    "AxeItemMixin",
-    "ItemMixin",
-    "ShovelItemMixin",
-    "PlayerEntityMixin",
-    "ServerPlayerEntityMixin",
-    "RecipeManagerMixin",
-    "CampfireBlockMixin",
-    "BlastFurnaceScreenHandlerMixin",
-    "AbstractFurnaceScreenHandlerMixin",
-    "BlastFurnaceBlockEntityMixin",
     "AbstractFurnaceBlockEntityMixin",
+    "AbstractFurnaceScreenHandlerMixin",
+    "AxeItemMixin",
+    "BlastFurnaceBlockEntityMixin",
+    "BlastFurnaceScreenHandlerMixin",
+    "CampfireBlockMixin",
+    "ItemMixin",
     "PillarBlockMixin",
+    "PlayerEntityMixin",
+    "RecipeManagerMixin",
+    "ServerPlayerEntityMixin",
     "SheepEntityMixin",
-    "compat.FallenLogBlockMixin",
+    "ShovelItemMixin",
+    "access.AbstractFurnaceBlockEntityAccessor",
     "access.AxeItemAccessor",
-    "access.AbstractFurnaceBlockEntityAccessor"
+    "compat.FallenLogBlockMixin"
   ],
   "client": [
     "client.BlastFurnaceScreenMixin",
-    "client.ClientRecipeBookMixin"
+    "client.ClientRecipeBookMixin",
+    "client.DeathScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

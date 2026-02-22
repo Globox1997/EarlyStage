@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.*;
+import net.earlystage.network.EarlyServerPacket;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 
@@ -23,6 +24,7 @@ public class EarlyStageMain implements ModInitializer {
         JsonReaderInit.init();
         WorldInit.init();
         RecipeInit.init();
+        EarlyServerPacket.init();
     }
 
     public static Identifier identifierOf(String name) {

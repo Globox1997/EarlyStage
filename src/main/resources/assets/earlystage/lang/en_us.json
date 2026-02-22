@@ -65,5 +65,6 @@
     "emi.crafting_rock.info": "%s Hits",
     "emi.crafting_rock.tooltip": "Hit it with a rock!",
 
-    "tag.earlystage.bark_items": "Bark Items"
+    "tag.earlystage.bark_items": "Bark Items",
+    "screen.earlystage.respawn_info": "%s - Easy (%s)"
 }
