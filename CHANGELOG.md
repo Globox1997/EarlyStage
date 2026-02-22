@@ -1,7 +1,6 @@
 ### Added:
-- 
+- Added easy respawn info
 ### Fixed:
-- Added meadow compat
-- Added beachparty compat
+- 
 ### Changed:
 - 
