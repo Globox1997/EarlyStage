@@ -67,10 +67,11 @@
     "emi.crafting_rock.info": "%s Hits",
     "emi.crafting_rock.tooltip": "Hit it with a rock!",
 
-    "tag.earlystage.usable_crafting_rock_items": "Usable Crafting Rock Items",
-    "tag.earlystage.bark_items": "Bark Items",
-    "tag.earlystage.rock_items": "Rock Items",
-    "tag.earlystage.rock_feature_blocks": "Rock Feature Blocks",
-    "tag.earlystage.rock_feature_biomes": "Rock Feature Biomes",
+    "tag.item.earlystage.usable_crafting_rock_items": "Usable Crafting Rock Items",
+    "tag.item.earlystage.bark_items": "Bark Items",
+    "tag.item.earlystage.rock_items": "Rock Items",
+    "tag.block.earlystage.rock_feature_blocks": "Rock Feature Blocks",
+    "tag.biome.earlystage.rock_feature_biomes": "Rock Feature Biomes",
+
     "screen.earlystage.respawn_info": "%s - Easy (%s)"
 }
