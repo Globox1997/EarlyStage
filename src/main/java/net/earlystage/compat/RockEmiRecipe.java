@@ -5,6 +5,7 @@ import java.util.List;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.recipe.EmiShapedRecipe;
+import net.earlystage.EarlyStageMain;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.RenderInit;
 import net.minecraft.recipe.ShapedRecipe;
@@ -32,7 +33,7 @@ public class RockEmiRecipe extends EmiShapedRecipe {
 
     @Override
     public Identifier getId() {
-        return Identifier.of(super.getId().getPath() + "_rock");
+        return EarlyStageMain.identifierOf("/" + super.getId().getPath() + "_rock");
     }
 
 }

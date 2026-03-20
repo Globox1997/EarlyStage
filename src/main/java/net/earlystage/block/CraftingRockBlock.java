@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.inventory.CraftingRockInventory;
-import net.earlystage.init.BlockInit;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.TagInit;
 import net.minecraft.block.Block;
@@ -185,7 +184,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-        if (ConfigInit.CONFIG.info_tooltips) {
+        if (ConfigInit.CONFIG.infoTooltips) {
             tooltip.add(Text.translatable("earlystage.moreinfo.tooltip"));
             if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), 340)) {
                 tooltip.remove(Text.translatable("earlystage.moreinfo.tooltip"));

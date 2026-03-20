@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public class EarlyStageMain implements ModInitializer {
 
-    public static final List<SieveDropTemplate> SIEVE_DROP_TEMPLATES = new ArrayList<SieveDropTemplate>();
+    public static final List<SieveDropTemplate> SIEVE_DROP_TEMPLATES = new ArrayList<>();
 
     @Override
     public void onInitialize() {

@@ -1,5 +1,6 @@
 package net.earlystage.init;
 
+import net.earlystage.EarlyStageMain;
 import net.earlystage.block.render.CraftingRockBlockRenderer;
 import net.earlystage.block.render.SieveBlockRenderer;
 import net.fabricmc.api.EnvType;
@@ -12,7 +13,8 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class RenderInit {
 
-    public static final Identifier GUI_ICON_TEXTURES = Identifier.of("earlystage", "textures/gui/blast_furnace_extra_slot.png");
+    public static final Identifier GUI_ICON_TEXTURES = EarlyStageMain.identifierOf("textures/gui/blast_furnace_extra_slot.png");
+    public static final Identifier SIEVE = EarlyStageMain.identifierOf("textures/block/sieve_top.png");
 
     public static void init() {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.SIEVE, RenderLayer.getCutout());

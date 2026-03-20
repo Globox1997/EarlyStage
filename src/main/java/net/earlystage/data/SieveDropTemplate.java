@@ -14,11 +14,11 @@ public class SieveDropTemplate {
 
     public SieveDropTemplate(Item blockItem, List<Item> blockDrops, List<Float> dropChances, List<Integer> rollCount) {
         this.blockItem = blockItem;
-        this.blockDrops = new ArrayList<Item>();
+        this.blockDrops = new ArrayList<>();
         this.blockDrops.addAll(blockDrops);
-        this.dropChances = new ArrayList<Float>();
+        this.dropChances = new ArrayList<>();
         this.dropChances.addAll(dropChances);
-        this.rollCount = new ArrayList<Integer>();
+        this.rollCount = new ArrayList<>();
         this.rollCount.addAll(rollCount);
     }
 

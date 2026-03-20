@@ -1,6 +1,8 @@
 package net.earlystage.network;
 
+import net.earlystage.EarlyStageMain;
 import net.earlystage.network.packet.BeginnerDeathPacket;
+import net.earlystage.network.packet.SieveDropPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,9 +18,16 @@ public class EarlyClientPacket {
             int deathCount = payload.deathCount();
 
             if (context.client().world.getEntityById(entityId) instanceof ClientPlayerEntity clientPlayerEntity) {
-                clientPlayerEntity.getStatHandler().setStat(clientPlayerEntity,  Stats.CUSTOM.getOrCreateStat(Stats.DEATHS), deathCount);
+                clientPlayerEntity.getStatHandler().setStat(clientPlayerEntity, Stats.CUSTOM.getOrCreateStat(Stats.DEATHS), deathCount);
             }
         });
+        ClientPlayNetworking.registerGlobalReceiver(SieveDropPacket.PACKET_ID, (payload, context) -> {
+                    context.client().execute(() -> {
+                        EarlyStageMain.SIEVE_DROP_TEMPLATES.clear();
+                        EarlyStageMain.SIEVE_DROP_TEMPLATES.addAll(payload.templates());
+                    });
+                }
+        );
     }
 
 }
