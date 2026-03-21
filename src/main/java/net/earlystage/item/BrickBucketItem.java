@@ -1,5 +1,6 @@
 package net.earlystage.item;
 
+import net.earlystage.init.CompatInit;
 import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -13,14 +14,15 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -57,13 +59,16 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
             }
             if (this.fluid == Fluids.EMPTY) {
                 BlockState blockState = world.getBlockState(blockPos);
-                if (blockState.getBlock() instanceof FluidDrainable && !blockState.getFluidState().isEmpty() && blockState.getFluidState().isStill()
+                if (blockState.getBlock() instanceof FluidDrainable drainable && !blockState.getFluidState().isEmpty() && blockState.getFluidState().isStill()
                         && (blockState.getFluidState().isIn(FluidTags.WATER) || blockState.getFluidState().isIn(FluidTags.LAVA))) {
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     ItemStack itemStack2;
                     if (blockState.getFluidState().isIn(FluidTags.LAVA)) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.LAVA_BRICK_BUCKET);
+                    } else if (CompatInit.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
+                        world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                        itemStack2 = new ItemStack(CompatInit.PURIFIED_WATER_BRICK_BUCKET);
                     } else {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.WATER_BRICK_BUCKET);
@@ -71,11 +76,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
                     world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
                     ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
                     if (!world.isClient()) {
-                        if (blockState.get(Properties.WATERLOGGED)) {
-                            world.setBlockState(blockPos, blockState.with(Properties.WATERLOGGED, false), Block.NOTIFY_ALL);
-                        }else{
-                            world.setBlockState(blockPos, this.fluid.getDefaultState().getBlockState(), Block.NOTIFY_ALL_AND_REDRAW);
-                        }
+                        drainable.tryDrainFluid(user, world, blockPos, blockState);
                         Criteria.FILLED_BUCKET.trigger((ServerPlayerEntity) user, itemStack2);
                     }
                     return TypedActionResult.success(itemStack3, world.isClient());
@@ -83,7 +84,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
                 return TypedActionResult.fail(itemStack);
             }
             BlockState blockState = world.getBlockState(blockPos);
-            BlockPos blockPos3 = blockState.getBlock() instanceof FluidFillable && this.fluid == Fluids.WATER ? blockPos : blockPos2;
+            BlockPos blockPos3 = blockState.getBlock() instanceof FluidFillable fluidFillable && this.fluid == Fluids.WATER ? blockPos : blockPos2;
             if (this.placeFluid(user, world, blockPos3, blockHitResult)) {
                 this.onEmptied(user, world, itemStack, blockPos3);
                 if (user instanceof ServerPlayerEntity) {
@@ -138,7 +139,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
             this.playEmptyingSound(player, world, pos);
             return true;
         }
-        if (!world.isClient && bl && !blockState.isLiquid()) {
+        if (!world.isClient() && bl && !blockState.isLiquid()) {
             world.breakBlock(pos, true);
         }
         if (world.setBlockState(pos, this.fluid.getDefaultState().getBlockState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD) || blockState.getFluidState().isStill()) {

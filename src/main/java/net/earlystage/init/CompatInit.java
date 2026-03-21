@@ -2,6 +2,8 @@ package net.earlystage.init;
 
 import net.earlystage.EarlyStageMain;
 import net.earlystage.item.BarkItem;
+import net.earlystage.item.BrickBucketItem;
+import net.earlystage.item.WoodenBucketItem;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -78,6 +80,10 @@ public class CompatInit {
 
     // Beachparty
     public static Item BP_PALM_BARK;
+
+    // Dehydration
+    public static Item PURIFIED_WATER_WOODEN_BUCKET;
+    public static Item PURIFIED_WATER_BRICK_BUCKET;
 
     public static void init() {
         if (FabricLoader.getInstance().isModLoaded("oblivion")) {
@@ -363,6 +369,12 @@ public class CompatInit {
 
             BP_PALM_BARK = ItemInit.register("bp_palm_bark", new BarkItem(new Item.Settings(), Registries.BLOCK.get(Identifier.of("beachparty:palm_log")), Registries.BLOCK.get(Identifier.of("beachparty:palm_wood")), 150));
             BarkItem.STRIPPED_LOG_COMPAT.put(Registries.BLOCK.get(Identifier.of("beachparty:palm_log")), Registries.BLOCK.get(Identifier.of("beachparty:stripped_palm_log")));
+        }
+        if (FabricLoader.getInstance().isModLoaded("dehydration")) {
+            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("dehydration_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    ResourcePackActivationType.DEFAULT_ENABLED);
+            PURIFIED_WATER_WOODEN_BUCKET = ItemInit.register("purified_water_wooden_bucket", new WoodenBucketItem(Registries.FLUID.get(Identifier.of("dehydration:purified_water")), new Item.Settings().maxCount(1)));
+            PURIFIED_WATER_BRICK_BUCKET = ItemInit.register("purified_water_brick_bucket", new BrickBucketItem(Registries.FLUID.get(Identifier.of("dehydration:purified_water")), new Item.Settings().maxCount(1)));
         }
     }
 }
