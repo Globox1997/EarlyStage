@@ -1,8 +1,6 @@
 ### Added:
-- Added easy respawn info
-- Added sieve emi compat
-- Added dehydration bucket compat
+- Dehydration water compatibility
 ### Fixed:
-- Fixed blast furnace emi compat
+- 
 ### Changed:
 - 

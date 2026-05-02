@@ -49,6 +49,10 @@ dependencies {
 	modCompileOnly ('maven.modrinth:missing-wilds:1.4.0+beta+1.21.1-fabric') {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	// Dehydration
+	modCompileOnly ('maven.modrinth:dehydration:1.4.1+1.21.1') {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 
 }
 

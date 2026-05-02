@@ -27,6 +27,9 @@
     ],
     "emi": [
       "net.earlystage.compat.EarlyStageEmiPlugin"
+    ],
+    "dehydration": [
+      "net.earlystage.compat.EarlyStageDehydrationIntegration"
     ]
   },
   "mixins": [
