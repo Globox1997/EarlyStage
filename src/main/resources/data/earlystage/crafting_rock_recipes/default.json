@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crafting_table",
+    "earlystage:flint_sword",
+    "earlystage:flint_shovel",
+    "earlystage:flint_pickaxe",
+    "earlystage:flint_axe",
+    "earlystage:flint_hoe",
+    "earlystage:wooden_shield",
+    "earlystage:wooden_bucket",
+    "earlystage:clay_bucket",
+    "earlystage:campfire",
+    "earlystage:bowl"
+  ]
+}

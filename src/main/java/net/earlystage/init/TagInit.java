@@ -10,7 +10,6 @@ import net.minecraft.world.biome.Biome;
 public class TagInit {
 
     // Item
-    public static final TagKey<Item> USABLE_CRAFTING_ROCK_ITEMS = TagKey.of(RegistryKeys.ITEM, EarlyStageMain.identifierOf("usable_crafting_rock_items"));
     public static final TagKey<Item> BARK_ITEMS = TagKey.of(RegistryKeys.ITEM, EarlyStageMain.identifierOf("bark_items"));
     public static final TagKey<Item> ROCK_ITEMS = TagKey.of(RegistryKeys.ITEM, EarlyStageMain.identifierOf("rock_items"));
     // Block

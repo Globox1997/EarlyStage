@@ -68,7 +68,6 @@
     "emi.crafting_rock.tooltip": "Hit it with a rock!",
     "emi.sieve.tooltip": "Sieve Chance: %s%%",
 
-    "tag.item.earlystage.usable_crafting_rock_items": "Usable Crafting Rock Items",
     "tag.item.earlystage.bark_items": "Bark Items",
     "tag.item.earlystage.rock_items": "Rock Items",
     "tag.block.earlystage.rock_feature_blocks": "Rock Feature Blocks",

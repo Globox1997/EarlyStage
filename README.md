@@ -45,3 +45,18 @@ Example:
     ]
 }
 ```
+
+Since v1.2.0:  
+Crafting rock craftable items can be defined in a datapack.  
+Folder path: ```data\earlystage\crafting_rock_recipes\YOURFILE.json```  
+Values are recipe ids (recipe ids are often similar to the output item id but only recipe ids are valid here - a recipe id is the name of the recipe json file!)  
+Example:
+```json
+{
+    "replace": false,
+    "values": [
+        "minecraft:acacia_boat",
+        "minecraft:crafting_table"
+    ]
+}
+```

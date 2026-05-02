@@ -1,41 +1,33 @@
 package net.earlystage.block;
 
-import java.util.List;
-import java.util.Optional;
-
+import net.earlystage.EarlyStageMain;
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.inventory.CraftingRockInventory;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.TagInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -43,6 +35,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CraftingRockBlock extends Block implements BlockEntityProvider {
 
@@ -93,17 +88,16 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity != null) {
-            Inventory inventory = (Inventory) world.getBlockEntity(pos);
+        if (blockEntity instanceof CraftingRockBlockEntity craftingRockBlockEntity) {
             if (Math.abs(hit.getPos().getY() % 1) < 0.505D && Math.abs(hit.getPos().getY() % 1) > 0.495D) {
                 if (itemStack.isIn(TagInit.ROCK_ITEMS)) {
-                    if (!inventory.isEmpty()) {
+                    if (!craftingRockBlockEntity.isEmpty()) {
                         if (!world.isClient()) {
-                            if (((CraftingRockBlockEntity) blockEntity).getCraftHits() - 1 <= 0) {
-                                tryCraftItem(world, player, (CraftingRockBlockEntity) blockEntity);
-                                ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                            if (craftingRockBlockEntity.getCraftHits() - 1 <= 0) {
+                                tryCraftItem(world, player, craftingRockBlockEntity);
+                                craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                             } else {
-                                ((CraftingRockBlockEntity) blockEntity).decreaseCraftHits(player);
+                                craftingRockBlockEntity.decreaseCraftHits(player);
                             }
                         }
                         world.playSound(player, pos, SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -114,22 +108,24 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 double xPos = hit.getPos().getX() < 0D ? 1.0D + hit.getPos().getX() % 1 : hit.getPos().getX() % 1;
                 double zPos = hit.getPos().getZ() < 0D ? 1.0D + hit.getPos().getZ() % 1 : hit.getPos().getZ() % 1;
                 int slot = getSlot(xPos, zPos);
-                if (inventory.getStack(slot).isEmpty() && !itemStack.isEmpty() && itemStack.isIn(TagInit.USABLE_CRAFTING_ROCK_ITEMS)) {
+                if (craftingRockBlockEntity.getStack(slot).isEmpty() && !itemStack.isEmpty() && isAllowedInputItem(itemStack.getItem())) {
                     if (!world.isClient()) {
-                        inventory.setStack(slot, new ItemStack(itemStack.getItem(), 1));
+                        craftingRockBlockEntity.setStack(slot, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative()) {
                             itemStack.decrement(1);
                         }
-                        ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                        craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
                     return ItemActionResult.success(world.isClient());
-                } else if (!inventory.getStack(slot).isEmpty()) {
+                } else if (!craftingRockBlockEntity.getStack(slot).isEmpty()) {
                     if (!world.isClient()) {
                         if (!player.isCreative()) {
-                            player.getInventory().offerOrDrop(inventory.getStack(slot));
+                            player.getInventory().offerOrDrop(craftingRockBlockEntity.getStack(slot));
                         }
-                        inventory.setStack(slot, new ItemStack(Items.AIR));
-                        ((CraftingRockBlockEntity) blockEntity).setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.2F,
+                                ((world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F, world.getRandom().nextLong());
+                        craftingRockBlockEntity.setStack(slot, ItemStack.EMPTY);
+                        craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
                     }
                     return ItemActionResult.success(world.isClient());
                 }
@@ -154,7 +150,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
     private void tryCraftItem(World world, PlayerEntity player, CraftingRockBlockEntity blockEntity) {
         if (!world.isClient()) {
             CraftingRockInventory craftingInventory = null;
-            Optional<RecipeEntry<CraftingRecipe>> optional = null;
+            Optional<RecipeEntry<CraftingRecipe>> optional = Optional.empty();
             for (int i = 0; i < 4; i++) {
                 craftingInventory = new CraftingRockInventory(blockEntity, i);
                 optional = world.getServer().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, craftingInventory.createRecipeInput(), world);
@@ -162,10 +158,11 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                     break;
                 }
             }
-            if (optional != null && optional.isPresent() && (optional.get().value().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING)
-                    || ((ServerPlayerEntity) player).getRecipeBook().contains(optional.get()))) {
-                blockEntity.clear();
-                blockEntity.setStack(4, optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()));
+            if (optional.isPresent() && (optional.get().value().isIgnoredInRecipeBook() || !world.getGameRules().getBoolean(GameRules.DO_LIMITED_CRAFTING) || ((ServerPlayerEntity) player).getRecipeBook().contains(optional.get()))) {
+                if (isAllowedOutputItem(optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()).getItem())) {
+                    blockEntity.clear();
+                    blockEntity.setStack(4, optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()));
+                }
             }
         }
     }
@@ -176,8 +173,8 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CraftingRockBlockEntity) {
-            ItemScatterer.spawn(world, pos, (Inventory) ((CraftingRockBlockEntity) blockEntity));
+        if (blockEntity instanceof CraftingRockBlockEntity craftingRockBlockEntity) {
+            ItemScatterer.spawn(world, pos, craftingRockBlockEntity);
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
@@ -192,6 +189,24 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
             }
         }
         super.appendTooltip(stack, context, tooltip, options);
+    }
+
+    private boolean isAllowedInputItem(Item item) {
+        for (List<Item> items : EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.values()) {
+            if (items.contains(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAllowedOutputItem(Item item) {
+        for (Item key : EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.keySet()) {
+            if (key.equals(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

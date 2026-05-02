@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
 
-    private DefaultedList<ItemStack> inventory;
+    private final DefaultedList<ItemStack> inventory;
     private int craftHits = 0;
     private int totalHits = 0;
 
