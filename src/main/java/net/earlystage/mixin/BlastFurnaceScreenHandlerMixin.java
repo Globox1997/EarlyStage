@@ -27,7 +27,7 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
-        if (ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+        if (!ConfigInit.CONFIG.blastFurnaceExtraSlot) {
             return super.quickMove(player, slot);
         }
         ItemStack itemStack = ItemStack.EMPTY;
