@@ -1,7 +1,6 @@
 ### Added:
-- Crafting rock recipe data system
-- Dehydration water compatibility
-### Fixed:
 - 
+### Fixed:
+- Fixed crash with blast furnace disabled slot
 ### Changed:
 - 

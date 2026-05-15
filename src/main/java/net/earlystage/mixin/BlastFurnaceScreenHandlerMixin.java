@@ -1,15 +1,19 @@
 package net.earlystage.mixin;
 
+import net.earlystage.init.ConfigInit;
+import net.earlystage.misc.InputSlotFillerExtra;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.InputSlotFiller;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.*;
+import net.minecraft.screen.AbstractFurnaceScreenHandler;
+import net.minecraft.screen.BlastFurnaceScreenHandler;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,15 +21,17 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(BlastFurnaceScreenHandler.class)
 public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScreenHandler {
 
-    public BlastFurnaceScreenHandlerMixin(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory,
-                                          Inventory inventory, PropertyDelegate propertyDelegate) {
+    public BlastFurnaceScreenHandlerMixin(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, recipeType, category, syncId, playerInventory, inventory, propertyDelegate);
     }
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
+        if (ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+            return super.quickMove(player, slot);
+        }
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot2 = (Slot) this.slots.get(slot);
+        Slot slot2 = this.slots.get(slot);
         if (slot2 != null && slot2.hasStack()) {
             ItemStack itemStack2 = slot2.getStack();
             itemStack = itemStack2.copy();
@@ -73,59 +79,6 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
     @Override
     public void fillInputSlots(boolean craftAll, RecipeEntry<?> recipe, ServerPlayerEntity player) {
         new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static class InputSlotFillerExtra extends InputSlotFiller {
-
-        private RecipeEntry<?> recipe = null;
-
-        public InputSlotFillerExtra(AbstractRecipeScreenHandler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void fillInputSlots(ServerPlayerEntity entity, RecipeEntry recipe, boolean craftAll) {
-            this.recipe = recipe;
-            super.fillInputSlots(entity, recipe, craftAll);
-        }
-
-        @Override
-        public void acceptAlignedInput(Integer integer, int slot, int amount, int gridX, int gridY) {
-            if (slot == 1) {
-                slot = 3;
-            }
-            super.acceptAlignedInput(integer, slot, amount, gridX, gridY);
-        }
-
-        protected int fillInputSlot(Slot slot, ItemStack stack, int i) {
-            int k;
-            int j = this.inventory.indexOf(stack);
-            if (j == -1) {
-                return -1;
-            }
-
-            int requiredCount = 1;
-            if (this.recipe != null) {
-                requiredCount = this.recipe.value().getIngredients().get(slot.getIndex() == 0 ? 0 : 1).getMatchingStacks()[0].getCount();
-            }
-            int oldCount = stack.getCount();
-            if (oldCount > requiredCount) {
-                this.inventory.removeStack(i, requiredCount);
-                k = i;
-            } else {
-                requiredCount = oldCount;
-                this.inventory.removeStack(i);
-                k = this.inventory.getStack(j).getCount();
-            }
-            if (slot.getStack().isEmpty()) {
-                slot.setStackNoCallbacks(stack.copyWithCount(requiredCount));
-            } else {
-                slot.getStack().increment(requiredCount);
-            }
-            return i - k;
-        }
-
     }
 
 }
