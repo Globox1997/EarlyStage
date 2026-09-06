@@ -1,6 +1,6 @@
 package net.earlystage.item;
 
-import net.earlystage.init.CompatInit;
+import net.earlystage.compat.EarlyStageDehydrationIntegration;
 import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
@@ -66,9 +66,9 @@ public class WoodenBucketItem extends Item implements FluidModificationItem {
                     world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
 
                     ItemStack itemStack2 = new ItemStack(ItemInit.WATER_WOODEN_BUCKET, 1);
-                    if (CompatInit.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
+                    if (EarlyStageDehydrationIntegration.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                        itemStack2 = new ItemStack(CompatInit.PURIFIED_WATER_BRICK_BUCKET);
+                        itemStack2 = new ItemStack(EarlyStageDehydrationIntegration.PURIFIED_WATER_BRICK_BUCKET);
                     }
                     ItemStack itemStack3 = ItemUsage.exchangeStack(itemStack, user, itemStack2);
 
