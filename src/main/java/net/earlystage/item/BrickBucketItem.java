@@ -1,6 +1,6 @@
 package net.earlystage.item;
 
-import net.earlystage.compat.EarlyStageDehydrationIntegration;
+import net.earlystage.compat.EarlyStageDehydrationItems;
 import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -66,9 +66,9 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
                     if (blockState.getFluidState().isIn(FluidTags.LAVA)) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.LAVA_BRICK_BUCKET);
-                    } else if (EarlyStageDehydrationIntegration.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
+                    } else if (EarlyStageDehydrationItems.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                        itemStack2 = new ItemStack(EarlyStageDehydrationIntegration.PURIFIED_WATER_BRICK_BUCKET);
+                        itemStack2 = new ItemStack(EarlyStageDehydrationItems.PURIFIED_WATER_BRICK_BUCKET);
                     } else {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.WATER_BRICK_BUCKET);

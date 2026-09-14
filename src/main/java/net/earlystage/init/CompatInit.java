@@ -2,8 +2,6 @@ package net.earlystage.init;
 
 import net.earlystage.EarlyStageMain;
 import net.earlystage.item.BarkItem;
-import net.earlystage.item.BrickBucketItem;
-import net.earlystage.item.WoodenBucketItem;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
