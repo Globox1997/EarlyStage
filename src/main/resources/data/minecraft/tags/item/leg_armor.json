@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:steel_leggings"
+        "earlystage:steel_leggings",
+        "earlystage:damascus_steel_leggings"
     ]
 }

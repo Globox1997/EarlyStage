@@ -20,6 +20,19 @@
     "item.earlystage.steel_nugget": "Steel Nugget",
     "item.earlystage.steel_horse_armor": "Steel Horse Armor",
 
+    "item.earlystage.damascus_steel_sword": "Damascus Steel Sword",
+    "item.earlystage.damascus_steel_shovel": "Damascus Steel Shovel",
+    "item.earlystage.damascus_steel_pickaxe": "Damascus Steel Pickaxe",
+    "item.earlystage.damascus_steel_axe": "Damascus Steel Axe",
+    "item.earlystage.damascus_steel_hoe": "Damascus Steel Hoe",
+    "item.earlystage.damascus_steel_helmet": "Damascus Steel Helmet",
+    "item.earlystage.damascus_steel_chestplate": "Damascus Steel Chestplate",
+    "item.earlystage.damascus_steel_leggings": "Damascus Steel Leggings",
+    "item.earlystage.damascus_steel_boots": "Damascus Steel Boots",
+    "item.earlystage.damascus_steel_ingot": "Damascus Steel Ingot",
+    "item.earlystage.damascus_steel_nugget": "Damascus Steel Nugget",
+    "item.earlystage.damascus_steel_horse_armor": "Damascus Steel Horse Armor",
+
     "item.earlystage.wooden_shield": "Wooden Shield",
     "item.earlystage.wooden_bucket": "Wooden Bucket",
     "item.earlystage.water_wooden_bucket": "Water Wooden Bucket",
@@ -48,6 +61,7 @@
     "block.earlystage.crafting_rock": "Crafting Rock",
     "block.earlystage.crafting_rock.tooltip": "§7Hit it with a rock a few times to craft items",
     "block.earlystage.steel_block": "Block of Steel",
+    "block.earlystage.damascus_steel_block": "Block of Damascus Steel",
 
     "earlystage.moreinfo.tooltip": "§8Hold §6Shift §8For More Info",
 

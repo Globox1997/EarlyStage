@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:steel_chestplate"
+        "earlystage:steel_chestplate",
+        "earlystage:damascus_steel_chestplate"
     ]
 }

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "damascus_steel_ingot",
+  "ingredients": [
+    {
+      "item": "earlystage:damascus_steel_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "earlystage:damascus_steel_ingot"
+  }
+}

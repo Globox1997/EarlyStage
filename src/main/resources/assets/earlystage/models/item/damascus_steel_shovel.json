@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/handheld",
+    "textures": {
+        "layer0": "earlystage:item/damascus_steel_shovel"
+    }
+}

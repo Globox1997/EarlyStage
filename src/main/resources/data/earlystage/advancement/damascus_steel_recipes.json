@@ -1,0 +1,37 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "earlystage:damascus_steel_axe",
+            "earlystage:damascus_steel_boots",
+            "earlystage:damascus_steel_chestplate",
+            "earlystage:damascus_steel_helmet",
+            "earlystage:damascus_steel_hoe",
+            "earlystage:damascus_steel_ingot_from_iron_steel",
+            "earlystage:damascus_steel_ingot_from_nuggets",
+            "earlystage:damascus_steel_leggings",
+            "earlystage:damascus_steel_nugget_from_blasting",
+            "earlystage:damascus_steel_nugget_from_smelting",
+            "earlystage:damascus_steel_nugget",
+            "earlystage:damascus_steel_pickaxe",
+            "earlystage:damascus_steel_shovel",
+            "earlystage:damascus_steel_sword",
+            "earlystage:damascus_steel_block",
+            "earlystage:damascus_steel_ingot_from_blasting"
+        ]
+    },
+    "criteria": {
+        "got_the_string": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "earlystage:steel_ingot"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

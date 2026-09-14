@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "earlystage:steel_axe",
+    "earlystage:damascus_steel_axe",
     "earlystage:flint_axe"
   ]
 }

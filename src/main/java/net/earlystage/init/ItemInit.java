@@ -1,23 +1,17 @@
 package net.earlystage.init;
 
-import net.earlystage.item.*;
-import net.earlystage.item.material.*;
+import net.earlystage.EarlyStageMain;
+import net.earlystage.item.BarkItem;
+import net.earlystage.item.BrickBucketItem;
+import net.earlystage.item.ClayBucketItem;
+import net.earlystage.item.WoodenBucketItem;
+import net.earlystage.item.material.EarlyStageArmorMaterials;
+import net.earlystage.item.material.EarlyStageToolMaterials;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.AnimalArmorItem;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.PickaxeItem;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.item.ShovelItem;
-import net.minecraft.item.SwordItem;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -28,10 +22,13 @@ import net.minecraft.util.Identifier;
 public class ItemInit {
 
     // Item Group
-    public static final RegistryKey<ItemGroup> EARLYSTAGE_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of("earlystage", "item_group"));
+    public static final RegistryKey<ItemGroup> EARLYSTAGE_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, EarlyStageMain.identifierOf("item_group"));
 
     public static final Item STEEL_INGOT = register("steel_ingot", new Item(new Item.Settings()));
     public static final Item STEEL_NUGGET = register("steel_nugget", new Item(new Item.Settings()));
+    public static final Item DAMASCUS_STEEL_INGOT = register("damascus_steel_ingot", new Item(new Item.Settings()));
+    public static final Item DAMASCUS_STEEL_NUGGET = register("damascus_steel_nugget", new Item(new Item.Settings()));
+
     public static final Item STEEL_HELMET = register("steel_helmet",
             new ArmorItem(EarlyStageArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(20))));
     public static final Item STEEL_CHESTPLATE = register("steel_chestplate",
@@ -53,6 +50,29 @@ public class ItemInit {
             new HoeItem(EarlyStageToolMaterials.STEEL, new Item.Settings().attributeModifiers(HoeItem.createAttributeModifiers(EarlyStageToolMaterials.STEEL, -2.0f, -1.0f))));
     public static final Item STEEL_HORSE_ARMOR = register("steel_horse_armor",
             new AnimalArmorItem(EarlyStageArmorMaterials.STEEL, AnimalArmorItem.Type.EQUESTRIAN, false, new Item.Settings().maxCount(1)));
+
+
+    public static final Item DAMASCUS_STEEL_HELMET = register("damascus_steel_helmet",
+            new ArmorItem(EarlyStageArmorMaterials.DAMASCUS_STEEL, ArmorItem.Type.HELMET, new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(20))));
+    public static final Item DAMASCUS_STEEL_CHESTPLATE = register("damascus_steel_chestplate",
+            new ArmorItem(EarlyStageArmorMaterials.DAMASCUS_STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(20))));
+    public static final Item DAMASCUS_STEEL_LEGGINGS = register("damascus_steel_leggings",
+            new ArmorItem(EarlyStageArmorMaterials.DAMASCUS_STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(20))));
+    public static final Item DAMASCUS_STEEL_BOOTS = register("damascus_steel_boots",
+            new ArmorItem(EarlyStageArmorMaterials.DAMASCUS_STEEL, ArmorItem.Type.BOOTS, new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(20))));
+
+    public static final Item DAMASCUS_STEEL_SWORD = register("damascus_steel_sword",
+            new SwordItem(EarlyStageToolMaterials.DAMASCUS_STEEL, new Item.Settings().attributeModifiers(SwordItem.createAttributeModifiers(EarlyStageToolMaterials.DAMASCUS_STEEL, 3, -2.4f))));
+    public static final Item DAMASCUS_STEEL_SHOVEL = register("damascus_steel_shovel",
+            new ShovelItem(EarlyStageToolMaterials.DAMASCUS_STEEL, new Item.Settings().attributeModifiers(ShovelItem.createAttributeModifiers(EarlyStageToolMaterials.DAMASCUS_STEEL, 1.5f, -3.0f))));
+    public static final Item DAMASCUS_STEEL_PICKAXE = register("damascus_steel_pickaxe",
+            new PickaxeItem(EarlyStageToolMaterials.DAMASCUS_STEEL, new Item.Settings().attributeModifiers(PickaxeItem.createAttributeModifiers(EarlyStageToolMaterials.DAMASCUS_STEEL, 1.0f, -2.8f))));
+    public static final Item DAMASCUS_STEEL_AXE = register("damascus_steel_axe",
+            new AxeItem(EarlyStageToolMaterials.DAMASCUS_STEEL, new Item.Settings().attributeModifiers(AxeItem.createAttributeModifiers(EarlyStageToolMaterials.DAMASCUS_STEEL, 6.0f, -3.1f))));
+    public static final Item DAMASCUS_STEEL_HOE = register("damascus_steel_hoe",
+            new HoeItem(EarlyStageToolMaterials.DAMASCUS_STEEL, new Item.Settings().attributeModifiers(HoeItem.createAttributeModifiers(EarlyStageToolMaterials.DAMASCUS_STEEL, -2.0f, -1.0f))));
+    public static final Item DAMASCUS_STEEL_HORSE_ARMOR = register("damascus_steel_horse_armor",
+            new AnimalArmorItem(EarlyStageArmorMaterials.DAMASCUS_STEEL, AnimalArmorItem.Type.EQUESTRIAN, false, new Item.Settings().maxCount(1)));
 
     public static final Item FLINT_SWORD = register("flint_sword",
             new SwordItem(EarlyStageToolMaterials.FLINT, new Item.Settings().attributeModifiers(SwordItem.createAttributeModifiers(EarlyStageToolMaterials.FLINT, 1, -2.4f))));
@@ -89,7 +109,7 @@ public class ItemInit {
     public static final Item BAMBOO_BARK = register("bamboo_bark", new BarkItem(new Item.Settings(), Blocks.BAMBOO_BLOCK, null, 100));
 
     public static Item register(String id, Item item) {
-        return register(Identifier.of("earlystage", id), item);
+        return register(EarlyStageMain.identifierOf(id), item);
     }
 
     private static Item register(Identifier id, Item item) {

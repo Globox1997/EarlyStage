@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "earlystage:damascus_steel_pickaxe"
+    },
+    {
+      "item": "earlystage:damascus_steel_shovel"
+    },
+    {
+      "item": "earlystage:damascus_steel_axe"
+    },
+    {
+      "item": "earlystage:damascus_steel_hoe"
+    },
+    {
+      "item": "earlystage:damascus_steel_sword"
+    },
+    {
+      "item": "earlystage:damascus_steel_helmet"
+    },
+    {
+      "item": "earlystage:damascus_steel_chestplate"
+    },
+    {
+      "item": "earlystage:damascus_steel_leggings"
+    },
+    {
+      "item": "earlystage:damascus_steel_boots"
+    },
+    {
+      "item": "earlystage:damascus_steel_horse_armor"
+    },
+    {
+      "item": "minecraft:chainmail_helmet"
+    },
+    {
+      "item": "minecraft:chainmail_chestplate"
+    },
+    {
+      "item": "minecraft:chainmail_leggings"
+    },
+    {
+      "item": "minecraft:chainmail_boots"
+    }
+  ],
+  "result": {
+    "id": "earlystage:damascus_steel_nugget"
+  }
+}

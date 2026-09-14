@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "damascus_steel_ingot",
+  "key": {
+    "#": {
+      "item": "earlystage:damascus_steel_nugget"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "earlystage:damascus_steel_ingot"
+  },
+  "show_notification": true
+}

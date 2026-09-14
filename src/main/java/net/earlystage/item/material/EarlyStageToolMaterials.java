@@ -14,6 +14,8 @@ public class EarlyStageToolMaterials implements ToolMaterial {
 
     public static final ToolMaterial STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, 7.0f, 2.0f, 14, Ingredient.ofItems(ItemInit.STEEL_INGOT), "steel");
 
+    public static final ToolMaterial DAMASCUS_STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 720, 7.0f, 2.5f, 16, Ingredient.ofItems(ItemInit.DAMASCUS_STEEL_INGOT), "damascus_steel");
+
     private final TagKey<Block> inverseTag;
     private final int itemDurability;
     private final float miningSpeed;

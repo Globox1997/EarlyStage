@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:steel_ingot"
+        "earlystage:steel_ingot",
+        "earlystage:damascus_steel_ingot"
     ]
 }

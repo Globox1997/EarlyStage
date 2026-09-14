@@ -1,5 +1,6 @@
 package net.earlystage.init;
 
+import net.earlystage.EarlyStageMain;
 import net.earlystage.block.*;
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.entity.SieveBlockEntity;
@@ -26,12 +27,13 @@ public class BlockInit {
     public static final Block CRAFTING_ROCK = register("crafting_rock", new CraftingRockBlock(AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY).requiresTool().strength(1.5f, 6.0f)));
 
     public static final Block STEEL_BLOCK = register("steel_block", new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+    public static final Block DAMASCUS_STEEL_BLOCK = register("damascus_steel_block", new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
 
     public static BlockEntityType<SieveBlockEntity> SIEVE_ENTITY;
     public static BlockEntityType<CraftingRockBlockEntity> CRAFTING_ROCK_ENTITY;
 
     private static Block register(String id, Block block) {
-        return register(Identifier.of("earlystage", id), block);
+        return register(EarlyStageMain.identifierOf(id), block);
     }
 
     private static Block register(Identifier id, Block block) {
@@ -41,8 +43,8 @@ public class BlockInit {
     }
 
     public static void init() {
-        SIEVE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, "earlystage:sieve_entity", BlockEntityType.Builder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
-        CRAFTING_ROCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, "earlystage:crafting_rock_entity",
+        SIEVE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, EarlyStageMain.identifierOf("sieve_entity"), BlockEntityType.Builder.create(SieveBlockEntity::new, SIEVE, REDSTONE_SIEVE).build(null));
+        CRAFTING_ROCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, EarlyStageMain.identifierOf("crafting_rock_entity"),
                 BlockEntityType.Builder.create(CraftingRockBlockEntity::new, CRAFTING_ROCK).build(null));
     }
 }

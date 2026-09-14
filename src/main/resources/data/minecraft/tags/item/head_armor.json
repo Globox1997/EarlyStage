@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "earlystage:steel_helmet"
+        "earlystage:steel_helmet",
+        "earlystage:damascus_steel_helmet"
     ]
 }

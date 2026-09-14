@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "earlystage:steel_sword",
+    "earlystage:damascus_steel_sword",
     "earlystage:flint_sword"
   ]
 }

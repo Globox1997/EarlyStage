@@ -4,6 +4,11 @@
         "earlystage:steel_helmet",
         "earlystage:steel_chestplate",
         "earlystage:steel_leggings",
-        "earlystage:steel_boots"
+        "earlystage:steel_boots",
+        "earlystage:damascus_steel_helmet",
+        "earlystage:damascus_steel_chestplate",
+        "earlystage:damascus_steel_leggings",
+        "earlystage:damascus_steel_boots"
+
     ]
 }
