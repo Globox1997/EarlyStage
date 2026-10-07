@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- tool material compat
+- steel/damascus steel armor trims
 ### Changed:
 - 
