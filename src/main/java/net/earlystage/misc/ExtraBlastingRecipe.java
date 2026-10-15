@@ -53,7 +53,7 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
         if (input == null) {
             return false;
         }
-        if (this.isEmpty()) {
+        if (ingredient.isEmpty()) {
             return input.isEmpty();
         }
         for (ItemStack itemStack2 : ingredient.getMatchingStacks()) {
@@ -66,6 +66,11 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
             return true;
         }
         return false;
+    }
+
+    public static int getRequiredCount(Ingredient ingredient) {
+        ItemStack[] matchingStacks = ingredient.getMatchingStacks();
+        return matchingStacks.length > 0 ? matchingStacks[0].getCount() : 1;
     }
 
     @Override

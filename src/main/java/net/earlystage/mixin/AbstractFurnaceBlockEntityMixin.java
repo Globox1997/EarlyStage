@@ -16,6 +16,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.earlystage.init.RecipeInit;
@@ -78,16 +81,22 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
     @Inject(method = "craftRecipe", at = @At("TAIL"))
     private static void craftRecipeMixin(DynamicRegistryManager registryManager, @Nullable RecipeEntry<?> recipe, DefaultedList<ItemStack> slots, int count, CallbackInfoReturnable<Boolean> info) {
         if (recipe != null && !recipe.value().isEmpty() && recipe.value().getType().equals(RecipeInit.EXTRA_BLASTING)) {
-            slots.get(3).decrement(recipe.value().getIngredients().get(1).getMatchingStacks()[0].getCount());
-            if (recipe.value().getIngredients().get(0).getMatchingStacks()[0].getCount() > 1) {
-                slots.get(0).decrement(recipe.value().getIngredients().get(0).getMatchingStacks()[0].getCount() - 1);
+            slots.get(3).decrement(ExtraBlastingRecipe.getRequiredCount(recipe.value().getIngredients().get(1)));
+            int inputCount = ExtraBlastingRecipe.getRequiredCount(recipe.value().getIngredients().get(0));
+            if (inputCount > 1) {
+                slots.get(0).decrement(inputCount - 1);
             }
         }
     }
 
+    @Inject(method = "setStack", at = @At("HEAD"))
+    private void setStackHeadMixin(int slot, ItemStack stack, CallbackInfo info, @Share("extraSlotChanged") LocalBooleanRef extraSlotChanged) {
+        extraSlotChanged.set(this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3 && !stack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(this.inventory.get(slot), stack));
+    }
+
     @Inject(method = "setStack", at = @At("TAIL"))
-    private void setStackMixin(int slot, ItemStack stack, CallbackInfo info) {
-        if (this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3 && !stack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(this.inventory.get(slot), stack)) {
+    private void setStackMixin(int slot, ItemStack stack, CallbackInfo info, @Share("extraSlotChanged") LocalBooleanRef extraSlotChanged) {
+        if (extraSlotChanged.get()) {
             this.cookTimeTotal = getCookTime(this.world, (AbstractFurnaceBlockEntity) (Object) this);
             this.cookTime = 0;
             this.markDirty();
