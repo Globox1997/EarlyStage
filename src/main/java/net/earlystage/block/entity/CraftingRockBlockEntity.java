@@ -85,7 +85,12 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
 
     @Override
     public boolean isEmpty() {
-        return this.inventory.isEmpty();
+        for (ItemStack itemStack : this.inventory) {
+            if (!itemStack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
