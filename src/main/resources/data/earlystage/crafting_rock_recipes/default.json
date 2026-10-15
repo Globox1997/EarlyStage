@@ -10,7 +10,7 @@
     "earlystage:wooden_shield",
     "earlystage:wooden_bucket",
     "earlystage:clay_bucket",
-    "earlystage:campfire",
-    "earlystage:bowl"
+    "minecraft:campfire",
+    "minecraft:bowl"
   ]
 }
