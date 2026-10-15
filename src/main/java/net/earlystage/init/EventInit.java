@@ -1,8 +1,8 @@
 package net.earlystage.init;
 
 import ht.treechop.api.TreeChopEvents;
-import net.earlystage.EarlyStageMain;
-import net.earlystage.network.packet.SieveDropPacket;
+  import net.earlystage.network.EarlyServerPacket;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -49,7 +49,12 @@ public class EventInit {
         }
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            sender.sendPacket(new SieveDropPacket(EarlyStageMain.SIEVE_DROP_TEMPLATES));
+            EarlyServerPacket.syncData(handler.getPlayer());
+        });
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
+            if (success) {
+                server.getPlayerManager().getPlayerList().forEach(EarlyServerPacket::syncData);
+            }
         });
     }
 

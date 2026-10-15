@@ -27,7 +27,7 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
-        if (!ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+        if (!ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
             return super.quickMove(player, slot);
         }
         ItemStack itemStack = ItemStack.EMPTY;
@@ -63,22 +63,28 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScre
     @Override
     public void clearCraftingSlots() {
         super.clearCraftingSlots();
-        this.getSlot(3).setStackNoCallbacks(ItemStack.EMPTY);
+        if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
+            this.getSlot(3).setStackNoCallbacks(ItemStack.EMPTY);
+        }
     }
 
     @Override
     public int getCraftingWidth() {
-        return 2;
+        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 2 : super.getCraftingWidth();
     }
 
     @Override
     public int getCraftingSlotCount() {
-        return 4;
+        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 4 : super.getCraftingSlotCount();
     }
 
     @Override
     public void fillInputSlots(boolean craftAll, RecipeEntry<?> recipe, ServerPlayerEntity player) {
-        new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
+        if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
+            new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
+        } else {
+            super.fillInputSlots(craftAll, recipe, player);
+        }
     }
 
 }

@@ -25,7 +25,7 @@ public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<Blas
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         super.drawBackground(context, delta, mouseX, mouseY);
-        if (ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+        if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
             context.drawTexture(RenderInit.GUI_ICON_TEXTURES, this.x + 75, this.y + 16, 0, 0, 18, 18);
         }
     }

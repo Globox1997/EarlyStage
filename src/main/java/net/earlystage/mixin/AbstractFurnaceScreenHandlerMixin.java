@@ -37,7 +37,7 @@ public abstract class AbstractFurnaceScreenHandlerMixin extends AbstractRecipeSc
 
     @ModifyConstant(method = "Lnet/minecraft/screen/AbstractFurnaceScreenHandler;<init>(Lnet/minecraft/screen/ScreenHandlerType;Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/book/RecipeBookCategory;ILnet/minecraft/entity/player/PlayerInventory;)V", constant = @Constant(intValue = 3))
     private static int initModifyMixin(int original, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory) {
-        if (type.equals(ScreenHandlerType.BLAST_FURNACE) && ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+        if (type.equals(ScreenHandlerType.BLAST_FURNACE) && ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
             return 4;
         }
         return original;
@@ -45,7 +45,7 @@ public abstract class AbstractFurnaceScreenHandlerMixin extends AbstractRecipeSc
 
     @Inject(method = "Lnet/minecraft/screen/AbstractFurnaceScreenHandler;<init>(Lnet/minecraft/screen/ScreenHandlerType;Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/book/RecipeBookCategory;ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/inventory/Inventory;Lnet/minecraft/screen/PropertyDelegate;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AbstractFurnaceScreenHandler;addSlot(Lnet/minecraft/screen/slot/Slot;)Lnet/minecraft/screen/slot/Slot;", shift = Shift.AFTER, ordinal = 2))
     private void initTestMixin(CallbackInfo info) {
-        if ((Object) this instanceof BlastFurnaceScreenHandler && ConfigInit.CONFIG.blastFurnaceExtraSlot) {
+        if ((Object) this instanceof BlastFurnaceScreenHandler && ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
             this.addSlot(new Slot(this.inventory, 3, 76, 17));
         }
     }
