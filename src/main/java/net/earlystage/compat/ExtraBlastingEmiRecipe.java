@@ -13,7 +13,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
-import java.util.Locale;
 
 public class ExtraBlastingEmiRecipe implements EmiRecipe {
     private final List<EmiIngredient> input;
@@ -60,14 +59,14 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addFillingArrow(43, 5, this.cookTime * 20);
+        widgets.addFillingArrow(43, 5, this.cookTime * 50);
         widgets.addText(Text.translatable("emi.cooking.experience", this.experience), 40, 28, 0xFFFFFF, true);
         widgets.addTexture(EmiTexture.EMPTY_FLAME, 1, 25);
         widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, 1, 25, 10000, false, true, true);
         widgets.addSlot(input.get(0), 0, 4);
         widgets.addSlot(input.get(1), 20, 4);
         widgets.addSlot(output.get(0), 74, 0).large(true).recipeContext(this);
-        widgets.addTooltipText(List.of(Text.translatable("emi.cooking.time", this.cookTime / 20)), 43, 5, 24, 17);
+        widgets.addTooltipText(List.of(Text.translatable("emi.cooking.time", this.cookTime / 20f)), 43, 5, 24, 17);
     }
 
 }
