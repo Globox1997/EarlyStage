@@ -14,7 +14,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -22,7 +21,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -66,7 +64,7 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
                     if (blockState.getFluidState().isIn(FluidTags.LAVA)) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(ItemInit.LAVA_BRICK_BUCKET);
-                    } else if (EarlyStageDehydrationItems.PURIFIED_WATER_BRICK_BUCKET != null && blockState.getFluidState().isOf(Registries.FLUID.get(Identifier.of("dehydration:purified_water")))) {
+                    } else if (EarlyStageDehydrationItems.isPurifiedWater(blockState.getFluidState())) {
                         world.playSound(user, blockPos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         itemStack2 = new ItemStack(EarlyStageDehydrationItems.PURIFIED_WATER_BRICK_BUCKET);
                     } else {
