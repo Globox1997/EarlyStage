@@ -51,11 +51,13 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
 
     private static List<ShapedRecipe> getDefaultRockRecipes(RecipeManager manager) {
         List<ShapedRecipe> list = new ArrayList<ShapedRecipe>();
-        list.add((ShapedRecipe) manager.get(EarlyStageMain.identifierOf("flint_axe")).get().value());
-        list.add((ShapedRecipe) manager.get(EarlyStageMain.identifierOf("flint_hoe")).get().value());
-        list.add((ShapedRecipe) manager.get(EarlyStageMain.identifierOf("flint_pickaxe")).get().value());
-        list.add((ShapedRecipe) manager.get(EarlyStageMain.identifierOf("flint_shovel")).get().value());
-        list.add((ShapedRecipe) manager.get(EarlyStageMain.identifierOf("flint_sword")).get().value());
+        for (String name : List.of("flint_axe", "flint_hoe", "flint_pickaxe", "flint_shovel", "flint_sword")) {
+            manager.get(EarlyStageMain.identifierOf(name)).ifPresent(recipe -> {
+                if (recipe.value() instanceof ShapedRecipe shapedRecipe) {
+                    list.add(shapedRecipe);
+                }
+            });
+        }
         return list;
     }
 
