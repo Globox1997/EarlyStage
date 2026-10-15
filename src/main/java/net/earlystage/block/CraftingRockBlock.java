@@ -10,18 +10,15 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -95,7 +92,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                         if (!world.isClient()) {
                             if (craftingRockBlockEntity.getCraftHits() - 1 <= 0) {
                                 tryCraftItem(world, player, craftingRockBlockEntity);
-                                craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                                craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                             } else {
                                 craftingRockBlockEntity.decreaseCraftHits(player);
                             }
@@ -114,7 +111,7 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                         if (!player.isCreative()) {
                             itemStack.decrement(1);
                         }
-                        craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                        craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                     }
                     return ItemActionResult.success(world.isClient());
                 } else if (!craftingRockBlockEntity.getStack(slot).isEmpty()) {
@@ -125,13 +122,18 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.2F,
                                 ((world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F, world.getRandom().nextLong());
                         craftingRockBlockEntity.setStack(slot, ItemStack.EMPTY);
-                        craftingRockBlockEntity.setCraftHits(ConfigInit.CONFIG.craftRockCraftHits + world.getRandom().nextInt(ConfigInit.CONFIG.craftRockCraftHits / 2));
+                        craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                     }
                     return ItemActionResult.success(world.isClient());
                 }
             }
         }
         return ItemActionResult.FAIL;
+    }
+
+    private static int getRandomCraftHits(World world) {
+        int craftHits = Math.max(1, ConfigInit.CONFIG.craftRockCraftHits);
+        return craftHits + world.getRandom().nextInt(Math.max(1, craftHits / 2));
     }
 
     private int getSlot(double x, double z) {
