@@ -16,7 +16,7 @@ public record ExtraBlastingRecipeInput(ItemStack input, ItemStack extraInput) im
 
     @Override
     public int getSize() {
-        return 3;
+        return 2;
     }
 
     @Override
