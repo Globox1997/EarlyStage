@@ -36,8 +36,9 @@ public abstract class CampfireBlockMixin extends BlockWithEntity {
                 }
                 player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
                 info.setReturnValue(ItemActionResult.SUCCESS);
+            } else {
+                info.setReturnValue(ItemActionResult.CONSUME);
             }
-            info.setReturnValue(ItemActionResult.CONSUME);
         }
     }
 
