@@ -2,9 +2,11 @@ package net.earlystage.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.ItemInit;
@@ -31,13 +33,24 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"), cancellable = true)
     protected void dropInventoryMixin(CallbackInfo info) {
-        if (!this.getWorld().isClient() && !((PlayerEntity) (Object) this).isCreative() && ConfigInit.CONFIG.beginnerDeathCount > 0
-                && ((ServerPlayerEntity) (Object) this).getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)) < ConfigInit.CONFIG.beginnerDeathCount) {
+        if (isBeginnerDeath()) {
             info.cancel();
         }
     }
 
-    // RemoveOffhandItemTask and BindingCurse not done by my mixins for the shield
+    @Inject(method = "getXpToDrop", at = @At("HEAD"), cancellable = true)
+    protected void getXpToDropMixin(CallbackInfoReturnable<Integer> info) {
+        if (isBeginnerDeath()) {
+            info.setReturnValue(0);
+        }
+    }
+
+    @Unique
+    private boolean isBeginnerDeath() {
+        return !this.getWorld().isClient() && !((PlayerEntity) (Object) this).isCreative() && ConfigInit.CONFIG.beginnerDeathCount > 0
+                && ((ServerPlayerEntity) (Object) this).getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)) < ConfigInit.CONFIG.beginnerDeathCount;
+    }
+
     @Inject(method = "damageShield", at = @At("HEAD"), cancellable = true)
     protected void damageShieldMixin(float amount, CallbackInfo info) {
         if (this.activeItemStack.isOf(ItemInit.WOODEN_SHIELD)) {
