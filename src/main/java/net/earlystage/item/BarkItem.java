@@ -28,18 +28,29 @@ public class BarkItem extends Item {
 
     public static final Map<Block, Item> BARK_ITEMS = new HashMap<Block, Item>();
     public static final Map<Block, Block> STRIPPED_LOG_COMPAT = new HashMap<Block, Block>();
-    private final Block logBlock;
     @Nullable
-    private final Block woodBlock;
+    private Block logBlock;
+    @Nullable
+    private Block woodBlock;
 
-    public BarkItem(Settings settings, Block logBlock, @Nullable Block woodBlock, int cookTime) {
+    public BarkItem(Settings settings, @Nullable Block logBlock, @Nullable Block woodBlock, int cookTime) {
         super(settings);
-        this.logBlock = logBlock;
-        this.woodBlock = woodBlock;
         FuelRegistry.INSTANCE.add(this, cookTime);
-        BarkItem.BARK_ITEMS.put(this.logBlock, this);
-        if (this.woodBlock != null) {
-            BarkItem.BARK_ITEMS.put(this.woodBlock, this);
+        this.setLogBlock(logBlock);
+        this.setWoodBlock(woodBlock);
+    }
+
+    public void setLogBlock(@Nullable Block logBlock) {
+        this.logBlock = logBlock;
+        if (logBlock != null) {
+            BarkItem.BARK_ITEMS.put(logBlock, this);
+        }
+    }
+
+    public void setWoodBlock(@Nullable Block woodBlock) {
+        this.woodBlock = woodBlock;
+        if (woodBlock != null) {
+            BarkItem.BARK_ITEMS.put(woodBlock, this);
         }
     }
 
@@ -48,12 +59,9 @@ public class BarkItem extends Item {
         BlockPos blockPos = context.getBlockPos();
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
-        Block block = blockState.getBlock();
         if (blockState.isIn(BlockTags.LOGS)) {
-            if ((AxeItemAccessor.getStrippedBlocks().containsValue(block)
-                    && (AxeItemAccessor.getStrippedBlocks().get(logBlock) == block || (woodBlock != null && AxeItemAccessor.getStrippedBlocks().get(woodBlock) == block))) ||
-                    (STRIPPED_LOG_COMPAT.containsValue(block)
-                            && (STRIPPED_LOG_COMPAT.get(logBlock) == block || (woodBlock != null && STRIPPED_LOG_COMPAT.get(woodBlock) == block)))) {
+            Block unstrippedBlock = this.getUnstrippedBlock(blockState.getBlock());
+            if (unstrippedBlock != null) {
                 PlayerEntity playerEntity = context.getPlayer();
                 ItemStack itemStack = context.getStack();
                 if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
@@ -62,8 +70,10 @@ public class BarkItem extends Item {
                 world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
                 if (!world.isClient()) {
-                    BlockState blockState2 = AxeItemAccessor.getStrippedBlocks().get(logBlock) == block ? logBlock.getDefaultState().with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS))
-                            : woodBlock.getDefaultState();
+                    BlockState blockState2 = unstrippedBlock.getDefaultState();
+                    if (blockState.contains(PillarBlock.AXIS) && blockState2.contains(PillarBlock.AXIS)) {
+                        blockState2 = blockState2.with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS));
+                    }
                     world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(playerEntity, blockState2));
                     if (playerEntity != null && !playerEntity.isCreative()) {
@@ -75,6 +85,21 @@ public class BarkItem extends Item {
 
         }
         return super.useOnBlock(context);
+    }
+
+    @Nullable
+    private Block getUnstrippedBlock(Block strippedBlock) {
+        if (this.logBlock != null && isStrippedVersion(this.logBlock, strippedBlock)) {
+            return this.logBlock;
+        }
+        if (this.woodBlock != null && isStrippedVersion(this.woodBlock, strippedBlock)) {
+            return this.woodBlock;
+        }
+        return null;
+    }
+
+    private static boolean isStrippedVersion(Block block, Block strippedBlock) {
+        return AxeItemAccessor.getStrippedBlocks().get(block) == strippedBlock || STRIPPED_LOG_COMPAT.get(block) == strippedBlock;
     }
 
 }
