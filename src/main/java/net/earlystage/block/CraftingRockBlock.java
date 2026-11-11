@@ -105,15 +105,22 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 double xPos = hit.getPos().getX() < 0D ? 1.0D + hit.getPos().getX() % 1 : hit.getPos().getX() % 1;
                 double zPos = hit.getPos().getZ() < 0D ? 1.0D + hit.getPos().getZ() % 1 : hit.getPos().getZ() % 1;
                 int slot = getSlot(xPos, zPos);
-                if (craftingRockBlockEntity.getStack(slot).isEmpty() && !itemStack.isEmpty() && isAllowedInputItem(itemStack.getItem())) {
-                    if (!world.isClient()) {
-                        craftingRockBlockEntity.setStack(slot, new ItemStack(itemStack.getItem(), 1));
-                        if (!player.isCreative()) {
-                            itemStack.decrement(1);
+                if (craftingRockBlockEntity.getStack(slot).isEmpty()) {
+                    if (!itemStack.isEmpty()) {
+                        if (isAllowedInputItem(itemStack.getItem())) {
+                            if (!world.isClient()) {
+                                craftingRockBlockEntity.setStack(slot, new ItemStack(itemStack.getItem(), 1));
+                                if (!player.isCreative()) {
+                                    itemStack.decrement(1);
+                                }
+                                craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
+                            }
+                            return ItemActionResult.success(world.isClient());
+                        } else {
+                            player.sendMessage(Text.translatable("block.earlystage.crafting_rock.unusable"), true);
                         }
-                        craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                     }
-                    return ItemActionResult.success(world.isClient());
+                    return ItemActionResult.FAIL;
                 } else if (!craftingRockBlockEntity.getStack(slot).isEmpty()) {
                     if (!world.isClient()) {
                         if (!player.isCreative()) {
@@ -164,7 +171,11 @@ public class CraftingRockBlock extends Block implements BlockEntityProvider {
                 if (isAllowedOutputItem(optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()).getItem())) {
                     blockEntity.clear();
                     blockEntity.setStack(4, optional.get().value().craft(craftingInventory.createRecipeInput(), world.getRegistryManager()));
+                } else {
+                    player.sendMessage(Text.translatable("block.earlystage.crafting_rock.uncraftable"), true);
                 }
+            } else {
+                player.sendMessage(Text.translatable("block.earlystage.crafting_rock.uncraftable"), true);
             }
         }
     }

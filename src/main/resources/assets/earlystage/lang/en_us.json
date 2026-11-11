@@ -59,6 +59,8 @@
     "block.earlystage.redstone_sieve": "Redstone Sieve",
     "block.earlystage.crafting_rock": "Crafting Rock",
     "block.earlystage.crafting_rock.tooltip": "§7Hit it with a rock a few times to craft items",
+    "block.earlystage.crafting_rock.unusable": "Unusable at crafting rock",
+    "block.earlystage.crafting_rock.uncraftable": "Uncraftable at crafting rock",
     "block.earlystage.steel_block": "Block of Steel",
     "block.earlystage.damascus_steel_block": "Block of Damascus Steel",
 
