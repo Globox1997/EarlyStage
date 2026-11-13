@@ -1,7 +1,8 @@
 package net.earlystage.init;
 
 import ht.treechop.api.TreeChopEvents;
-  import net.earlystage.network.EarlyServerPacket;
+import net.earlystage.data.DataLoader;
+import net.earlystage.network.EarlyServerPacket;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
@@ -51,8 +52,10 @@ public class EventInit {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             EarlyServerPacket.syncData(handler.getPlayer());
         });
+        ServerLifecycleEvents.SERVER_STARTING.register(DataLoader::updateCraftingRockRecipeItems);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             if (success) {
+                DataLoader.updateCraftingRockRecipeItems(server);
                 server.getPlayerManager().getPlayerList().forEach(EarlyServerPacket::syncData);
             }
         });

@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- 
+- Crafting rock recipe issue
 ### Changed:
-- Crafting rock interaction feedback
+- 

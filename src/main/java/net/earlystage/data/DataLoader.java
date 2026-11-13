@@ -1,6 +1,5 @@
 package net.earlystage.data;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,9 +7,14 @@ import net.earlystage.EarlyStageMain;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +28,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger("EarlyStage");
 
-    private static boolean CRAFTING_ROCK_RECIPES_REPLACED = false;
+    private static final Set<Identifier> CRAFTING_ROCK_RECIPE_IDS = new LinkedHashSet<>();
 
     @Override
     public Identifier getFabricId() {
@@ -34,57 +38,38 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
     @Override
     public void reload(ResourceManager manager) {
         EarlyStageMain.SIEVE_DROP_TEMPLATES.clear();
-        EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
+        CRAFTING_ROCK_RECIPE_IDS.clear();
 
-        manager.findResources("crafting_rock_recipes", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
-            try {
-                InputStream stream = resourceRef.getInputStream();
+        boolean craftingRockRecipesReplaced = false;
+        for (Map.Entry<Identifier, Resource> entry : manager.findResources("crafting_rock_recipes", id -> id.getPath().endsWith(".json")).entrySet()) {
+            if (craftingRockRecipesReplaced) {
+                break;
+            }
+            try (InputStream stream = entry.getValue().getInputStream()) {
                 JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
 
-                if (CRAFTING_ROCK_RECIPES_REPLACED) {
-                    return;
-                }
-                CRAFTING_ROCK_RECIPES_REPLACED = data.has("replace") && data.get("replace").getAsBoolean();
-                if (CRAFTING_ROCK_RECIPES_REPLACED) {
-                    EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
+                if (JsonHelper.getBoolean(data, "replace", false)) {
+                    craftingRockRecipesReplaced = true;
+                    CRAFTING_ROCK_RECIPE_IDS.clear();
                 }
 
                 if (!data.has("values")) {
-                    return;
+                    continue;
                 }
 
-                JsonArray values = data.getAsJsonArray("values");
-                for (JsonElement element : values) {
-                    Identifier recipeId = Identifier.of(element.getAsString());
-
-                    Identifier fileId = Identifier.of(recipeId.getNamespace(), "recipe/" + recipeId.getPath() + ".json");
-
-                    try {
-                        Collection<Resource> resources = manager.getAllResources(fileId);
-
-                        for (Resource resource : resources) {
-                            try (InputStream recipeStream = resource.getInputStream()) {
-                                JsonObject recipeJson = JsonParser.parseReader(new InputStreamReader(recipeStream)).getAsJsonObject();
-
-                                extractRecipeItems(recipeJson, manager).ifPresent(recipeItems -> {
-                                    Item outputItem = Registries.ITEM.get(recipeItems.output());
-                                    List<Item> inputItems = recipeItems.inputs().stream().map(Registries.ITEM::get).toList();
-
-                                    EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.merge(outputItem, new ArrayList<>(inputItems), (existing, incoming) -> {
-                                        existing.addAll(incoming);
-                                        return existing;
-                                    });
-                                });
-                            }
-                        }
-                    } catch (Exception e) {
-                        LOGGER.warn("Could not load recipe {} referenced in {}: {}", recipeId, id, e.toString());
+                for (JsonElement element : data.getAsJsonArray("values")) {
+                    String recipeId = element.isJsonObject() ? JsonHelper.getString(element.getAsJsonObject(), "id") : element.getAsString();
+                    Identifier identifier = Identifier.tryParse(recipeId);
+                    if (identifier == null) {
+                        LOGGER.warn("Invalid recipe id {} in {}", recipeId, entry.getKey());
+                        continue;
                     }
+                    CRAFTING_ROCK_RECIPE_IDS.add(identifier);
                 }
             } catch (Exception e) {
-                LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
+                LOGGER.error("Error occurred while loading resource {}. {}", entry.getKey().toString(), e.toString());
             }
-        });
+        }
 
         manager.findResources("sieve_drops", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
             try {
@@ -134,136 +119,36 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                 LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
             }
         });
-
     }
 
-    private record RecipeItems(Identifier output, List<Identifier> inputs) {
-    }
-
-    private Optional<RecipeItems> extractRecipeItems(JsonObject recipe, ResourceManager resourceManager) {
-        if (!recipe.has("type") || !recipe.has("result")) {
-            return Optional.empty();
-        }
-
-        String type = recipe.get("type").getAsString();
-        List<Identifier> inputs = new ArrayList<>();
-
-        switch (type) {
-            case "minecraft:crafting_shaped" -> {
-                if (recipe.has("key")) {
-                    for (Map.Entry<String, JsonElement> entry : recipe.getAsJsonObject("key").entrySet()) {
-                        inputs.addAll(resolveIngredient(entry.getValue(), resourceManager));
+    public static void updateCraftingRockRecipeItems(MinecraftServer server) {
+        Map<Item, List<Item>> recipeItems = new HashMap<>();
+        for (Identifier recipeId : CRAFTING_ROCK_RECIPE_IDS) {
+            Optional<RecipeEntry<?>> optional = server.getRecipeManager().get(recipeId);
+            if (optional.isEmpty()) {
+                LOGGER.warn("Crafting rock recipe {} does not exist", recipeId);
+                continue;
+            }
+            if (!(optional.get().value() instanceof CraftingRecipe recipe)) {
+                LOGGER.warn("Crafting rock recipe {} is not a crafting recipe", recipeId);
+                continue;
+            }
+            ItemStack result = recipe.getResult(server.getRegistryManager());
+            if (result.isEmpty()) {
+                LOGGER.warn("Crafting rock recipe {} has no result", recipeId);
+                continue;
+            }
+            List<Item> inputs = recipeItems.computeIfAbsent(result.getItem(), item -> new ArrayList<>());
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                for (ItemStack stack : ingredient.getMatchingStacks()) {
+                    if (!stack.isEmpty() && !inputs.contains(stack.getItem())) {
+                        inputs.add(stack.getItem());
                     }
                 }
             }
-            case "minecraft:crafting_shapeless" -> {
-                if (recipe.has("ingredients")) {
-                    for (JsonElement ingredient : recipe.getAsJsonArray("ingredients")) {
-                        inputs.addAll(resolveIngredient(ingredient, resourceManager));
-                    }
-                }
-            }
-            default -> {
-                LOGGER.warn("Unsupported recipe type: {}", type);
-                return Optional.empty();
-            }
         }
-
-        JsonObject result = recipe.getAsJsonObject("result");
-        String outputKey = result.has("id") ? "id" : "item";
-        if (!result.has(outputKey)) {
-            return Optional.empty();
-        }
-
-        Identifier outputId = Identifier.of(result.get(outputKey).getAsString());
-        if (!Registries.ITEM.containsId(outputId)) {
-            LOGGER.warn("Unknown output item in recipe: {}", outputId);
-            return Optional.empty();
-        }
-
-        return Optional.of(new RecipeItems(outputId, inputs));
-    }
-
-    private List<Identifier> resolveIngredient(JsonElement ingredient, ResourceManager resourceManager) {
-        if (ingredient.isJsonArray()) {
-            List<Identifier> items = new ArrayList<>();
-            for (JsonElement element : ingredient.getAsJsonArray()) {
-                items.addAll(resolveIngredient(element, resourceManager));
-            }
-            return items;
-        }
-
-        JsonObject obj = ingredient.getAsJsonObject();
-
-        if (obj.has("item")) {
-            Identifier itemId = Identifier.of(obj.get("item").getAsString());
-            if (Registries.ITEM.containsId(itemId)) {
-                return List.of(itemId);
-            } else {
-                LOGGER.warn("Unknown item in recipe ingredient: {}", itemId);
-            }
-        } else if (obj.has("tag")) {
-            Identifier tagId = Identifier.of(obj.get("tag").getAsString());
-            return resolveItemTag(tagId, resourceManager);
-        }
-
-        return List.of();
-    }
-
-    private List<Identifier> resolveItemTag(Identifier tagId, ResourceManager resourceManager) {
-        return resolveItemTag(tagId, resourceManager, new HashSet<>());
-    }
-
-    private List<Identifier> resolveItemTag(Identifier tagId, ResourceManager resourceManager, Set<Identifier> visited) {
-        if (!visited.add(tagId)) {
-            LOGGER.warn("Circular tag reference detected: {}", tagId);
-            return List.of();
-        }
-
-        Identifier fileId = Identifier.of(tagId.getNamespace(), "tags/item/" + tagId.getPath() + ".json");
-
-        List<Identifier> result = new ArrayList<>();
-        Collection<Resource> resources;
-
-        try {
-            resources = resourceManager.getAllResources(fileId);
-        } catch (Exception e) {
-            LOGGER.warn("Could not find tag file for {}: {}", tagId, e.toString());
-            return List.of();
-        }
-
-        for (Resource resource : resources) {
-            try (InputStream stream = resource.getInputStream()) {
-                JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
-
-                if (json.has("replace") && json.get("replace").getAsBoolean()) {
-                    result.clear();
-                }
-
-                if (!json.has("values")) {
-                    continue;
-                }
-                JsonArray values = json.getAsJsonArray("values");
-                for (JsonElement element : values) {
-                    String entry = element.getAsString();
-
-                    if (entry.startsWith("#")) {
-                        Identifier nestedTag = Identifier.of(entry.substring(1));
-                        result.addAll(resolveItemTag(nestedTag, resourceManager, visited));
-                    } else {
-                        Identifier itemId = Identifier.of(entry);
-                        if (Registries.ITEM.containsId(itemId)) {
-                            result.add(itemId);
-                        } else {
-                            LOGGER.warn("Tag {} references unknown item {}, skipping.", tagId, itemId);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                LOGGER.error("Error reading tag file {} from {}: {}", fileId, resource, e.toString());
-            }
-        }
-        return result;
+        EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
+        EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.putAll(recipeItems);
     }
 
 }
