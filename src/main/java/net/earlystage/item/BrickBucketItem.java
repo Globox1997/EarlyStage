@@ -1,6 +1,7 @@
 package net.earlystage.item;
 
 import net.earlystage.compat.EarlyStageDehydrationItems;
+import net.earlystage.init.ConfigInit;
 import net.earlystage.init.ItemInit;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +22,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -31,6 +34,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class BrickBucketItem extends Item implements FluidModificationItem {
@@ -104,6 +109,14 @@ public class BrickBucketItem extends Item implements FluidModificationItem {
             return new ItemStack(ItemInit.BRICK_BUCKET);
         }
         return stack;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+        if (this.fluid == Fluids.LAVA && ConfigInit.CONFIG.infoTooltips) {
+            tooltip.add(Text.translatable("item.earlystage.lava_brick_bucket.tooltip"));
+        }
+        super.appendTooltip(stack, context, tooltip, type);
     }
 
     @Override
