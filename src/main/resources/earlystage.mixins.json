@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "net.earlystage.mixin.EarlyStageMixinPlugin",
   "mixins": [
+    "AbstractBlockStateMixin",
     "AbstractFurnaceBlockEntityMixin",
     "AbstractFurnaceScreenHandlerMixin",
     "AxeItemMixin",
@@ -12,7 +13,6 @@
     "BlastFurnaceScreenHandlerMixin",
     "CampfireBlockMixin",
     "ItemMixin",
-    "PillarBlockMixin",
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "ServerPlayerEntityMixin",

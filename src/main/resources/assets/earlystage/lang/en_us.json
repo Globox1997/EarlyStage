@@ -38,6 +38,7 @@
     "item.earlystage.brick_bucket": "Brick Bucket",
     "item.earlystage.water_brick_bucket": "Water Brick Bucket",
     "item.earlystage.lava_brick_bucket": "Lava Brick Bucket",
+    "item.earlystage.lava_brick_bucket.tooltip": "§7Breaks when the lava is poured out",
     "item.earlystage.clay_bucket": "Clay Bucket",
     "item.earlystage.stone_shears": "Stone Shears",
 
@@ -74,6 +75,7 @@
     "text.autoconfig.earlystage.option.craftRockMaxCraftHits": "Craft Rock Max Craft Hits",
     "text.autoconfig.earlystage.option.infoTooltips": "Info Tooltips",
     "text.autoconfig.earlystage.option.extraStickDropChance": "Extra Stick Drop Chance",
+    "text.autoconfig.earlystage.option.stripBarkDrops": "Strip Bark Drops",
     "text.autoconfig.earlystage.option.beginnerDeathCount": "Beginner Death Count",
     "text.autoconfig.earlystage.option.blastFurnaceExtraSlot": "Blast Furnace Extra Slot",
 
