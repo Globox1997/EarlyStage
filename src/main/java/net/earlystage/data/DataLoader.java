@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
@@ -72,18 +73,33 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
         }
 
         manager.findResources("sieve_drops", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
-            try {
-                InputStream stream = resourceRef.getInputStream();
-                JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+            JsonObject data;
+            try (InputStream stream = resourceRef.getInputStream()) {
+                data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+            } catch (Exception e) {
+                LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
+                return;
+            }
+            if (!data.has("drops") || !data.get("drops").isJsonArray()) {
+                LOGGER.warn("Sieve drop file {} has no drops array", id);
+                return;
+            }
 
-                for (int u = 0; u < data.getAsJsonArray("drops").size(); u++) {
-                    JsonObject data2 = (JsonObject) data.getAsJsonArray("drops").get(u);
-                    if (Registries.BLOCK.get(Identifier.of(data2.get("block_id").getAsString())) == Blocks.AIR) {
-                        LOGGER.warn("Block Id: " + data2.get("block_id").getAsString() + " is not a valid block id");
+            for (JsonElement dropElement : data.getAsJsonArray("drops")) {
+                try {
+                    JsonObject data2 = dropElement.getAsJsonObject();
+                    String blockIdString = JsonHelper.getString(data2, "block_id");
+                    Identifier blockId = Identifier.tryParse(blockIdString);
+                    if (blockId == null || !Registries.BLOCK.containsId(blockId) || Registries.BLOCK.get(blockId) == Blocks.AIR) {
+                        LOGGER.warn("Block Id: {} in {} is not a valid block id", blockIdString, id);
                         continue;
                     }
 
-                    Item blockItem = Registries.BLOCK.get(Identifier.of(data2.get("block_id").getAsString())).asItem();
+                    Item blockItem = Registries.BLOCK.get(blockId).asItem();
+                    if (blockItem == Items.AIR) {
+                        LOGGER.warn("Block Id: {} in {} has no item form", blockIdString, id);
+                        continue;
+                    }
 
                     List<Item> blockDrops = new ArrayList<>();
                     List<Float> dropChances = new ArrayList<>();
@@ -96,7 +112,6 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                                 break;
                             }
                     } else {
-                        // checks if it already exists
                         for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
                             if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem() == blockItem) {
                                 blockDrops.addAll(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockDrops());
@@ -107,16 +122,28 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                             }
                     }
 
-                    for (int i = 0; i < data2.getAsJsonArray("block_drops").size(); i++) {
-                        JsonObject data3 = (JsonObject) data2.getAsJsonArray("block_drops").get(i);
-                        blockDrops.add(Registries.ITEM.get(Identifier.of(data3.get("item_id").getAsString())));
-                        dropChances.add(data3.get("chance").getAsFloat());
-                        rollCount.add(data3.get("rolls").getAsInt());
+                    for (JsonElement blockDropElement : JsonHelper.getArray(data2, "block_drops")) {
+                        try {
+                            JsonObject data3 = blockDropElement.getAsJsonObject();
+                            String itemIdString = JsonHelper.getString(data3, "item_id");
+                            Identifier itemId = Identifier.tryParse(itemIdString);
+                            if (itemId == null || !Registries.ITEM.containsId(itemId) || Registries.ITEM.get(itemId) == Items.AIR) {
+                                LOGGER.warn("Item Id: {} for block {} in {} is not a valid item id", itemIdString, blockIdString, id);
+                                continue;
+                            }
+                            float chance = JsonHelper.getFloat(data3, "chance");
+                            int rolls = JsonHelper.getInt(data3, "rolls");
+                            blockDrops.add(Registries.ITEM.get(itemId));
+                            dropChances.add(chance);
+                            rollCount.add(rolls);
+                        } catch (Exception e) {
+                            LOGGER.error("Invalid sieve drop for block {} in {}. {}", blockIdString, id, e.toString());
+                        }
                     }
                     EarlyStageMain.SIEVE_DROP_TEMPLATES.add(new SieveDropTemplate(blockItem, blockDrops, dropChances, rollCount));
+                } catch (Exception e) {
+                    LOGGER.error("Invalid sieve drop entry in {}. {}", id, e.toString());
                 }
-            } catch (Exception e) {
-                LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
             }
         });
     }
