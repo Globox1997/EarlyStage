@@ -72,6 +72,8 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
             }
         }
 
+        Map<Item, SieveDropTemplate> mergedSieveDrops = new LinkedHashMap<>();
+        Map<Item, SieveDropTemplate> replacedSieveDrops = new LinkedHashMap<>();
         manager.findResources("sieve_drops", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
             JsonObject data;
             try (InputStream stream = resourceRef.getInputStream()) {
@@ -101,26 +103,11 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                         continue;
                     }
 
-                    List<Item> blockDrops = new ArrayList<>();
-                    List<Float> dropChances = new ArrayList<>();
-                    List<Integer> rollCount = new ArrayList<>();
-
-                    if (JsonHelper.getBoolean(data2, "replace", false)) {
-                        for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
-                            if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem() == blockItem) {
-                                EarlyStageMain.SIEVE_DROP_TEMPLATES.remove(i);
-                                break;
-                            }
-                    } else {
-                        for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
-                            if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem() == blockItem) {
-                                blockDrops.addAll(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockDrops());
-                                dropChances.addAll(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getDropChances());
-                                rollCount.addAll(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getRollCount());
-                                EarlyStageMain.SIEVE_DROP_TEMPLATES.remove(i);
-                                break;
-                            }
-                    }
+                    Map<Item, SieveDropTemplate> sieveDrops = JsonHelper.getBoolean(data2, "replace", false) ? replacedSieveDrops : mergedSieveDrops;
+                    SieveDropTemplate template = sieveDrops.computeIfAbsent(blockItem, item -> new SieveDropTemplate(item, List.of(), List.of(), List.of()));
+                    List<Item> blockDrops = template.getBlockDrops();
+                    List<Float> dropChances = template.getDropChances();
+                    List<Integer> rollCount = template.getRollCount();
 
                     for (JsonElement blockDropElement : JsonHelper.getArray(data2, "block_drops")) {
                         try {
@@ -140,12 +127,17 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                             LOGGER.error("Invalid sieve drop for block {} in {}. {}", blockIdString, id, e.toString());
                         }
                     }
-                    EarlyStageMain.SIEVE_DROP_TEMPLATES.add(new SieveDropTemplate(blockItem, blockDrops, dropChances, rollCount));
                 } catch (Exception e) {
                     LOGGER.error("Invalid sieve drop entry in {}. {}", id, e.toString());
                 }
             }
         });
+        mergedSieveDrops.forEach((blockItem, template) -> {
+            if (!replacedSieveDrops.containsKey(blockItem)) {
+                EarlyStageMain.SIEVE_DROP_TEMPLATES.add(template);
+            }
+        });
+        EarlyStageMain.SIEVE_DROP_TEMPLATES.addAll(replacedSieveDrops.values());
     }
 
     public static void updateCraftingRockRecipeItems(MinecraftServer server) {
