@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Crafting rock recipe issue
+- Stone shears not dropping specific blocks
 ### Changed:
-- Changed log breaking restriction mechanic
+- 

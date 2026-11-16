@@ -10,6 +10,7 @@ import net.earlystage.item.material.EarlyStageToolMaterials;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -87,7 +88,7 @@ public class ItemInit {
 
     public static final Item WOODEN_SHIELD = register("wooden_shield", new ShieldItem(new Item.Settings().maxDamage(69)));
 
-    public static final Item STONE_SHEARS = register("stone_shears", new ShearsItem(new Item.Settings().maxDamage(24)));
+    public static final Item STONE_SHEARS = register("stone_shears", new ShearsItem(new Item.Settings().maxDamage(24).component(DataComponentTypes.TOOL, ShearsItem.createToolComponent())));
 
     public static final Item WOODEN_BUCKET = register("wooden_bucket", new WoodenBucketItem(Fluids.EMPTY, new Item.Settings().maxCount(16)));
     public static final Item WATER_WOODEN_BUCKET = register("water_wooden_bucket", new WoodenBucketItem(Fluids.WATER, new Item.Settings().recipeRemainder(WOODEN_BUCKET).maxCount(1)));
