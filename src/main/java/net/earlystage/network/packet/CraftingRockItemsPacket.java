@@ -6,13 +6,14 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems) implements CustomPayload {
+public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems, List<Identifier> recipeIds) implements CustomPayload {
 
     public static final Id<CraftingRockItemsPacket> PACKET_ID = new Id<>(EarlyStageMain.identifierOf("crafting_rock_items_packet"));
 
@@ -26,6 +27,10 @@ public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems) impleme
             for (Item item : entry.getValue()) {
                 buf.writeInt(Registries.ITEM.getRawId(item));
             }
+        }
+        buf.writeInt(payload.recipeIds().size());
+        for (Identifier recipeId : payload.recipeIds()) {
+            buf.writeIdentifier(recipeId);
         }
     }
 
@@ -41,7 +46,12 @@ public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems) impleme
             }
             recipeItems.put(output, inputs);
         }
-        return new CraftingRockItemsPacket(recipeItems);
+        int recipeIdCount = buf.readInt();
+        List<Identifier> recipeIds = new ArrayList<>();
+        for (int i = 0; i < recipeIdCount; i++) {
+            recipeIds.add(buf.readIdentifier());
+        }
+        return new CraftingRockItemsPacket(recipeItems, recipeIds);
     }
 
     @Override

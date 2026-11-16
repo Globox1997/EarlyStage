@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 public class SieveBlockEntity extends BlockEntity implements Inventory {
 
     private int tick;
-    private DefaultedList<ItemStack> inventory;
+    private final DefaultedList<ItemStack> inventory;
     private int sieveCount;
 
     public SieveBlockEntity(BlockPos pos, BlockState state) {
@@ -77,14 +77,14 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     public void sieve() {
         this.sieveCount++;
         if (this.sieveCount > 3) {
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++) {
                     if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem().equals(this.getStack(0).getItem())) {
                         SieveDropTemplate sieveDropTemplate = EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i);
 
                         for (int u = 0; u < sieveDropTemplate.getBlockDrops().size(); u++) {
                             for (int k = 0; k < sieveDropTemplate.getRollCount().get(u); k++) {
-                                if (this.world.random.nextFloat() <= sieveDropTemplate.getDropChances().get(u))
+                                if (this.world.getRandom().nextFloat() <= sieveDropTemplate.getDropChances().get(u))
                                     dropItem(sieveDropTemplate.getBlockDrops().get(u));
                             }
                         }
@@ -94,14 +94,18 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
                 this.clear();
             }
             world.playSound(null, pos, SoundEvents.BLOCK_COMPOSTER_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
-        } else
+        } else {
             world.playSound(null, pos, SoundEvents.BLOCK_COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            if (!world.isClient()) {
+                this.markDirty();
+            }
+        }
     }
 
     private void dropItem(Item item) {
-        double d = (double) (world.random.nextFloat() * 0.7f) + (double) 0.15f;
-        double e = (double) (world.random.nextFloat() * 0.7f) + 0.06000000238418579 + 0.6;
-        double g = (double) (world.random.nextFloat() * 0.7f) + (double) 0.15f;
+        double d = (double) (world.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
+        double e = (double) (world.getRandom().nextFloat() * 0.7f) + 0.06000000238418579 + 0.6;
+        double g = (double) (world.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
 
         ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + d, (double) pos.getY() + e, (double) pos.getZ() + g, new ItemStack(item));
         itemEntity.setToDefaultPickupDelay();
@@ -117,7 +121,7 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     private void sendUpdate() {
         if (this.world != null) {
             BlockState state = this.world.getBlockState(this.pos);
-            (this.world).updateListeners(this.pos, state, state, 3);
+            this.world.updateListeners(this.pos, state, state, 3);
         }
     }
 
@@ -164,10 +168,13 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        if (this.isEmpty() && this.world.getBlockState(pos.up()).isAir())
-            for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
-                if (stack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem()))
+        if (this.isEmpty() && this.world.getBlockState(pos.up()).isAir()) {
+            for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++) {
+                if (stack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem())) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 
