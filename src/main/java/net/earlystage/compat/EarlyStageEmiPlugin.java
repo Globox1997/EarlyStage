@@ -11,12 +11,13 @@ import net.earlystage.init.BlockInit;
 import net.earlystage.init.RecipeInit;
 import net.earlystage.init.RenderInit;
 import net.earlystage.misc.ExtraBlastingRecipe;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.ShapedRecipe;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.util.Identifier;
 
 public class EarlyStageEmiPlugin implements EmiPlugin {
 
@@ -37,8 +38,18 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
         emiRegistry.addCategory(CRAFTING_ROCK_CATEGORY);
         emiRegistry.addWorkstation(CRAFTING_ROCK_CATEGORY, CRAFTING_ROCK);
 
-        for (ShapedRecipe recipe : getDefaultRockRecipes(manager)) {
-            emiRegistry.addRecipe(new RockEmiRecipe(recipe));
+        DynamicRegistryManager registryManager = MinecraftClient.getInstance().world != null ? MinecraftClient.getInstance().world.getRegistryManager() : null;
+        if (registryManager != null) {
+            for (Identifier recipeId : EarlyStageMain.CRAFTING_ROCK_RECIPES) {
+                manager.get(recipeId).ifPresent(recipe -> {
+                    if (recipe.value() instanceof CraftingRecipe craftingRecipe) {
+                        ItemStack output = craftingRecipe.getResult(registryManager);
+                        if (!output.isEmpty()) {
+                            emiRegistry.addRecipe(new RockEmiRecipe(recipeId, craftingRecipe, output));
+                        }
+                    }
+                });
+            }
         }
 
         emiRegistry.addCategory(SIEVE_CATEGORY);
@@ -47,18 +58,6 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
         for (SieveDropTemplate template : EarlyStageMain.SIEVE_DROP_TEMPLATES) {
             emiRegistry.addRecipe(new SieveEmiRecipe(template));
         }
-    }
-
-    private static List<ShapedRecipe> getDefaultRockRecipes(RecipeManager manager) {
-        List<ShapedRecipe> list = new ArrayList<ShapedRecipe>();
-        for (String name : List.of("flint_axe", "flint_hoe", "flint_pickaxe", "flint_shovel", "flint_sword")) {
-            manager.get(EarlyStageMain.identifierOf(name)).ifPresent(recipe -> {
-                if (recipe.value() instanceof ShapedRecipe shapedRecipe) {
-                    list.add(shapedRecipe);
-                }
-            });
-        }
-        return list;
     }
 
 }

@@ -31,7 +31,7 @@ public class EarlyServerPacket {
         if (ServerPlayNetworking.canSend(player, CraftingRockItemsPacket.PACKET_ID)) {
             Map<Item, List<Item>> recipeItems = new HashMap<>();
             EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.forEach((output, inputs) -> recipeItems.put(output, List.copyOf(inputs)));
-            ServerPlayNetworking.send(player, new CraftingRockItemsPacket(recipeItems));
+            ServerPlayNetworking.send(player, new CraftingRockItemsPacket(recipeItems, EarlyStageMain.CRAFTING_ROCK_RECIPES));
         }
         if (ServerPlayNetworking.canSend(player, ConfigSyncPacket.PACKET_ID)) {
             ServerPlayNetworking.send(player, new ConfigSyncPacket(ConfigInit.CONFIG.blastFurnaceExtraSlot));

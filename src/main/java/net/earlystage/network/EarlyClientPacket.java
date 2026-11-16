@@ -14,6 +14,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.stat.Stats;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class EarlyClientPacket {
@@ -37,6 +38,7 @@ public class EarlyClientPacket {
             if (!context.client().isIntegratedServerRunning()) {
                 EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
                 payload.recipeItems().forEach((output, inputs) -> EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.put(output, new ArrayList<>(inputs)));
+                EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(payload.recipeIds());
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_ID, (payload, context) -> {

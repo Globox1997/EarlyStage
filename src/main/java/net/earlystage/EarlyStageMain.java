@@ -16,6 +16,7 @@ public class EarlyStageMain implements ModInitializer {
 
     public static final List<SieveDropTemplate> SIEVE_DROP_TEMPLATES = new ArrayList<>();
     public static final Map<Item, List<Item>> CRAFTING_ROCK_RECIPE_ITEMS = new HashMap<>();
+    public static volatile List<Identifier> CRAFTING_ROCK_RECIPES = List.of();
 
     @Override
     public void onInitialize() {

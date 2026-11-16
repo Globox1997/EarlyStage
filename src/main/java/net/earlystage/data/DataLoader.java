@@ -142,6 +142,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
     public static void updateCraftingRockRecipeItems(MinecraftServer server) {
         Map<Item, List<Item>> recipeItems = new HashMap<>();
+        List<Identifier> recipeIds = new ArrayList<>();
         for (Identifier recipeId : CRAFTING_ROCK_RECIPE_IDS) {
             Optional<RecipeEntry<?>> optional = server.getRecipeManager().get(recipeId);
             if (optional.isEmpty()) {
@@ -157,6 +158,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                 LOGGER.warn("Crafting rock recipe {} has no result", recipeId);
                 continue;
             }
+            recipeIds.add(recipeId);
             List<Item> inputs = recipeItems.computeIfAbsent(result.getItem(), item -> new ArrayList<>());
             for (Ingredient ingredient : recipe.getIngredients()) {
                 for (ItemStack stack : ingredient.getMatchingStacks()) {
@@ -168,6 +170,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
         }
         EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
         EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.putAll(recipeItems);
+        EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(recipeIds);
     }
 
 }
