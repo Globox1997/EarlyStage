@@ -62,7 +62,9 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
         if (blockEntity.getType().equals(BlockEntityType.BLAST_FURNACE) && !blockEntity.getStack(3).isEmpty()) {
             RecipeEntry<ExtraBlastingRecipe> extraBlastingRecipe = world.getRecipeManager()
                     .getFirstMatch(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(blockEntity.getStack(0), blockEntity.getStack(3)), world).orElse(null);
-            return extraBlastingRecipe;
+            if (extraBlastingRecipe != null) {
+                return extraBlastingRecipe;
+            }
         }
         return original;
     }
@@ -80,11 +82,10 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
 
     @Inject(method = "craftRecipe", at = @At("TAIL"))
     private static void craftRecipeMixin(DynamicRegistryManager registryManager, @Nullable RecipeEntry<?> recipe, DefaultedList<ItemStack> slots, int count, CallbackInfoReturnable<Boolean> info) {
-        if (recipe != null && !recipe.value().isEmpty() && recipe.value().getType().equals(RecipeInit.EXTRA_BLASTING)) {
-            slots.get(3).decrement(ExtraBlastingRecipe.getRequiredCount(recipe.value().getIngredients().get(1)));
-            int inputCount = ExtraBlastingRecipe.getRequiredCount(recipe.value().getIngredients().get(0));
-            if (inputCount > 1) {
-                slots.get(0).decrement(inputCount - 1);
+        if (recipe != null && recipe.value() instanceof ExtraBlastingRecipe extraBlastingRecipe) {
+            slots.get(3).decrement(extraBlastingRecipe.getExtraInputCount());
+            if (extraBlastingRecipe.getInputCount() > 1) {
+                slots.get(0).decrement(extraBlastingRecipe.getInputCount() - 1);
             }
         }
     }

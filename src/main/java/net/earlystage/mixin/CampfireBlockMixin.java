@@ -28,7 +28,7 @@ public abstract class CampfireBlockMixin extends BlockWithEntity {
 
     @Inject(method = "onUseWithItem", at = @At("HEAD"), cancellable = true)
     private void onUseWithItemMixin(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ItemActionResult> info) {
-        if (!state.get(CampfireBlock.LIT) && player.getStackInHand(hand).isIn(TagInit.BARK_ITEMS)) {
+        if (CampfireBlock.canBeLit(state) && player.getStackInHand(hand).isIn(TagInit.BARK_ITEMS)) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(CampfireBlock.LIT, true));
                 if (!player.isCreative()) {

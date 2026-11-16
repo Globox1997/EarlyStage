@@ -60,7 +60,7 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     public void decreaseCraftHits(Entity entity) {
         this.craftHits--;
         this.totalHits++;
-        if (!this.world.isClient && ConfigInit.CONFIG.craftRockMaxCraftHits <= this.totalHits) {
+        if (!this.world.isClient() && ConfigInit.CONFIG.craftRockMaxCraftHits <= this.totalHits) {
             this.world.breakBlock(pos, false, entity);
         }
     }
@@ -68,7 +68,7 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     private void sendUpdate() {
         if (this.world != null) {
             BlockState state = this.world.getBlockState(this.pos);
-            (this.world).updateListeners(this.pos, state, state, 3);
+            this.world.updateListeners(this.pos, state, state, 3);
         }
     }
 
@@ -119,11 +119,12 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        // if (this.isEmpty() && this.world.getBlockState(pos.up()).isAir())
-        // for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++)
-        // if (stack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem()))
-        // return true;
-        return true;
+        return false;
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return 1;
     }
 
     @Override
