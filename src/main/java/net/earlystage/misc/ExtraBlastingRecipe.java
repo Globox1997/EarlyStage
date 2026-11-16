@@ -18,25 +18,43 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 
 public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
     private final CookingRecipeCategory category;
     private final String group;
     private final Ingredient input;
+    private final int inputCount;
     private final Ingredient extraInput;
+    private final int extraInputCount;
     private final ItemStack output;
     private final float experience;
     private final int cookTime;
 
-    public ExtraBlastingRecipe(String group, CookingRecipeCategory category, Ingredient input, Ingredient extraInput, ItemStack output, float experience, int cookTime) {
+    public ExtraBlastingRecipe(String group, CookingRecipeCategory category, Ingredient input, int inputCount, Ingredient extraInput, int extraInputCount, ItemStack output, float experience,
+            int cookTime) {
         this.category = category;
         this.group = group;
         this.input = input;
+        this.inputCount = Math.max(1, inputCount);
         this.extraInput = extraInput;
+        this.extraInputCount = Math.max(1, extraInputCount);
         this.output = output;
         this.experience = experience;
         this.cookTime = cookTime;
+    }
+
+    private ExtraBlastingRecipe(String group, CookingRecipeCategory category, CountedIngredient input, CountedIngredient extraInput, ItemStack output, float experience, int cookTime) {
+        this(group, category, input.ingredient(), input.count(), extraInput.ingredient(), extraInput.count(), output, experience, cookTime);
+    }
+
+    public record CountedIngredient(Ingredient ingredient, int count) {
+
+        public static final Codec<CountedIngredient> CODEC = Codec.withAlternative(
+                RecordCodecBuilder.<CountedIngredient>mapCodec(instance -> instance.group(MapCodec.assumeMapUnsafe(Ingredient.DISALLOW_EMPTY_CODEC).forGetter(CountedIngredient::ingredient),
+                        Codecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(CountedIngredient::count)).apply(instance, CountedIngredient::new)).codec(),
+                Ingredient.DISALLOW_EMPTY_CODEC, ingredient -> new CountedIngredient(ingredient, 1));
     }
 
     @Override
@@ -49,28 +67,16 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
         return RecipeInit.EXTRA_BLASTING_SERIALIZER;
     }
 
-    private boolean test(@Nullable ItemStack input, Ingredient ingredient) {
-        if (input == null) {
-            return false;
-        }
-        if (ingredient.isEmpty()) {
-            return input.isEmpty();
-        }
-        for (ItemStack itemStack2 : ingredient.getMatchingStacks()) {
-            if (!itemStack2.isOf(input.getItem())) {
-                continue;
-            }
-            if (input.getCount() < itemStack2.getCount()) {
-                return false;
-            }
-            return true;
-        }
-        return false;
+    private static boolean test(@Nullable ItemStack stack, Ingredient ingredient, int count) {
+        return stack != null && !stack.isEmpty() && ingredient.test(stack) && stack.getCount() >= count;
     }
 
-    public static int getRequiredCount(Ingredient ingredient) {
-        ItemStack[] matchingStacks = ingredient.getMatchingStacks();
-        return matchingStacks.length > 0 ? matchingStacks[0].getCount() : 1;
+    public int getInputCount() {
+        return this.inputCount;
+    }
+
+    public int getExtraInputCount() {
+        return this.extraInputCount;
     }
 
     @Override
@@ -121,8 +127,9 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
 
         public static final MapCodec<ExtraBlastingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
                 CookingRecipeCategory.CODEC.fieldOf("category").orElse(CookingRecipeCategory.MISC).forGetter(recipe -> recipe.category),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.input),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("extraingredient").forGetter(recipe -> recipe.extraInput), ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
+                CountedIngredient.CODEC.fieldOf("ingredient").forGetter(recipe -> new CountedIngredient(recipe.input, recipe.inputCount)),
+                CountedIngredient.CODEC.fieldOf("extraingredient").forGetter(recipe -> new CountedIngredient(recipe.extraInput, recipe.extraInputCount)),
+                ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                 Codec.FLOAT.fieldOf("experience").orElse(Float.valueOf(0.0f)).forGetter(recipe -> Float.valueOf(recipe.experience)),
                 Codec.INT.fieldOf("cookingtime").orElse(100).forGetter(recipe -> recipe.cookTime)).apply(instance, ExtraBlastingRecipe::new));
 
@@ -142,18 +149,22 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
             String group = buf.readString();
             CookingRecipeCategory cookingRecipeCategory = buf.readEnumConstant(CookingRecipeCategory.class);
             Ingredient input = Ingredient.PACKET_CODEC.decode(buf);
+            int inputCount = buf.readVarInt();
             Ingredient extraInput = Ingredient.PACKET_CODEC.decode(buf);
+            int extraInputCount = buf.readVarInt();
             ItemStack itemStack = (ItemStack) ItemStack.PACKET_CODEC.decode(buf);
             float experience = buf.readFloat();
             int cookTime = buf.readVarInt();
-            return new ExtraBlastingRecipe(group, cookingRecipeCategory, input, extraInput, itemStack, experience, cookTime);
+            return new ExtraBlastingRecipe(group, cookingRecipeCategory, input, inputCount, extraInput, extraInputCount, itemStack, experience, cookTime);
         }
 
         private static void write(RegistryByteBuf buf, ExtraBlastingRecipe extraBlastingRecipe) {
             buf.writeString(extraBlastingRecipe.group);
             buf.writeEnumConstant(extraBlastingRecipe.getCategory());
             Ingredient.PACKET_CODEC.encode(buf, extraBlastingRecipe.input);
+            buf.writeVarInt(extraBlastingRecipe.inputCount);
             Ingredient.PACKET_CODEC.encode(buf, extraBlastingRecipe.extraInput);
+            buf.writeVarInt(extraBlastingRecipe.extraInputCount);
             ItemStack.PACKET_CODEC.encode(buf, extraBlastingRecipe.output);
             buf.writeFloat(extraBlastingRecipe.experience);
             buf.writeVarInt(extraBlastingRecipe.cookTime);
@@ -163,7 +174,7 @@ public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
 
     @Override
     public boolean matches(ExtraBlastingRecipeInput extraBlastingRecipeInput, World world) {
-        return this.input.test(extraBlastingRecipeInput.input()) && test(extraBlastingRecipeInput.extraInput(), this.extraInput);
+        return test(extraBlastingRecipeInput.input(), this.input, this.inputCount) && test(extraBlastingRecipeInput.extraInput(), this.extraInput, this.extraInputCount);
     }
 
     @Override

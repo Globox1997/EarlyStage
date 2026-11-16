@@ -21,7 +21,7 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
     private final float experience;
 
     public ExtraBlastingEmiRecipe(ExtraBlastingRecipe recipe) {
-        this.input = List.of(EmiIngredient.of(recipe.getIngredients().get(0)), EmiIngredient.of(recipe.getIngredients().get(1)));
+        this.input = List.of(EmiIngredient.of(recipe.getIngredients().get(0), recipe.getInputCount()), EmiIngredient.of(recipe.getIngredients().get(1), recipe.getExtraInputCount()));
         this.output = List.of(EmiStack.of(recipe.getOutput()));
         this.cookTime = recipe.getCookTime();
         this.experience = recipe.getExperience();
