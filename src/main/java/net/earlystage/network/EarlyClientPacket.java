@@ -10,9 +10,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.stat.Stats;
-
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.stats.Stats;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,25 +23,25 @@ public class EarlyClientPacket {
             int entityId = payload.entityId();
             int deathCount = payload.deathCount();
 
-            if (context.client().world.getEntityById(entityId) instanceof ClientPlayerEntity clientPlayerEntity) {
-                clientPlayerEntity.getStatHandler().setStat(clientPlayerEntity, Stats.CUSTOM.getOrCreateStat(Stats.DEATHS), deathCount);
+            if (context.client().level.getEntity(entityId) instanceof LocalPlayer clientPlayerEntity) {
+                clientPlayerEntity.getStats().setValue(clientPlayerEntity, Stats.CUSTOM.get(Stats.DEATHS), deathCount);
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(SieveDropPacket.PACKET_ID, (payload, context) -> {
-            if (!context.client().isIntegratedServerRunning()) {
+            if (!context.client().hasSingleplayerServer()) {
                 EarlyStageMain.SIEVE_DROP_TEMPLATES.clear();
                 EarlyStageMain.SIEVE_DROP_TEMPLATES.addAll(payload.templates());
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(CraftingRockItemsPacket.PACKET_ID, (payload, context) -> {
-            if (!context.client().isIntegratedServerRunning()) {
+            if (!context.client().hasSingleplayerServer()) {
                 EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
                 payload.recipeItems().forEach((output, inputs) -> EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.put(output, new ArrayList<>(inputs)));
                 EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(payload.recipeIds());
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_ID, (payload, context) -> {
-            if (!context.client().isIntegratedServerRunning()) {
+            if (!context.client().hasSingleplayerServer()) {
                 ConfigInit.SYNCED_BLAST_FURNACE_EXTRA_SLOT = payload.blastFurnaceExtraSlot();
             }
         });

@@ -2,50 +2,50 @@ package net.earlystage.block.entity;
 
 import net.earlystage.init.BlockInit;
 import net.earlystage.init.ConfigInit;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
+public class CraftingRockBlockEntity extends BlockEntity implements Container {
 
-    private final DefaultedList<ItemStack> inventory;
+    private final NonNullList<ItemStack> inventory;
     private int craftHits = 0;
     private int totalHits = 0;
 
     public CraftingRockBlockEntity(BlockPos pos, BlockState state) {
         super(BlockInit.CRAFTING_ROCK_ENTITY, pos, state);
-        this.inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(9, ItemStack.EMPTY);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    public void loadAdditional(CompoundTag nbt, Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
         inventory.clear();
-        Inventories.readNbt(nbt, inventory, registryLookup);
+        ContainerHelper.loadAllItems(nbt, inventory, registryLookup);
         this.craftHits = nbt.getInt("CraftHits");
         this.totalHits = nbt.getInt("TotalHits");
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, inventory, registryLookup);
+    public void saveAdditional(CompoundTag nbt, Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        ContainerHelper.saveAllItems(nbt, inventory, registryLookup);
         nbt.putInt("CraftHits", this.craftHits);
         nbt.putInt("TotalHits", this.totalHits);
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
+    public void setChanged() {
+        super.setChanged();
         sendUpdate();
     }
 
@@ -60,26 +60,26 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     public void decreaseCraftHits(Entity entity) {
         this.craftHits--;
         this.totalHits++;
-        if (!this.world.isClient() && ConfigInit.CONFIG.craftRockMaxCraftHits <= this.totalHits) {
-            this.world.breakBlock(pos, false, entity);
+        if (!this.level.isClientSide() && ConfigInit.CONFIG.craftRockMaxCraftHits <= this.totalHits) {
+            this.level.destroyBlock(worldPosition, false, entity);
         }
     }
 
     private void sendUpdate() {
-        if (this.world != null) {
-            BlockState state = this.world.getBlockState(this.pos);
-            this.world.updateListeners(this.pos, state, state, 3);
+        if (this.level != null) {
+            BlockState state = this.level.getBlockState(this.worldPosition);
+            this.level.sendBlockUpdated(this.worldPosition, state, state, 3);
         }
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.inventory.clear();
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return 9;
     }
 
@@ -94,52 +94,52 @@ public class CraftingRockBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public ItemStack getStack(int slot) {
+    public ItemStack getItem(int slot) {
         return this.inventory.get(slot);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack result = Inventories.splitStack(this.inventory, slot, 1);
-        this.markDirty();
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack result = ContainerHelper.removeItem(this.inventory, slot, 1);
+        this.setChanged();
         return result;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        this.markDirty();
-        return Inventories.removeStack(this.inventory, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        this.setChanged();
+        return ContainerHelper.takeItem(this.inventory, slot);
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.inventory.set(slot, stack);
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
-    public boolean isValid(int slot, ItemStack stack) {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
         return false;
     }
 
     @Override
-    public int getMaxCountPerStack() {
+    public int getMaxStackSize() {
         return 1;
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return this.createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return this.saveWithoutMetadata(registryLookup);
     }
 
 }

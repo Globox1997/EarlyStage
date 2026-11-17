@@ -11,15 +11,15 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.RenderInit;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 public class RockEmiRecipe extends EmiCraftingRecipe {
 
-    public RockEmiRecipe(Identifier recipeId, CraftingRecipe recipe, ItemStack output) {
+    public RockEmiRecipe(ResourceLocation recipeId, CraftingRecipe recipe, ItemStack output) {
         super(createInputs(recipe), EmiStack.of(output), EarlyStageMain.identifierOf("/" + recipeId.getNamespace() + "/" + recipeId.getPath() + "_rock"), !(recipe instanceof ShapedRecipe));
     }
 
@@ -43,10 +43,10 @@ public class RockEmiRecipe extends EmiCraftingRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addText(Text.translatable("emi.crafting_rock.info", ConfigInit.CONFIG.craftRockCraftHits), 59, 5, 0xFFFFFF, true);
+        widgets.addText(Component.translatable("emi.crafting_rock.info", ConfigInit.CONFIG.craftRockCraftHits), 59, 5, 0xFFFFFF, true);
         widgets.addTexture(RenderInit.GUI_ICON_TEXTURES, 65, 38, 15, 12, 34, 0);
         super.addWidgets(widgets);
-        widgets.addTooltipText(List.of(Text.translatable("emi.crafting_rock.tooltip")), 65, 38, 15, 12);
+        widgets.addTooltipText(List.of(Component.translatable("emi.crafting_rock.tooltip")), 65, 38, 15, 12);
     }
 
     @Override

@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -88,10 +88,10 @@ public class CompatInit {
     // Beachparty
     public static Item BP_PALM_BARK;
 
-    private static final Map<Identifier, List<Consumer<Block>>> PENDING_BLOCKS = new HashMap<>();
+    private static final Map<ResourceLocation, List<Consumer<Block>>> PENDING_BLOCKS = new HashMap<>();
 
     public static void init() {
-        RegistryEntryAddedCallback.event(Registries.BLOCK).register((rawId, id, block) -> {
+        RegistryEntryAddedCallback.event(BuiltInRegistries.BLOCK).register((rawId, id, block) -> {
             List<Consumer<Block>> actions = PENDING_BLOCKS.remove(id);
             if (actions != null) {
                 actions.forEach(action -> action.accept(block));
@@ -385,7 +385,7 @@ public class CompatInit {
     }
 
     private static Item registerBark(String name, String logId, @Nullable String woodId) {
-        BarkItem barkItem = (BarkItem) ItemInit.register(name, new BarkItem(new Item.Settings(), null, null, 150));
+        BarkItem barkItem = (BarkItem) ItemInit.register(name, new BarkItem(new Item.Properties(), null, null, 150));
         whenBlockRegistered(logId, barkItem::setLogBlock);
         if (woodId != null) {
             whenBlockRegistered(woodId, barkItem::setWoodBlock);
@@ -398,9 +398,9 @@ public class CompatInit {
     }
 
     private static void whenBlockRegistered(String id, Consumer<Block> action) {
-        Identifier identifier = Identifier.of(id);
-        if (Registries.BLOCK.containsId(identifier)) {
-            action.accept(Registries.BLOCK.get(identifier));
+        ResourceLocation identifier = ResourceLocation.parse(id);
+        if (BuiltInRegistries.BLOCK.containsKey(identifier)) {
+            action.accept(BuiltInRegistries.BLOCK.get(identifier));
         } else {
             PENDING_BLOCKS.computeIfAbsent(identifier, key -> new ArrayList<>()).add(action);
         }

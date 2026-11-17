@@ -2,88 +2,88 @@ package net.earlystage.mixin;
 
 import net.earlystage.init.ConfigInit;
 import net.earlystage.misc.InputSlotFillerExtra;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.BlastFurnaceScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.BlastFurnaceMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(BlastFurnaceScreenHandler.class)
-public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceScreenHandler {
+@Mixin(BlastFurnaceMenu.class)
+public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceMenu {
 
-    public BlastFurnaceScreenHandlerMixin(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    public BlastFurnaceScreenHandlerMixin(MenuType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookType category, int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate) {
         super(type, recipeType, category, syncId, playerInventory, inventory, propertyDelegate);
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
+    public ItemStack quickMoveStack(Player player, int slot) {
         if (!ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            return super.quickMove(player, slot);
+            return super.quickMoveStack(player, slot);
         }
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot2 = this.slots.get(slot);
-        if (slot2 != null && slot2.hasStack()) {
-            ItemStack itemStack2 = slot2.getStack();
+        if (slot2 != null && slot2.hasItem()) {
+            ItemStack itemStack2 = slot2.getItem();
             itemStack = itemStack2.copy();
 
             if (slot == 2) {
-                if (!this.insertItem(itemStack2, 4, 40, true)) {
+                if (!this.moveItemStackTo(itemStack2, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot2.onQuickTransfer(itemStack2, itemStack);
-            } else if (slot == 1 || slot == 0 || slot == 3 ? !this.insertItem(itemStack2, 4, 40, false)
-                    : (this.isSmeltable(itemStack2) ? !this.insertItem(itemStack2, 0, 1, false)
-                    : (this.isFuel(itemStack2) ? !this.insertItem(itemStack2, 1, 2, false)
-                    : (slot >= 4 && slot < 31 ? !this.insertItem(itemStack2, 31, 40, false) : slot >= 31 && slot < 40 && !this.insertItem(itemStack2, 4, 31, false))))) {
+                slot2.onQuickCraft(itemStack2, itemStack);
+            } else if (slot == 1 || slot == 0 || slot == 3 ? !this.moveItemStackTo(itemStack2, 4, 40, false)
+                    : (this.canSmelt(itemStack2) ? !this.moveItemStackTo(itemStack2, 0, 1, false)
+                    : (this.isFuel(itemStack2) ? !this.moveItemStackTo(itemStack2, 1, 2, false)
+                    : (slot >= 4 && slot < 31 ? !this.moveItemStackTo(itemStack2, 31, 40, false) : slot >= 31 && slot < 40 && !this.moveItemStackTo(itemStack2, 4, 31, false))))) {
                 return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
-                slot2.setStack(ItemStack.EMPTY);
+                slot2.setByPlayer(ItemStack.EMPTY);
             } else {
-                slot2.markDirty();
+                slot2.setChanged();
             }
             if (itemStack2.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
             }
-            slot2.onTakeItem(player, itemStack2);
+            slot2.onTake(player, itemStack2);
         }
         return itemStack;
     }
 
     @Override
-    public void clearCraftingSlots() {
-        super.clearCraftingSlots();
+    public void clearCraftingContent() {
+        super.clearCraftingContent();
         if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            this.getSlot(3).setStackNoCallbacks(ItemStack.EMPTY);
+            this.getSlot(3).set(ItemStack.EMPTY);
         }
     }
 
     @Override
-    public int getCraftingWidth() {
-        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 2 : super.getCraftingWidth();
+    public int getGridWidth() {
+        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 2 : super.getGridWidth();
     }
 
     @Override
-    public int getCraftingSlotCount() {
-        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 4 : super.getCraftingSlotCount();
+    public int getSize() {
+        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 4 : super.getSize();
     }
 
     @Override
-    public void fillInputSlots(boolean craftAll, RecipeEntry<?> recipe, ServerPlayerEntity player) {
+    public void handlePlacement(boolean craftAll, RecipeHolder<?> recipe, ServerPlayer player) {
         if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            new InputSlotFillerExtra(this).fillInputSlots(player, recipe, craftAll);
+            new InputSlotFillerExtra(this).recipeClicked(player, recipe, craftAll);
         } else {
-            super.fillInputSlots(craftAll, recipe, player);
+            super.handlePlacement(craftAll, recipe, player);
         }
     }
 

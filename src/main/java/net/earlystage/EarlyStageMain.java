@@ -4,9 +4,8 @@ import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.*;
 import net.earlystage.network.EarlyServerPacket;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,7 @@ public class EarlyStageMain implements ModInitializer {
 
     public static final List<SieveDropTemplate> SIEVE_DROP_TEMPLATES = new ArrayList<>();
     public static final Map<Item, List<Item>> CRAFTING_ROCK_RECIPE_ITEMS = new HashMap<>();
-    public static volatile List<Identifier> CRAFTING_ROCK_RECIPES = List.of();
+    public static volatile List<ResourceLocation> CRAFTING_ROCK_RECIPES = List.of();
 
     @Override
     public void onInitialize() {
@@ -32,8 +31,8 @@ public class EarlyStageMain implements ModInitializer {
         EarlyServerPacket.init();
     }
 
-    public static Identifier identifierOf(String name) {
-        return Identifier.of("earlystage", name);
+    public static ResourceLocation identifierOf(String name) {
+        return ResourceLocation.fromNamespaceAndPath("earlystage", name);
     }
 
 }

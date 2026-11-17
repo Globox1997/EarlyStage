@@ -4,29 +4,29 @@ import net.earlystage.init.ConfigInit;
 import net.earlystage.init.RenderInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.client.gui.screen.ingame.BlastFurnaceScreen;
-import net.minecraft.client.gui.screen.recipebook.AbstractFurnaceRecipeBookScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.BlastFurnaceScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
+import net.minecraft.client.gui.screens.recipebook.AbstractFurnaceRecipeBookComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.BlastFurnaceMenu;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BlastFurnaceScreen.class)
-public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<BlastFurnaceScreenHandler> {
+public abstract class BlastFurnaceScreenMixin extends AbstractFurnaceScreen<BlastFurnaceMenu> {
 
-    public BlastFurnaceScreenMixin(BlastFurnaceScreenHandler handler, AbstractFurnaceRecipeBookScreen recipeBook, PlayerInventory inventory, Text title, Identifier background, Identifier litProgressTexture, Identifier burnProgressTexture) {
+    public BlastFurnaceScreenMixin(BlastFurnaceMenu handler, AbstractFurnaceRecipeBookComponent recipeBook, Inventory inventory, Component title, ResourceLocation background, ResourceLocation litProgressTexture, ResourceLocation burnProgressTexture) {
         super(handler, recipeBook, inventory, title, background, litProgressTexture, burnProgressTexture);
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        super.drawBackground(context, delta, mouseX, mouseY);
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+        super.renderBg(context, delta, mouseX, mouseY);
         if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            context.drawTexture(RenderInit.GUI_ICON_TEXTURES, this.x + 75, this.y + 16, 0, 0, 18, 18);
+            context.blit(RenderInit.GUI_ICON_TEXTURES, this.leftPos + 75, this.topPos + 16, 0, 0, 18, 18);
         }
     }
 

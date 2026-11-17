@@ -7,13 +7,13 @@ import net.earlystage.init.ItemInit;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class EarlyStageDehydrationIntegration implements DehydrationAPI {
 
     @Override
-    public int calculateDrinkThirst(ItemStack itemStack, PlayerEntity playerEntity) {
+    public int calculateDrinkThirst(ItemStack itemStack, Player playerEntity) {
         return 0;
     }
 

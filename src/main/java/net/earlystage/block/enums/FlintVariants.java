@@ -1,8 +1,8 @@
 package net.earlystage.block.enums;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum FlintVariants implements StringIdentifiable {
+public enum FlintVariants implements StringRepresentable {
     SMALL("small"), MEDIUM("medium");
 
     private final String name;
@@ -12,7 +12,7 @@ public enum FlintVariants implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

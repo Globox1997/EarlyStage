@@ -11,13 +11,13 @@ import net.earlystage.init.BlockInit;
 import net.earlystage.init.RecipeInit;
 import net.earlystage.init.RenderInit;
 import net.earlystage.misc.ExtraBlastingRecipe;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 public class EarlyStageEmiPlugin implements EmiPlugin {
 
@@ -32,18 +32,18 @@ public class EarlyStageEmiPlugin implements EmiPlugin {
     @Override
     public void register(EmiRegistry emiRegistry) {
         RecipeManager manager = emiRegistry.getRecipeManager();
-        for (RecipeEntry<ExtraBlastingRecipe> recipe : manager.listAllOfType(RecipeInit.EXTRA_BLASTING)) {
+        for (RecipeHolder<ExtraBlastingRecipe> recipe : manager.getAllRecipesFor(RecipeInit.EXTRA_BLASTING)) {
             emiRegistry.addRecipe(new ExtraBlastingEmiRecipe(recipe.value()));
         }
         emiRegistry.addCategory(CRAFTING_ROCK_CATEGORY);
         emiRegistry.addWorkstation(CRAFTING_ROCK_CATEGORY, CRAFTING_ROCK);
 
-        DynamicRegistryManager registryManager = MinecraftClient.getInstance().world != null ? MinecraftClient.getInstance().world.getRegistryManager() : null;
+        RegistryAccess registryManager = Minecraft.getInstance().level != null ? Minecraft.getInstance().level.registryAccess() : null;
         if (registryManager != null) {
-            for (Identifier recipeId : EarlyStageMain.CRAFTING_ROCK_RECIPES) {
-                manager.get(recipeId).ifPresent(recipe -> {
+            for (ResourceLocation recipeId : EarlyStageMain.CRAFTING_ROCK_RECIPES) {
+                manager.byKey(recipeId).ifPresent(recipe -> {
                     if (recipe.value() instanceof CraftingRecipe craftingRecipe) {
-                        ItemStack output = craftingRecipe.getResult(registryManager);
+                        ItemStack output = craftingRecipe.getResultItem(registryManager);
                         if (!output.isEmpty()) {
                             emiRegistry.addRecipe(new RockEmiRecipe(recipeId, craftingRecipe, output));
                         }

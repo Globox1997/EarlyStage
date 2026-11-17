@@ -4,105 +4,105 @@ import org.jetbrains.annotations.Nullable;
 
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.earlystage.init.BlockInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class RedstoneSieveBlock extends SieveBlock {
 
-    public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public RedstoneSieveBlock(Settings settings) {
+    public RedstoneSieveBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos())).with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(POWERED, ctx.getLevel().hasNeighborSignal(ctx.getClickedPos())).setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockInit.SIEVE_ENTITY, world.isClient() ? SieveBlockEntity::clientTick : SieveBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockInit.SIEVE_ENTITY, world.isClientSide() ? SieveBlockEntity::clientTick : SieveBlockEntity::serverTick);
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient()) {
-            boolean bl = state.get(POWERED);
-            if (bl != world.isReceivingRedstonePower(pos)) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (!world.isClientSide()) {
+            boolean bl = state.getValue(POWERED);
+            if (bl != world.hasNeighborSignal(pos)) {
                 if (bl) {
-                    world.scheduleBlockTick(pos, this, 4);
+                    world.scheduleTick(pos, this, 4);
                 } else {
-                    world.setBlockState(pos, state.cycle(POWERED), Block.NOTIFY_LISTENERS);
+                    world.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
                 }
             }
         }
-        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+        super.neighborChanged(state, world, pos, sourceBlock, sourcePos, notify);
 
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (state.get(POWERED).booleanValue() && !world.isReceivingRedstonePower(pos)) {
-            world.setBlockState(pos, state.cycle(POWERED), Block.NOTIFY_LISTENERS);
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        if (state.getValue(POWERED).booleanValue() && !world.hasNeighborSignal(pos)) {
+            world.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
         }
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
-        super.appendProperties(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
-            Inventory inventory = (Inventory) world.getBlockEntity(pos);
-            ItemStack blockStack = inventory.getStack(0);
+            Container inventory = (Container) world.getBlockEntity(pos);
+            ItemStack blockStack = inventory.getItem(0);
             if (blockStack.isEmpty()) {
-                if (inventory.isValid(0, itemStack)) {
+                if (inventory.canPlaceItem(0, itemStack)) {
                     ((SieveBlockEntity) blockEntity).refreshSieveCount();
-                    if (!world.isClient()) {
-                        inventory.setStack(0, new ItemStack(itemStack.getItem(), 1));
+                    if (!world.isClientSide()) {
+                        inventory.setItem(0, new ItemStack(itemStack.getItem(), 1));
                         if (!player.isCreative())
-                            itemStack.decrement(1);
+                            itemStack.shrink(1);
                     }
-                    return ItemActionResult.success(world.isClient());
+                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
                 }
-                return ItemActionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             } else {
                 if (itemStack.isEmpty()) {
-                    if (!world.isClient()) {
-                        player.setStackInHand(hand, blockStack);
-                        inventory.clear();
+                    if (!world.isClientSide()) {
+                        player.setItemInHand(hand, blockStack);
+                        inventory.clearContent();
                     }
-                    return ItemActionResult.success(world.isClient());
+                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
                 }
             }
         }
-        return ItemActionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
     @SuppressWarnings("unchecked")

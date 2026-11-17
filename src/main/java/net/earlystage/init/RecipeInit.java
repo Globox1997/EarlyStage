@@ -1,8 +1,8 @@
 package net.earlystage.init;
 
 import net.earlystage.misc.ExtraBlastingRecipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class RecipeInit {
 

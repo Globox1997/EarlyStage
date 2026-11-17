@@ -5,11 +5,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.earlystage.init.ConfigInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.stats.Stats;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -23,16 +23,16 @@ public abstract class DeathScreenMixin extends Screen {
     @Shadow
     @Mutable
     @Final
-    private boolean isHardcore;
+    private boolean hardcore;
 
-    public DeathScreenMixin(Text title) {
+    public DeathScreenMixin(Component title) {
         super(title);
     }
 
-    @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;", ordinal = 1))
-    private MutableText initMixin(String key, Operation<MutableText> original) {
-        if (!this.isHardcore && this.client != null && this.client.player != null && ConfigInit.CONFIG.beginnerDeathCount > 0 && this.client.player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)) < ConfigInit.CONFIG.beginnerDeathCount) {
-            return Text.translatable("screen.earlystage.respawn_info", Text.translatable(key), ConfigInit.CONFIG.beginnerDeathCount - this.client.player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)));
+    @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 1))
+    private MutableComponent initMixin(String key, Operation<MutableComponent> original) {
+        if (!this.hardcore && this.minecraft != null && this.minecraft.player != null && ConfigInit.CONFIG.beginnerDeathCount > 0 && this.minecraft.player.getStats().getValue(Stats.CUSTOM.get(Stats.DEATHS)) < ConfigInit.CONFIG.beginnerDeathCount) {
+            return Component.translatable("screen.earlystage.respawn_info", Component.translatable(key), ConfigInit.CONFIG.beginnerDeathCount - this.minecraft.player.getStats().getValue(Stats.CUSTOM.get(Stats.DEATHS)));
         }
         return original.call(key);
     }

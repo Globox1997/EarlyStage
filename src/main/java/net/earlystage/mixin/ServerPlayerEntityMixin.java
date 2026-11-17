@@ -4,14 +4,14 @@ import com.mojang.authlib.GameProfile;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.network.packet.BeginnerDeathPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.ServerStatHandler;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.ServerStatsCounter;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -20,23 +20,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity {
+@Mixin(ServerPlayer.class)
+public abstract class ServerPlayerEntityMixin extends Player {
 
     @Shadow
     @Mutable
     @Final
-    private ServerStatHandler statHandler;
+    private ServerStatsCounter stats;
 
-    public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
+    public ServerPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
     }
 
-    @Inject(method = "copyFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerPlayerEntity;enchantmentTableSeed:I", ordinal = 0))
-    private void copyFromMixin(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo info) {
-        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY) && !oldPlayer.isSpectator()
-                && statHandler.getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS)) <= ConfigInit.CONFIG.beginnerDeathCount) {
-            this.getInventory().clone(oldPlayer.getInventory());
+    @Inject(method = "restoreFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerPlayer;enchantmentSeed:I", ordinal = 0))
+    private void copyFromMixin(ServerPlayer oldPlayer, boolean alive, CallbackInfo info) {
+        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && !oldPlayer.isSpectator()
+                && stats.getValue(Stats.CUSTOM.get(Stats.DEATHS)) <= ConfigInit.CONFIG.beginnerDeathCount) {
+            this.getInventory().replaceWith(oldPlayer.getInventory());
             this.experienceLevel = oldPlayer.experienceLevel;
             this.totalExperience = oldPlayer.totalExperience;
             this.experienceProgress = oldPlayer.experienceProgress;
@@ -44,10 +44,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         }
     }
 
-    @Inject(method = "onDeath", at = @At("HEAD"))
+    @Inject(method = "die", at = @At("HEAD"))
     private void onDeathMixin(DamageSource damageSource, CallbackInfo info) {
-        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
-            ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, new BeginnerDeathPacket(this.getId(), statHandler.getStat(Stats.CUSTOM.getOrCreateStat(Stats.DEATHS))));
+        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            ServerPlayNetworking.send((ServerPlayer) (Object) this, new BeginnerDeathPacket(this.getId(), stats.getValue(Stats.CUSTOM.get(Stats.DEATHS))));
         }
     }
 

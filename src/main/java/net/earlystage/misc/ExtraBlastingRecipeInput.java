@@ -1,12 +1,12 @@
 package net.earlystage.misc;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 public record ExtraBlastingRecipeInput(ItemStack input, ItemStack extraInput) implements RecipeInput {
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return switch (slot) {
             case 0 -> this.input;
             case 1 -> this.extraInput;
@@ -15,7 +15,7 @@ public record ExtraBlastingRecipeInput(ItemStack input, ItemStack extraInput) im
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return 2;
     }
 

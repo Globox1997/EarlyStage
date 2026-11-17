@@ -7,22 +7,22 @@ import org.jetbrains.annotations.Nullable;
 
 import net.earlystage.mixin.access.AxeItemAccessor;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class BarkItem extends Item {
 
@@ -33,7 +33,7 @@ public class BarkItem extends Item {
     @Nullable
     private Block woodBlock;
 
-    public BarkItem(Settings settings, @Nullable Block logBlock, @Nullable Block woodBlock, int cookTime) {
+    public BarkItem(Properties settings, @Nullable Block logBlock, @Nullable Block woodBlock, int cookTime) {
         super(settings);
         FuelRegistry.INSTANCE.add(this, cookTime);
         this.setLogBlock(logBlock);
@@ -55,36 +55,36 @@ public class BarkItem extends Item {
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos blockPos = context.getBlockPos();
-        World world = context.getWorld();
+    public InteractionResult useOn(UseOnContext context) {
+        BlockPos blockPos = context.getClickedPos();
+        Level world = context.getLevel();
         BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.isIn(BlockTags.LOGS)) {
+        if (blockState.is(BlockTags.LOGS)) {
             Block unstrippedBlock = this.getUnstrippedBlock(blockState.getBlock());
             if (unstrippedBlock != null) {
-                PlayerEntity playerEntity = context.getPlayer();
-                ItemStack itemStack = context.getStack();
-                if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                    Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
+                Player playerEntity = context.getPlayer();
+                ItemStack itemStack = context.getItemInHand();
+                if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
                 }
-                world.playSound(null, blockPos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                world.playSound(null, blockPos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0f, 1.0f);
 
-                if (!world.isClient()) {
-                    BlockState blockState2 = unstrippedBlock.getDefaultState();
-                    if (blockState.contains(PillarBlock.AXIS) && blockState2.contains(PillarBlock.AXIS)) {
-                        blockState2 = blockState2.with(PillarBlock.AXIS, blockState.get(PillarBlock.AXIS));
+                if (!world.isClientSide()) {
+                    BlockState blockState2 = unstrippedBlock.defaultBlockState();
+                    if (blockState.hasProperty(RotatedPillarBlock.AXIS) && blockState2.hasProperty(RotatedPillarBlock.AXIS)) {
+                        blockState2 = blockState2.setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
                     }
-                    world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(playerEntity, blockState2));
+                    world.setBlock(blockPos, blockState2, Block.UPDATE_ALL | Block.UPDATE_IMMEDIATE);
+                    world.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(playerEntity, blockState2));
                     if (playerEntity != null && !playerEntity.isCreative()) {
-                        itemStack.decrement(1);
+                        itemStack.shrink(1);
                     }
                 }
-                return ActionResult.success(world.isClient());
+                return InteractionResult.sidedSuccess(world.isClientSide());
             }
 
         }
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
     @Nullable

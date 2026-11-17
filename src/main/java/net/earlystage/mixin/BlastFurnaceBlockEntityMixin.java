@@ -1,19 +1,18 @@
 package net.earlystage.mixin;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlastFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
 
 @Mixin(BlastFurnaceBlockEntity.class)
 public abstract class BlastFurnaceBlockEntityMixin extends AbstractFurnaceBlockEntity {
@@ -22,9 +21,9 @@ public abstract class BlastFurnaceBlockEntityMixin extends AbstractFurnaceBlockE
         super(blockEntityType, pos, state, recipeType);
     }
 
-    @Inject(method = "Lnet/minecraft/block/entity/BlastFurnaceBlockEntity;<init>(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("TAIL"))
     private void initMixin(BlockPos pos, BlockState state, CallbackInfo info) {
-        this.inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
+        this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
 }

@@ -1,21 +1,21 @@
 package net.earlystage.misc;
 
-import net.minecraft.recipe.InputSlotFiller;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.recipebook.ServerPlaceRecipe;
+import net.minecraft.world.inventory.RecipeBookMenu;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class InputSlotFillerExtra extends InputSlotFiller {
+public class InputSlotFillerExtra extends ServerPlaceRecipe {
 
-    public InputSlotFillerExtra(AbstractRecipeScreenHandler handler) {
+    public InputSlotFillerExtra(RecipeBookMenu handler) {
         super(handler);
     }
 
     @Override
-    public void acceptAlignedInput(Integer integer, int slot, int amount, int gridX, int gridY) {
+    public void addItemToSlot(Integer integer, int slot, int amount, int gridX, int gridY) {
         if (slot == 1) {
             slot = 3;
         }
-        super.acceptAlignedInput(integer, slot, amount, gridX, gridY);
+        super.addItemToSlot(integer, slot, amount, gridX, gridY);
     }
 
 }

@@ -9,9 +9,8 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.misc.ExtraBlastingRecipe;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 
 public class ExtraBlastingEmiRecipe implements EmiRecipe {
@@ -33,7 +32,7 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return EarlyStageMain.identifierOf("/" + this.output.get(0).getId().getPath() + "_extra");
     }
 
@@ -60,13 +59,13 @@ public class ExtraBlastingEmiRecipe implements EmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         widgets.addFillingArrow(43, 5, this.cookTime * 50);
-        widgets.addText(Text.translatable("emi.cooking.experience", this.experience), 40, 28, 0xFFFFFF, true);
+        widgets.addText(Component.translatable("emi.cooking.experience", this.experience), 40, 28, 0xFFFFFF, true);
         widgets.addTexture(EmiTexture.EMPTY_FLAME, 1, 25);
         widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, 1, 25, 10000, false, true, true);
         widgets.addSlot(input.get(0), 0, 4);
         widgets.addSlot(input.get(1), 20, 4);
         widgets.addSlot(output.get(0), 74, 0).large(true).recipeContext(this);
-        widgets.addTooltipText(List.of(Text.translatable("emi.cooking.time", this.cookTime / 20f)), 43, 5, 24, 17);
+        widgets.addTooltipText(List.of(Component.translatable("emi.cooking.time", this.cookTime / 20f)), 43, 5, 24, 17);
     }
 
 }

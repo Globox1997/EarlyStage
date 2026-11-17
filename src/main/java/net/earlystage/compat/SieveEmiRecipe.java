@@ -8,10 +8,9 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.data.SieveDropTemplate;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +19,12 @@ public class SieveEmiRecipe implements EmiRecipe {
     private final SieveDropTemplate template;
     private final List<EmiIngredient> inputs;
     private final List<EmiStack> outputs;
-    private final Identifier id;
+    private final ResourceLocation id;
 
     public SieveEmiRecipe(SieveDropTemplate template) {
         this.template = template;
         this.id = EarlyStageMain.identifierOf("/sieve/" + template.getBlockItem().toString().replace(':', '_'));
-        this.inputs = List.of(EmiIngredient.of(Ingredient.ofItems(template.getBlockItem())));
+        this.inputs = List.of(EmiIngredient.of(Ingredient.of(template.getBlockItem())));
 
         this.outputs = new ArrayList<>();
         for (int i = 0; i < template.getBlockDrops().size(); i++) {
@@ -40,7 +39,7 @@ public class SieveEmiRecipe implements EmiRecipe {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -73,7 +72,7 @@ public class SieveEmiRecipe implements EmiRecipe {
         for (int i = 0; i < outputs.size(); i++) {
             int x = 48 + (i % 4) * 18;
             int y = 4 + (i / 4) * 18;
-            widgets.addSlot(outputs.get(i), x, y).recipeContext(this).appendTooltip(Text.translatable("emi.sieve.tooltip", Math.round(this.template.getDropChances().get(i) * 1000f) / 10f));
+            widgets.addSlot(outputs.get(i), x, y).recipeContext(this).appendTooltip(Component.translatable("emi.sieve.tooltip", Math.round(this.template.getDropChances().get(i) * 1000f) / 10f));
         }
     }
 }

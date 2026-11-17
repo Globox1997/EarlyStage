@@ -1,46 +1,46 @@
 package net.earlystage.mixin;
 
 import net.earlystage.init.ItemInit;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SheepEntity.class)
-public abstract class SheepEntityMixin extends AnimalEntity {
+@Mixin(Sheep.class)
+public abstract class SheepEntityMixin extends Animal {
 
-    public SheepEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+    public SheepEntityMixin(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject(method = "interactMob", at = @At("HEAD"), cancellable = true)
-    private void interactMobMixin(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> info) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        if (itemStack.isOf(ItemInit.STONE_SHEARS)) {
-            if (!this.getWorld().isClient() && this.isShearable()) {
-                this.sheared(SoundCategory.PLAYERS);
-                this.emitGameEvent(GameEvent.SHEAR, player);
-                itemStack.damage(1, player, SheepEntity.getSlotForHand(hand));
-                info.setReturnValue(ActionResult.SUCCESS);
+    @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
+    private void interactMobMixin(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> info) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (itemStack.is(ItemInit.STONE_SHEARS)) {
+            if (!this.level().isClientSide() && this.readyForShearing()) {
+                this.shear(SoundSource.PLAYERS);
+                this.gameEvent(GameEvent.SHEAR, player);
+                itemStack.hurtAndBreak(1, player, Sheep.getSlotForHand(hand));
+                info.setReturnValue(InteractionResult.SUCCESS);
             }
         }
     }
 
     @Shadow
-    public abstract void sheared(SoundCategory shearedSoundCategory);
+    public abstract void shear(SoundSource shearedSoundCategory);
 
     @Shadow
-    public abstract boolean isShearable();
+    public abstract boolean readyForShearing();
 
 }

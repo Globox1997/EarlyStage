@@ -1,37 +1,37 @@
 package net.earlystage.block.render;
 
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.earlystage.block.CraftingRockBlock;
 import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.fabricmc.api.EnvType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
 public class CraftingRockBlockRenderer implements BlockEntityRenderer<CraftingRockBlockEntity> {
 
-    public CraftingRockBlockRenderer(BlockEntityRendererFactory.Context ctx) {
+    public CraftingRockBlockRenderer(BlockEntityRendererProvider.Context ctx) {
     }
 
     @Override
-    public void render(CraftingRockBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(CraftingRockBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         if (blockEntity != null && !blockEntity.isEmpty()) {
             int slot = 0;
             for (int i = 0; i < 3; i++) {
                 for (int u = 0; u < 3; u++) {
 
-                    if (!blockEntity.getStack(slot).isEmpty()) {
-                        matrices.push();
+                    if (!blockEntity.getItem(slot).isEmpty()) {
+                        matrices.pushPose();
 
-                        boolean isBlockItem = blockEntity.getStack(slot).getItem() instanceof BlockItem;
+                        boolean isBlockItem = blockEntity.getItem(slot).getItem() instanceof BlockItem;
 
                         if (isBlockItem) {
                             matrices.scale(0.8f, 0.8f, 0.8f);
@@ -39,10 +39,10 @@ public class CraftingRockBlockRenderer implements BlockEntityRenderer<CraftingRo
                             matrices.scale(0.5f, 0.5f, 0.5f);
                         }
 
-                        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90.0f));
+                        matrices.mulPose(Axis.XN.rotationDegrees(90.0f));
 
-                        Direction direction = blockEntity.getCachedState().get(CraftingRockBlock.FACING);
-                        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(direction.asRotation() - 180.0f));
+                        Direction direction = blockEntity.getBlockState().getValue(CraftingRockBlock.FACING);
+                        matrices.mulPose(Axis.ZN.rotationDegrees(direction.toYRot() - 180.0f));
 
                         if (direction.equals(Direction.NORTH)) {
                             if (isBlockItem) {
@@ -73,10 +73,10 @@ public class CraftingRockBlockRenderer implements BlockEntityRenderer<CraftingRo
                             matrices.translate(-2.0D, 0.0D, 0.0D);
                         }
 
-                        MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getStack(slot), ModelTransformationMode.GROUND,
-                                WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up()), overlay, matrices, vertexConsumers, blockEntity.getWorld(),
-                                (int) blockEntity.getPos().asLong());
-                        matrices.pop();
+                        Minecraft.getInstance().getItemRenderer().renderStatic(blockEntity.getItem(slot), ItemDisplayContext.GROUND,
+                                LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above()), overlay, matrices, vertexConsumers, blockEntity.getLevel(),
+                                (int) blockEntity.getBlockPos().asLong());
+                        matrices.popPose();
                     }
                     slot++;
                 }

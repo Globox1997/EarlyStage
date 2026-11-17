@@ -4,59 +4,59 @@ import net.earlystage.EarlyStageMain;
 import net.earlystage.data.SieveDropTemplate;
 import net.earlystage.init.BlockInit;
 import net.earlystage.init.ConfigInit;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class SieveBlockEntity extends BlockEntity implements Inventory {
+public class SieveBlockEntity extends BlockEntity implements Container {
 
     private int tick;
-    private final DefaultedList<ItemStack> inventory;
+    private final NonNullList<ItemStack> inventory;
     private int sieveCount;
 
     public SieveBlockEntity(BlockPos pos, BlockState state) {
         super(BlockInit.SIEVE_ENTITY, pos, state);
-        this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
         inventory.clear();
-        Inventories.readNbt(nbt, inventory, registryLookup);
+        ContainerHelper.loadAllItems(nbt, inventory, registryLookup);
         sieveCount = nbt.getInt("SieveCount");
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, inventory, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        ContainerHelper.saveAllItems(nbt, inventory, registryLookup);
         nbt.putInt("SieveCount", sieveCount);
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
+    public static void clientTick(Level world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
         blockEntity.update();
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
+    public static void serverTick(Level world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {
         blockEntity.update();
     }
 
     private void update() {
-        if (!this.isEmpty() && world.isReceivingRedstonePower(pos)) {
+        if (!this.isEmpty() && level.hasNeighborSignal(worldPosition)) {
             this.tick++;
             if (this.tick >= ConfigInit.CONFIG.redstoneSieveTicks) {
                 this.sieve();
@@ -77,98 +77,98 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     public void sieve() {
         this.sieveCount++;
         if (this.sieveCount > 3) {
-            if (!world.isClient()) {
+            if (!level.isClientSide()) {
                 for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++) {
-                    if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem().equals(this.getStack(0).getItem())) {
+                    if (EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem().equals(this.getItem(0).getItem())) {
                         SieveDropTemplate sieveDropTemplate = EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i);
 
                         for (int u = 0; u < sieveDropTemplate.getBlockDrops().size(); u++) {
                             for (int k = 0; k < sieveDropTemplate.getRollCount().get(u); k++) {
-                                if (this.world.getRandom().nextFloat() <= sieveDropTemplate.getDropChances().get(u))
+                                if (this.level.getRandom().nextFloat() <= sieveDropTemplate.getDropChances().get(u))
                                     dropItem(sieveDropTemplate.getBlockDrops().get(u));
                             }
                         }
                         break;
                     }
                 }
-                this.clear();
+                this.clearContent();
             }
-            world.playSound(null, pos, SoundEvents.BLOCK_COMPOSTER_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            level.playSound(null, worldPosition, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
         } else {
-            world.playSound(null, pos, SoundEvents.BLOCK_COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            if (!world.isClient()) {
-                this.markDirty();
+            level.playSound(null, worldPosition, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+            if (!level.isClientSide()) {
+                this.setChanged();
             }
         }
     }
 
     private void dropItem(Item item) {
-        double d = (double) (world.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
-        double e = (double) (world.getRandom().nextFloat() * 0.7f) + 0.06000000238418579 + 0.6;
-        double g = (double) (world.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
+        double d = (double) (level.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
+        double e = (double) (level.getRandom().nextFloat() * 0.7f) + 0.06000000238418579 + 0.6;
+        double g = (double) (level.getRandom().nextFloat() * 0.7f) + (double) 0.15f;
 
-        ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + d, (double) pos.getY() + e, (double) pos.getZ() + g, new ItemStack(item));
-        itemEntity.setToDefaultPickupDelay();
-        world.spawnEntity(itemEntity);
+        ItemEntity itemEntity = new ItemEntity(level, (double) worldPosition.getX() + d, (double) worldPosition.getY() + e, (double) worldPosition.getZ() + g, new ItemStack(item));
+        itemEntity.setDefaultPickUpDelay();
+        level.addFreshEntity(itemEntity);
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
+    public void setChanged() {
+        super.setChanged();
         sendUpdate();
     }
 
     private void sendUpdate() {
-        if (this.world != null) {
-            BlockState state = this.world.getBlockState(this.pos);
-            this.world.updateListeners(this.pos, state, state, 3);
+        if (this.level != null) {
+            BlockState state = this.level.getBlockState(this.worldPosition);
+            this.level.sendBlockUpdated(this.worldPosition, state, state, 3);
         }
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.inventory.clear();
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return 1;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.getStack(0).isEmpty();
+        return this.getItem(0).isEmpty();
     }
 
     @Override
-    public ItemStack getStack(int slot) {
+    public ItemStack getItem(int slot) {
         return this.inventory.get(0);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack result = Inventories.splitStack(this.inventory, slot, 1);
-        this.markDirty();
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack result = ContainerHelper.removeItem(this.inventory, slot, 1);
+        this.setChanged();
         return result;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        this.markDirty();
-        return Inventories.removeStack(this.inventory, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        this.setChanged();
+        return ContainerHelper.takeItem(this.inventory, slot);
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.inventory.set(0, stack);
         this.refreshSieveCount();
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
-    public boolean isValid(int slot, ItemStack stack) {
-        if (this.isEmpty() && this.world.getBlockState(pos.up()).isAir()) {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        if (this.isEmpty() && this.level.getBlockState(worldPosition.above()).isAir()) {
             for (int i = 0; i < EarlyStageMain.SIEVE_DROP_TEMPLATES.size(); i++) {
                 if (stack.getItem().equals(EarlyStageMain.SIEVE_DROP_TEMPLATES.get(i).getBlockItem())) {
                     return true;
@@ -179,18 +179,18 @@ public class SieveBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return this.createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return this.saveWithoutMetadata(registryLookup);
     }
 
 }

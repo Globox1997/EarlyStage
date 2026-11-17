@@ -4,11 +4,11 @@ import java.util.function.Predicate;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.levelgen.GenerationStep;
 
 public class WorldInit {
 
@@ -17,10 +17,10 @@ public class WorldInit {
 
     public static void init() {
         if (ConfigInit.CONFIG.generateRocks) {
-            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of("earlystage:rock")));
+            BiomeModifications.addFeature(rockPredicate, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse("earlystage:rock")));
         }
         if (ConfigInit.CONFIG.generateFlint) {
-            BiomeModifications.addFeature(rockPredicate, GenerationStep.Feature.TOP_LAYER_MODIFICATION, RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of("earlystage:flint")));
+            BiomeModifications.addFeature(rockPredicate, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse("earlystage:flint")));
         }
     }
 }

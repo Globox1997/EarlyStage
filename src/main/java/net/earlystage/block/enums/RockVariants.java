@@ -1,8 +1,8 @@
 package net.earlystage.block.enums;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum RockVariants implements StringIdentifiable {
+public enum RockVariants implements StringRepresentable {
     SMALL("small"), MEDIUM("medium"), LARGE("large"), EXTRA_LARGE("extra_large");
 
     private final String name;
@@ -12,7 +12,7 @@ public enum RockVariants implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

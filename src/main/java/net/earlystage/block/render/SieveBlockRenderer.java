@@ -1,26 +1,26 @@
 package net.earlystage.block.render;
 
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.fabricmc.api.EnvType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
 public class SieveBlockRenderer implements BlockEntityRenderer<SieveBlockEntity> {
 
-    public SieveBlockRenderer(BlockEntityRendererFactory.Context ctx) {
+    public SieveBlockRenderer(BlockEntityRendererProvider.Context ctx) {
     }
 
     @Override
-    public void render(SieveBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(SieveBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         if (blockEntity != null && !blockEntity.isEmpty()) {
-            matrices.push();
+            matrices.pushPose();
             double height;
             switch (blockEntity.getSieveCount()) {
             case 0:
@@ -42,10 +42,10 @@ public class SieveBlockRenderer implements BlockEntityRenderer<SieveBlockEntity>
             matrices.translate(0.5D, height, 0.5D);
             matrices.scale(3.0f, 3.0f, 3.0f);
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(blockEntity.getStack(0), ModelTransformationMode.GROUND,
-                    WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up()), overlay, matrices, vertexConsumers, blockEntity.getWorld(),
-                    (int) blockEntity.getPos().asLong());
-            matrices.pop();
+            Minecraft.getInstance().getItemRenderer().renderStatic(blockEntity.getItem(0), ItemDisplayContext.GROUND,
+                    LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above()), overlay, matrices, vertexConsumers, blockEntity.getLevel(),
+                    (int) blockEntity.getBlockPos().asLong());
+            matrices.popPose();
         }
     }
 }

@@ -8,9 +8,8 @@ import net.earlystage.network.packet.CraftingRockItemsPacket;
 import net.earlystage.network.packet.SieveDropPacket;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.Item;
-import net.minecraft.server.network.ServerPlayerEntity;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class EarlyServerPacket {
         PayloadTypeRegistry.playS2C().register(ConfigSyncPacket.PACKET_ID, ConfigSyncPacket.PACKET_CODEC);
     }
 
-    public static void syncData(ServerPlayerEntity player) {
+    public static void syncData(ServerPlayer player) {
         if (ServerPlayNetworking.canSend(player, SieveDropPacket.PACKET_ID)) {
             ServerPlayNetworking.send(player, new SieveDropPacket(List.copyOf(EarlyStageMain.SIEVE_DROP_TEMPLATES)));
         }

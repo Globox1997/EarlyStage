@@ -1,23 +1,22 @@
 package net.earlystage.item.material;
 
 import net.earlystage.init.ItemInit;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import java.util.function.Supplier;
 
-public class EarlyStageToolMaterials implements ToolMaterial {
+public class EarlyStageToolMaterials implements Tier {
 
-    public static final ToolMaterial FLINT = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_WOODEN_TOOL, 29, 1.5f, 0.0f, 0, () -> Items.FLINT, "flint");
+    public static final Tier FLINT = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_WOODEN_TOOL, 29, 1.5f, 0.0f, 0, () -> Items.FLINT, "flint");
 
-    public static final ToolMaterial STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, 7.0f, 2.0f, 14, () -> ItemInit.STEEL_INGOT, "steel");
+    public static final Tier STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, 7.0f, 2.0f, 14, () -> ItemInit.STEEL_INGOT, "steel");
 
-    public static final ToolMaterial DAMASCUS_STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 720, 7.0f, 2.5f, 16, () -> ItemInit.DAMASCUS_STEEL_INGOT, "damascus_steel");
+    public static final Tier DAMASCUS_STEEL = new EarlyStageToolMaterials(BlockTags.INCORRECT_FOR_IRON_TOOL, 720, 7.0f, 2.5f, 16, () -> ItemInit.DAMASCUS_STEEL_INGOT, "damascus_steel");
 
     private final TagKey<Block> inverseTag;
     private final int itemDurability;
@@ -38,33 +37,33 @@ public class EarlyStageToolMaterials implements ToolMaterial {
     }
 
     @Override
-    public int getDurability() {
+    public int getUses() {
         return this.itemDurability;
     }
 
     @Override
-    public float getMiningSpeedMultiplier() {
+    public float getSpeed() {
         return this.miningSpeed;
     }
 
     @Override
-    public float getAttackDamage() {
+    public float getAttackDamageBonus() {
         return this.attackDamage;
     }
 
     @Override
-    public TagKey<Block> getInverseTag() {
+    public TagKey<Block> getIncorrectBlocksForDrops() {
         return this.inverseTag;
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 
     @Override
     public Ingredient getRepairIngredient() {
-        return Ingredient.ofItems(this.repairItemSupplier.get());
+        return Ingredient.of(this.repairItemSupplier.get());
     }
 
     @Override

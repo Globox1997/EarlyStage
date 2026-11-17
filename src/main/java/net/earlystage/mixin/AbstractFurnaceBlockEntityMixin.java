@@ -24,44 +24,44 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.earlystage.init.RecipeInit;
 import net.earlystage.misc.ExtraBlastingRecipe;
 import net.earlystage.misc.ExtraBlastingRecipeInput;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
-public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerBlockEntity {
+public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlockEntity {
 
     @Shadow
-    int cookTime;
+    int cookingProgress;
     @Shadow
-    int cookTimeTotal;
+    int cookingTotalTime;
     @Shadow
     @Mutable
     @Final
-    private Object2IntOpenHashMap<Identifier> recipesUsed;
+    private Object2IntOpenHashMap<ResourceLocation> recipesUsed;
     @Shadow
-    protected DefaultedList<ItemStack> inventory;
+    protected NonNullList<ItemStack> items;
 
     public AbstractFurnaceBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
     }
 
-    @ModifyVariable(method = "tick", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/block/entity/AbstractFurnaceBlockEntity;getMaxCountPerStack()I"))
-    private static RecipeEntry<?> tickMixin(RecipeEntry<?> original, World world, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity blockEntity) {
-        if (blockEntity.getType().equals(BlockEntityType.BLAST_FURNACE) && !blockEntity.getStack(3).isEmpty()) {
-            RecipeEntry<ExtraBlastingRecipe> extraBlastingRecipe = world.getRecipeManager()
-                    .getFirstMatch(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(blockEntity.getStack(0), blockEntity.getStack(3)), world).orElse(null);
+    @ModifyVariable(method = "serverTick", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;getMaxStackSize()I"))
+    private static RecipeHolder<?> tickMixin(RecipeHolder<?> original, Level world, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity blockEntity) {
+        if (blockEntity.getType().equals(BlockEntityType.BLAST_FURNACE) && !blockEntity.getItem(3).isEmpty()) {
+            RecipeHolder<ExtraBlastingRecipe> extraBlastingRecipe = world.getRecipeManager()
+                    .getRecipeFor(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(blockEntity.getItem(0), blockEntity.getItem(3)), world).orElse(null);
             if (extraBlastingRecipe != null) {
                 return extraBlastingRecipe;
             }
@@ -69,10 +69,10 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
         return original;
     }
 
-    @Inject(method = "getCookTime", at = @At("HEAD"), cancellable = true)
-    private static void getCookTimeMixin(World world, AbstractFurnaceBlockEntity furnace, CallbackInfoReturnable<Integer> info) {
+    @Inject(method = "getTotalCookTime", at = @At("HEAD"), cancellable = true)
+    private static void getCookTimeMixin(Level world, AbstractFurnaceBlockEntity furnace, CallbackInfoReturnable<Integer> info) {
         if (furnace.getType().equals(BlockEntityType.BLAST_FURNACE)) {
-            RecipeEntry<ExtraBlastingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(furnace.getStack(0), furnace.getStack(3)), world)
+            RecipeHolder<ExtraBlastingRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeInit.EXTRA_BLASTING, new ExtraBlastingRecipeInput(furnace.getItem(0), furnace.getItem(3)), world)
                     .orElse(null);
             if (recipe != null) {
                 info.setReturnValue(recipe.value().getCookTime());
@@ -80,41 +80,41 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
         }
     }
 
-    @Inject(method = "craftRecipe", at = @At("TAIL"))
-    private static void craftRecipeMixin(DynamicRegistryManager registryManager, @Nullable RecipeEntry<?> recipe, DefaultedList<ItemStack> slots, int count, CallbackInfoReturnable<Boolean> info) {
+    @Inject(method = "burn", at = @At("TAIL"))
+    private static void craftRecipeMixin(RegistryAccess registryManager, @Nullable RecipeHolder<?> recipe, NonNullList<ItemStack> slots, int count, CallbackInfoReturnable<Boolean> info) {
         if (recipe != null && recipe.value() instanceof ExtraBlastingRecipe extraBlastingRecipe) {
-            slots.get(3).decrement(extraBlastingRecipe.getExtraInputCount());
+            slots.get(3).shrink(extraBlastingRecipe.getExtraInputCount());
             if (extraBlastingRecipe.getInputCount() > 1) {
-                slots.get(0).decrement(extraBlastingRecipe.getInputCount() - 1);
+                slots.get(0).shrink(extraBlastingRecipe.getInputCount() - 1);
             }
         }
     }
 
-    @Inject(method = "setStack", at = @At("HEAD"))
+    @Inject(method = "setItem", at = @At("HEAD"))
     private void setStackHeadMixin(int slot, ItemStack stack, CallbackInfo info, @Share("extraSlotChanged") LocalBooleanRef extraSlotChanged) {
-        extraSlotChanged.set(this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3 && !stack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(this.inventory.get(slot), stack));
+        extraSlotChanged.set(this.getType().equals(BlockEntityType.BLAST_FURNACE) && slot == 3 && !stack.isEmpty() && !ItemStack.isSameItemSameComponents(this.items.get(slot), stack));
     }
 
-    @Inject(method = "setStack", at = @At("TAIL"))
+    @Inject(method = "setItem", at = @At("TAIL"))
     private void setStackMixin(int slot, ItemStack stack, CallbackInfo info, @Share("extraSlotChanged") LocalBooleanRef extraSlotChanged) {
         if (extraSlotChanged.get()) {
-            this.cookTimeTotal = getCookTime(this.world, (AbstractFurnaceBlockEntity) (Object) this);
-            this.cookTime = 0;
-            this.markDirty();
+            this.cookingTotalTime = getTotalCookTime(this.level, (AbstractFurnaceBlockEntity) (Object) this);
+            this.cookingProgress = 0;
+            this.setChanged();
         }
     }
 
-    @Inject(method = "getRecipesUsedAndDropExperience", at = @At("HEAD"), cancellable = true)
-    private void getRecipesUsedAndDropExperienceMixin(ServerWorld world, Vec3d pos, CallbackInfoReturnable<List<RecipeEntry<?>>> info) {
+    @Inject(method = "getRecipesToAwardAndPopExperience", at = @At("HEAD"), cancellable = true)
+    private void getRecipesUsedAndDropExperienceMixin(ServerLevel world, Vec3 pos, CallbackInfoReturnable<List<RecipeHolder<?>>> info) {
         if (this.getType().equals(BlockEntityType.BLAST_FURNACE)) {
-            ArrayList<RecipeEntry<?>> blastFurnaceExtraRecipes = Lists.newArrayList();
-            for (Object2IntMap.Entry<Identifier> entry : this.recipesUsed.object2IntEntrySet()) {
-                world.getRecipeManager().get(entry.getKey()).ifPresent(recipe -> {
+            ArrayList<RecipeHolder<?>> blastFurnaceExtraRecipes = Lists.newArrayList();
+            for (Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
+                world.getRecipeManager().byKey(entry.getKey()).ifPresent(recipe -> {
                     blastFurnaceExtraRecipes.add(recipe);
                     if (recipe.value() instanceof ExtraBlastingRecipe extraBlastingRecipe) {
-                        dropExperience(world, pos, entry.getIntValue(), extraBlastingRecipe.getExperience());
+                        createExperience(world, pos, entry.getIntValue(), extraBlastingRecipe.getExperience());
                     } else {
-                        dropExperience(world, pos, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).getExperience());
+                        createExperience(world, pos, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).getExperience());
                     }
                 });
             }
@@ -123,11 +123,11 @@ public abstract class AbstractFurnaceBlockEntityMixin extends LockableContainerB
     }
 
     @Shadow
-    private static void dropExperience(ServerWorld world, Vec3d pos, int multiplier, float experience) {
+    private static void createExperience(ServerLevel world, Vec3 pos, int multiplier, float experience) {
     }
 
     @Shadow
-    private static int getCookTime(World world, AbstractFurnaceBlockEntity furnace) {
+    private static int getTotalCookTime(Level world, AbstractFurnaceBlockEntity furnace) {
         return 0;
     }
 }

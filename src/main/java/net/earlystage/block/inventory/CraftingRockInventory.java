@@ -1,28 +1,27 @@
 package net.earlystage.block.inventory;
 
 import java.util.List;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.ItemStack;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+public class CraftingRockInventory extends TransientCraftingContainer {
 
-public class CraftingRockInventory extends CraftingInventory {
+    private final NonNullList<ItemStack> stacks;
 
-    private final DefaultedList<ItemStack> stacks;
-
-    public CraftingRockInventory(Inventory inventory, int variant) {
+    public CraftingRockInventory(Container inventory, int variant) {
         super(null, 3, 3);
-        stacks = DefaultedList.ofSize(9, ItemStack.EMPTY);
+        stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 
-        for (int i = 0; i < inventory.size(); i++) {
-            this.stacks.set(getSlot(variant, i), inventory.getStack(i));
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            this.stacks.set(getSlot(variant, i), inventory.getItem(i));
         }
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return this.stacks.size();
     }
 
@@ -37,36 +36,36 @@ public class CraftingRockInventory extends CraftingInventory {
     }
 
     @Override
-    public ItemStack getStack(int slot) {
-        if (slot >= this.size()) {
+    public ItemStack getItem(int slot) {
+        if (slot >= this.getContainerSize()) {
             return ItemStack.EMPTY;
         }
         return this.stacks.get(slot);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack itemStack = Inventories.splitStack(this.stacks, slot, amount);
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack itemStack = ContainerHelper.removeItem(this.stacks, slot, amount);
         return itemStack;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        return Inventories.removeStack(this.stacks, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        return ContainerHelper.takeItem(this.stacks, slot);
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.stacks.set(slot, stack);
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.stacks.clear();
     }
 
     @Override
-    public List<ItemStack> getHeldStacks() {
+    public List<ItemStack> getItems() {
         return List.copyOf(this.stacks);
     }
 
