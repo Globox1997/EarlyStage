@@ -1,18 +1,18 @@
 {
+    "fabric:load_conditions": [
+        {
+            "condition": "fabric:all_mods_loaded",
+            "values": [
+                "environmentz"
+            ]
+        }
+    ],
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
-        {
-            "item": "earlystage:rock"
-        },
-        {
-            "item": "earlystage:rock"
-        },
-        {
-            "item": "earlystage:rock"
-        },
-        {
-            "item": "earlystage:rock"
-        }
+        "earlystage:rock",
+        "earlystage:rock",
+        "earlystage:rock",
+        "earlystage:rock"
     ],
     "result": {
         "id": "environmentz:heating_stones"

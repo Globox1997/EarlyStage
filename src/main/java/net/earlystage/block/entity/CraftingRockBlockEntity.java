@@ -14,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class CraftingRockBlockEntity extends BlockEntity implements Container {
 
@@ -27,20 +29,20 @@ public class CraftingRockBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, Provider registryLookup) {
-        super.loadAdditional(nbt, registryLookup);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         inventory.clear();
-        ContainerHelper.loadAllItems(nbt, inventory, registryLookup);
-        this.craftHits = nbt.getInt("CraftHits");
-        this.totalHits = nbt.getInt("TotalHits");
+        ContainerHelper.loadAllItems(input, inventory);
+        this.craftHits = input.getIntOr("CraftHits", 0);
+        this.totalHits = input.getIntOr("TotalHits", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, Provider registryLookup) {
-        super.saveAdditional(nbt, registryLookup);
-        ContainerHelper.saveAllItems(nbt, inventory, registryLookup);
-        nbt.putInt("CraftHits", this.craftHits);
-        nbt.putInt("TotalHits", this.totalHits);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, inventory);
+        output.putInt("CraftHits", this.craftHits);
+        output.putInt("TotalHits", this.totalHits);
     }
 
     @Override

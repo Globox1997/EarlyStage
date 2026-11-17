@@ -9,7 +9,7 @@ import net.earlystage.init.TagInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock {
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
-    private void onUseWithItemMixin(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<ItemInteractionResult> info) {
+    private void onUseWithItemMixin(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> info) {
         if (CampfireBlock.canLight(state) && player.getItemInHand(hand).is(TagInit.BARK_ITEMS)) {
             if (!world.isClientSide()) {
                 world.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, true));
@@ -35,9 +35,9 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock {
                     player.getItemInHand(hand).shrink(1);
                 }
                 player.awardStat(Stats.INTERACT_WITH_CAMPFIRE);
-                info.setReturnValue(ItemInteractionResult.SUCCESS);
+                info.setReturnValue(InteractionResult.SUCCESS);
             } else {
-                info.setReturnValue(ItemInteractionResult.CONSUME);
+                info.setReturnValue(InteractionResult.SUCCESS);
             }
         }
     }

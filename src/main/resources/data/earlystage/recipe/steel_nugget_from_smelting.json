@@ -4,48 +4,20 @@
   "cookingtime": 200,
   "experience": 0.1,
   "ingredient": [
-    {
-      "item": "earlystage:steel_pickaxe"
-    },
-    {
-      "item": "earlystage:steel_shovel"
-    },
-    {
-      "item": "earlystage:steel_axe"
-    },
-    {
-      "item": "earlystage:steel_hoe"
-    },
-    {
-      "item": "earlystage:steel_sword"
-    },
-    {
-      "item": "earlystage:steel_helmet"
-    },
-    {
-      "item": "earlystage:steel_chestplate"
-    },
-    {
-      "item": "earlystage:steel_leggings"
-    },
-    {
-      "item": "earlystage:steel_boots"
-    },
-    {
-      "item": "earlystage:steel_horse_armor"
-    },
-    {
-      "item": "minecraft:chainmail_helmet"
-    },
-    {
-      "item": "minecraft:chainmail_chestplate"
-    },
-    {
-      "item": "minecraft:chainmail_leggings"
-    },
-    {
-      "item": "minecraft:chainmail_boots"
-    }
+    "earlystage:steel_pickaxe",
+    "earlystage:steel_shovel",
+    "earlystage:steel_axe",
+    "earlystage:steel_hoe",
+    "earlystage:steel_sword",
+    "earlystage:steel_helmet",
+    "earlystage:steel_chestplate",
+    "earlystage:steel_leggings",
+    "earlystage:steel_boots",
+    "earlystage:steel_horse_armor",
+    "minecraft:chainmail_helmet",
+    "minecraft:chainmail_chestplate",
+    "minecraft:chainmail_leggings",
+    "minecraft:chainmail_boots"
   ],
   "result": {
     "id": "earlystage:steel_nugget"

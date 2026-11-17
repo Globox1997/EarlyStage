@@ -4,9 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.earlystage.EarlyStageMain;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -17,6 +16,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
+import net.minecraft.util.context.ContextMap;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.earlystage.misc.ExtraBlastingRecipe;
 import net.minecraft.world.level.block.Blocks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,16 +31,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class DataLoader implements SimpleSynchronousResourceReloadListener {
+public class DataLoader implements ResourceManagerReloadListener {
 
     private static final Logger LOGGER = LogManager.getLogger("EarlyStage");
 
-    private static final Set<ResourceLocation> CRAFTING_ROCK_RECIPE_IDS = new LinkedHashSet<>();
-
-    @Override
-    public ResourceLocation getFabricId() {
-        return EarlyStageMain.identifierOf("loader");
-    }
+    private static final Set<Identifier> CRAFTING_ROCK_RECIPE_IDS = new LinkedHashSet<>();
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
@@ -42,7 +43,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
         CRAFTING_ROCK_RECIPE_IDS.clear();
 
         boolean craftingRockRecipesReplaced = false;
-        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("crafting_rock_recipes", id -> id.getPath().endsWith(".json")).entrySet()) {
+        for (Map.Entry<Identifier, Resource> entry : manager.listResources("crafting_rock_recipes", id -> id.getPath().endsWith(".json")).entrySet()) {
             if (craftingRockRecipesReplaced) {
                 break;
             }
@@ -60,7 +61,7 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
                 for (JsonElement element : data.getAsJsonArray("values")) {
                     String recipeId = element.isJsonObject() ? GsonHelper.getAsString(element.getAsJsonObject(), "id") : element.getAsString();
-                    ResourceLocation identifier = ResourceLocation.tryParse(recipeId);
+                    Identifier identifier = Identifier.tryParse(recipeId);
                     if (identifier == null) {
                         LOGGER.warn("Invalid recipe id {} in {}", recipeId, entry.getKey());
                         continue;
@@ -91,13 +92,13 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                 try {
                     JsonObject data2 = dropElement.getAsJsonObject();
                     String blockIdString = GsonHelper.getAsString(data2, "block_id");
-                    ResourceLocation blockId = ResourceLocation.tryParse(blockIdString);
-                    if (blockId == null || !BuiltInRegistries.BLOCK.containsKey(blockId) || BuiltInRegistries.BLOCK.get(blockId) == Blocks.AIR) {
+                    Identifier blockId = Identifier.tryParse(blockIdString);
+                    if (blockId == null || !BuiltInRegistries.BLOCK.containsKey(blockId) || BuiltInRegistries.BLOCK.getValue(blockId) == Blocks.AIR) {
                         LOGGER.warn("Block Id: {} in {} is not a valid block id", blockIdString, id);
                         continue;
                     }
 
-                    Item blockItem = BuiltInRegistries.BLOCK.get(blockId).asItem();
+                    Item blockItem = BuiltInRegistries.BLOCK.getValue(blockId).asItem();
                     if (blockItem == Items.AIR) {
                         LOGGER.warn("Block Id: {} in {} has no item form", blockIdString, id);
                         continue;
@@ -113,14 +114,14 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                         try {
                             JsonObject data3 = blockDropElement.getAsJsonObject();
                             String itemIdString = GsonHelper.getAsString(data3, "item_id");
-                            ResourceLocation itemId = ResourceLocation.tryParse(itemIdString);
-                            if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId) || BuiltInRegistries.ITEM.get(itemId) == Items.AIR) {
+                            Identifier itemId = Identifier.tryParse(itemIdString);
+                            if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId) || BuiltInRegistries.ITEM.getValue(itemId) == Items.AIR) {
                                 LOGGER.warn("Item Id: {} for block {} in {} is not a valid item id", itemIdString, blockIdString, id);
                                 continue;
                             }
                             float chance = GsonHelper.getAsFloat(data3, "chance");
                             int rolls = GsonHelper.getAsInt(data3, "rolls");
-                            blockDrops.add(BuiltInRegistries.ITEM.get(itemId));
+                            blockDrops.add(BuiltInRegistries.ITEM.getValue(itemId));
                             dropChances.add(chance);
                             rollCount.add(rolls);
                         } catch (Exception e) {
@@ -142,9 +143,10 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
 
     public static void updateCraftingRockRecipeItems(MinecraftServer server) {
         Map<Item, List<Item>> recipeItems = new HashMap<>();
-        List<ResourceLocation> recipeIds = new ArrayList<>();
-        for (ResourceLocation recipeId : CRAFTING_ROCK_RECIPE_IDS) {
-            Optional<RecipeHolder<?>> optional = server.getRecipeManager().byKey(recipeId);
+        List<CraftingRockRecipe> recipes = new ArrayList<>();
+        ContextMap context = ContextMap.builder().set(SlotDisplayContext.REGISTRIES, server.registryAccess()).buildAndValidate(SlotDisplayContext.CONTEXT);
+        for (Identifier recipeId : CRAFTING_ROCK_RECIPE_IDS) {
+            Optional<RecipeHolder<?>> optional = server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, recipeId));
             if (optional.isEmpty()) {
                 LOGGER.warn("Crafting rock recipe {} does not exist", recipeId);
                 continue;
@@ -153,24 +155,36 @@ public class DataLoader implements SimpleSynchronousResourceReloadListener {
                 LOGGER.warn("Crafting rock recipe {} is not a crafting recipe", recipeId);
                 continue;
             }
-            ItemStack result = recipe.getResultItem(server.registryAccess());
+            if (recipe.display().isEmpty()) {
+                LOGGER.warn("Crafting rock recipe {} has no display", recipeId);
+                continue;
+            }
+            RecipeDisplay display = recipe.display().get(0);
+            ItemStack result = display.result().resolveForFirstStack(context);
             if (result.isEmpty()) {
                 LOGGER.warn("Crafting rock recipe {} has no result", recipeId);
                 continue;
             }
-            recipeIds.add(recipeId);
+            recipes.add(new CraftingRockRecipe(recipeId, display));
             List<Item> inputs = recipeItems.computeIfAbsent(result.getItem(), item -> new ArrayList<>());
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                for (ItemStack stack : ingredient.getItems()) {
-                    if (!stack.isEmpty() && !inputs.contains(stack.getItem())) {
-                        inputs.add(stack.getItem());
+            for (Ingredient ingredient : recipe.placementInfo().ingredients()) {
+                ingredient.items().forEach(holder -> {
+                    if (!inputs.contains(holder.value())) {
+                        inputs.add(holder.value());
                     }
-                }
+                });
             }
         }
         EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
         EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.putAll(recipeItems);
-        EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(recipeIds);
+        EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(recipes);
+        List<RecipeHolder<ExtraBlastingRecipe>> extraBlastingRecipes = new ArrayList<>();
+        for (RecipeHolder<?> recipe : server.getRecipeManager().getRecipes()) {
+            if (recipe.value() instanceof ExtraBlastingRecipe extraBlastingRecipe) {
+                extraBlastingRecipes.add(new RecipeHolder<>(recipe.id(), extraBlastingRecipe));
+            }
+        }
+        EarlyStageMain.EXTRA_BLASTING_RECIPES = List.copyOf(extraBlastingRecipes);
     }
 
 }

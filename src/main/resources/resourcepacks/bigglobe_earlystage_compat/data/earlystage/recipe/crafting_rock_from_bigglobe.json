@@ -4,9 +4,7 @@
         "dd"
     ],
     "key": {
-        "d": {
-            "item": "bigglobe:rock"
-        }
+        "d": "bigglobe:rock"
     },
     "result": {
         "id": "earlystage:crafting_rock"

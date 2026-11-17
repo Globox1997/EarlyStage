@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "damascus_steel_ingot",
   "ingredients": [
-    {
-      "item": "earlystage:damascus_steel_block"
-    }
+    "earlystage:damascus_steel_block"
   ],
   "result": {
     "count": 9,

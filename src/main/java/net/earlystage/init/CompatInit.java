@@ -3,11 +3,11 @@ package net.earlystage.init;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.item.BarkItem;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +88,7 @@ public class CompatInit {
     // Beachparty
     public static Item BP_PALM_BARK;
 
-    private static final Map<ResourceLocation, List<Consumer<Block>>> PENDING_BLOCKS = new HashMap<>();
+    private static final Map<Identifier, List<Consumer<Block>>> PENDING_BLOCKS = new HashMap<>();
 
     public static void init() {
         RegistryEntryAddedCallback.event(BuiltInRegistries.BLOCK).register((rawId, id, block) -> {
@@ -99,8 +99,8 @@ public class CompatInit {
         });
 
         if (FabricLoader.getInstance().isModLoaded("oblivion")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("oblivion_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("oblivion_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
             // Rune Wood
             RUNE_BARK = registerBark("rune_bark", "oblivion:rune_wood_log", "oblivion:rune_wood");
             addStrippedCompat("oblivion:rune_wood_log", "oblivion:stripped_rune_wood_log");
@@ -117,8 +117,8 @@ public class CompatInit {
             addStrippedCompat("oblivion:iron_wood", "oblivion:stripped_iron_wood");
         }
         if (FabricLoader.getInstance().isModLoaded("natures_spirit")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("natures_spirit_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("natures_spirit_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
             // Aspen
             ASPEN_BARK = registerBark("aspen_bark", "natures_spirit:aspen_log", "natures_spirit:aspen_wood");
             addStrippedCompat("natures_spirit:aspen_log", "natures_spirit:stripped_aspen_log");
@@ -205,8 +205,8 @@ public class CompatInit {
             addStrippedCompat("natures_spirit:wisteria_wood", "natures_spirit:stripped_wisteria_wood");
         }
         if (FabricLoader.getInstance().isModLoaded("regions_unexplored")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("regions_unexplored_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("regions_unexplored_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
 
             // Baobab
             BAOBAB_BARK = registerBark("baobab_bark", "regions_unexplored:baobab_log", "regions_unexplored:baobab_wood");
@@ -323,8 +323,8 @@ public class CompatInit {
             addStrippedCompat("regions_unexplored:yellow_bioshroom_stem", "regions_unexplored:stripped_yellow_bioshroom_stem");
         }
         if (FabricLoader.getInstance().isModLoaded("terrestria")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("terrestria_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("terrestria_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
             // Hemlock
             HEMLOCK_BARK = registerBark("hemlock_bark", "terrestria:hemlock_log", "terrestria:hemlock_wood");
             addStrippedCompat("terrestria:hemlock_log", "terrestria:stripped_hemlock_log");
@@ -361,23 +361,23 @@ public class CompatInit {
             addStrippedCompat("terrestria:redwood_wood", "terrestria:stripped_redwood_wood");
         }
         if (FabricLoader.getInstance().isModLoaded("bigglobe")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("bigglobe_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("bigglobe_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
         }
         if (FabricLoader.getInstance().isModLoaded("rocks")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("this_rocks_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("this_rocks_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
         }
         if (FabricLoader.getInstance().isModLoaded("meadow")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("meadow_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("meadow_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
 
             ALPINE_BIRCH_BARK = registerBark("alpine_birch_bark", "meadow:alpine_birch_log", null);
             addStrippedCompat("meadow:alpine_birch_log", "minecraft:stripped_birch_log");
         }
         if (FabricLoader.getInstance().isModLoaded("beachparty")) {
-            ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("beachparty_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                    ResourcePackActivationType.DEFAULT_ENABLED);
+            ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("beachparty_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                    PackActivationType.DEFAULT_ENABLED);
 
             BP_PALM_BARK = registerBark("bp_palm_bark", "beachparty:palm_log", "beachparty:palm_wood");
             addStrippedCompat("beachparty:palm_log", "beachparty:stripped_palm_log");
@@ -385,7 +385,7 @@ public class CompatInit {
     }
 
     private static Item registerBark(String name, String logId, @Nullable String woodId) {
-        BarkItem barkItem = (BarkItem) ItemInit.register(name, new BarkItem(new Item.Properties(), null, null, 150));
+        BarkItem barkItem = (BarkItem) ItemInit.registerBark(name, null, null, 150);
         whenBlockRegistered(logId, barkItem::setLogBlock);
         if (woodId != null) {
             whenBlockRegistered(woodId, barkItem::setWoodBlock);
@@ -398,9 +398,9 @@ public class CompatInit {
     }
 
     private static void whenBlockRegistered(String id, Consumer<Block> action) {
-        ResourceLocation identifier = ResourceLocation.parse(id);
+        Identifier identifier = Identifier.parse(id);
         if (BuiltInRegistries.BLOCK.containsKey(identifier)) {
-            action.accept(BuiltInRegistries.BLOCK.get(identifier));
+            action.accept(BuiltInRegistries.BLOCK.getValue(identifier));
         } else {
             PENDING_BLOCKS.computeIfAbsent(identifier, key -> new ArrayList<>()).add(action);
         }

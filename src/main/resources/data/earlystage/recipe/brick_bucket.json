@@ -5,9 +5,7 @@
         " d "
     ],
     "key": {
-        "d": {
-            "item": "minecraft:brick"
-        }
+        "d": "minecraft:brick"
     },
     "result": {
         "id": "earlystage:brick_bucket"

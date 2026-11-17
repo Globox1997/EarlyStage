@@ -1,6 +1,5 @@
 package net.earlystage;
 
-import net.earlystage.init.ModelInit;
 import net.earlystage.init.RenderInit;
 import net.earlystage.network.EarlyClientPacket;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,7 +12,6 @@ public class EarlyStageClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         RenderInit.init();
-        ModelInit.init();
         EarlyClientPacket.init();
     }
 

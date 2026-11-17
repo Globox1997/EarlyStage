@@ -5,9 +5,7 @@
         " d "
     ],
     "key": {
-        "d": {
-            "tag": "c:stripped_logs"
-        }
+        "d": "#c:stripped_logs"
     },
     "result": {
         "id": "earlystage:wooden_bucket"

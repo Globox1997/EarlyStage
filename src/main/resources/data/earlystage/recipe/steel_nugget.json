@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "earlystage:steel_ingot"
-    }
+    "earlystage:steel_ingot"
   ],
   "result": {
     "count": 9,

@@ -6,15 +6,9 @@
         "dfd"
     ],
     "key": {
-        "d": {
-            "tag": "minecraft:stone_crafting_materials"
-        },
-        "e": {
-            "item": "minecraft:string"
-        },
-        "f": {
-            "item": "minecraft:redstone"
-        }
+        "d": "#minecraft:stone_crafting_materials",
+        "e": "minecraft:string",
+        "f": "minecraft:redstone"
     },
     "result": {
         "id": "earlystage:redstone_sieve"

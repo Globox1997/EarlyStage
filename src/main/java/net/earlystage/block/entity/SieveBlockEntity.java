@@ -20,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class SieveBlockEntity extends BlockEntity implements Container {
 
@@ -33,18 +35,18 @@ public class SieveBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag nbt, Provider registryLookup) {
-        super.loadAdditional(nbt, registryLookup);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         inventory.clear();
-        ContainerHelper.loadAllItems(nbt, inventory, registryLookup);
-        sieveCount = nbt.getInt("SieveCount");
+        ContainerHelper.loadAllItems(input, inventory);
+        sieveCount = input.getIntOr("SieveCount", 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt, Provider registryLookup) {
-        super.saveAdditional(nbt, registryLookup);
-        ContainerHelper.saveAllItems(nbt, inventory, registryLookup);
-        nbt.putInt("SieveCount", sieveCount);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, inventory);
+        output.putInt("SieveCount", sieveCount);
     }
 
     public static void clientTick(Level world, BlockPos pos, BlockState state, SieveBlockEntity blockEntity) {

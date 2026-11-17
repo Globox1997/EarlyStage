@@ -6,12 +6,8 @@
         " e "
     ],
     "key": {
-        "d": {
-            "item": "minecraft:flint"
-        },
-        "e": {
-            "item": "minecraft:stick"
-        }
+        "d": "minecraft:flint",
+        "e": "minecraft:stick"
     },
     "result": {
         "id": "earlystage:flint_pickaxe"

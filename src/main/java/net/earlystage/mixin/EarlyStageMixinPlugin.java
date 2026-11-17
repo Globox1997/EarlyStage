@@ -22,8 +22,6 @@ public class EarlyStageMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains("FallenLogBlockMixin") && !FabricLoader.getInstance().isModLoaded("missingwilds"))
-            return false;
 //        if (mixinClassName.contains("Test") && !FabricLoader.getInstance().isModLoaded("terraform-wood-api-v1"))
 //            return false;
 

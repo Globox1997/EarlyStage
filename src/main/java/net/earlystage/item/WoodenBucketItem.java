@@ -2,7 +2,7 @@ package net.earlystage.item;
 
 import net.earlystage.compat.EarlyStageDehydrationItems;
 import net.earlystage.init.ItemInit;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,7 +13,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.Item;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
@@ -45,18 +47,18 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         BlockHitResult blockHitResult = WoodenBucketItem.getPlayerPOVHitResult(world, user, this.fluid == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         if (blockHitResult.getType() == HitResult.Type.MISS) {
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResult.PASS;
         }
         if (blockHitResult.getType() == HitResult.Type.BLOCK) {
             BlockPos blockPos = blockHitResult.getBlockPos();
             Direction direction = blockHitResult.getDirection();
             BlockPos blockPos2 = blockPos.relative(direction);
             if (!world.mayInteract(user, blockPos) || !user.mayUseItemAt(blockPos2, direction, itemStack)) {
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
             }
             if (this.fluid == Fluids.EMPTY) {
                 BlockState blockState = world.getBlockState(blockPos);
@@ -76,9 +78,9 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
 
                         CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) user, itemStack2);
                     }
-                    return InteractionResultHolder.sidedSuccess(itemStack3, world.isClientSide());
+                    return InteractionResult.SUCCESS.heldItemTransformedTo(itemStack3);
                 }
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
             }
             BlockState blockState = world.getBlockState(blockPos);
             BlockPos blockPos3 = blockState.getBlock() instanceof LiquidBlockContainer && this.fluid == Fluids.WATER ? blockPos : blockPos2;
@@ -88,11 +90,11 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
                     CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) user, blockPos3, itemStack);
                 }
                 user.awardStat(Stats.ITEM_USED.get(this));
-                return InteractionResultHolder.sidedSuccess(WoodenBucketItem.getEmptiedStack(itemStack, user), world.isClientSide());
+                return InteractionResult.SUCCESS.heldItemTransformedTo(WoodenBucketItem.getEmptiedStack(itemStack, user));
             }
-            return InteractionResultHolder.fail(itemStack);
+            return InteractionResult.FAIL;
         }
-        return InteractionResultHolder.pass(itemStack);
+        return InteractionResult.PASS;
     }
 
     public static ItemStack getEmptiedStack(ItemStack stack, Player player) {
@@ -103,14 +105,14 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
     }
 
     @Override
-    public void checkExtraContent(@Nullable Player player, Level world, ItemStack stack, BlockPos pos) {
-        if (!player.isCreative()) {
-            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f, false);
+    public void checkExtraContent(@Nullable LivingEntity player, Level world, ItemStack stack, BlockPos pos) {
+        if (!(player instanceof Player playerEntity) || !playerEntity.isCreative()) {
+            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BREAK.value(), SoundSource.PLAYERS, 0.8f, 0.8f + world.getRandom().nextFloat() * 0.4f, false);
         }
     }
 
     @Override
-    public boolean emptyContents(@Nullable Player player, Level world, BlockPos pos, @Nullable BlockHitResult hitResult) {
+    public boolean emptyContents(@Nullable LivingEntity player, Level world, BlockPos pos, @Nullable BlockHitResult hitResult) {
         if (!(this.fluid instanceof FlowingFluid)) {
             return false;
         }
@@ -121,11 +123,11 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
         if (!bl2) {
             return hitResult != null && this.emptyContents(player, world, hitResult.getBlockPos().relative(hitResult.getDirection()), null);
         }
-        if (world.dimensionType().ultraWarm() && this.fluid.is(FluidTags.WATER)) {
+        if (world.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos) && this.fluid.is(FluidTags.WATER)) {
             int i = pos.getX();
             int j = pos.getY();
             int k = pos.getZ();
-            world.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5f, 2.6f + (world.random.nextFloat() - world.random.nextFloat()) * 0.8f);
+            world.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5f, 2.6f + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.8f);
             for (int l = 0; l < 8; ++l) {
                 world.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0, 0.0, 0.0);
             }
@@ -146,7 +148,7 @@ public class WoodenBucketItem extends Item implements DispensibleContainerItem {
         return false;
     }
 
-    private void playEmptyingSound(@Nullable Player player, LevelAccessor world, BlockPos pos) {
+    private void playEmptyingSound(@Nullable LivingEntity player, LevelAccessor world, BlockPos pos) {
         SoundEvent soundEvent = this.fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
         world.playSound(player, pos, soundEvent, SoundSource.BLOCKS, 1.0f, 1.0f);
         world.gameEvent(player, GameEvent.FLUID_PLACE, pos);

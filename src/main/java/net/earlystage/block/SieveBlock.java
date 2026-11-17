@@ -1,17 +1,20 @@
 package net.earlystage.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.earlystage.block.entity.SieveBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -19,12 +22,12 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class SieveBlock extends Block implements EntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public SieveBlock(Properties settings) {
         super(settings);
@@ -57,7 +60,7 @@ public class SieveBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
@@ -70,35 +73,24 @@ public class SieveBlock extends Block implements EntityBlock {
                         if (!player.isCreative())
                             itemStack.shrink(1);
                     }
-                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             } else {
                 ((SieveBlockEntity) blockEntity).sieve();
-                return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
-    @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.is(newState.getBlock())) {
-            return;
-        }
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof SieveBlockEntity) {
-            Containers.dropContents(world, pos, (Container) ((SieveBlockEntity) blockEntity));
-        }
-        super.onRemove(state, world, pos, newState, moved);
-    }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation orientation, boolean notify) {
         if (!world.isClientSide() && !world.getBlockState(pos.above()).isAir() && world.getBlockEntity(pos) != null) {
             Containers.dropContents(world, pos, (Container) ((SieveBlockEntity) world.getBlockEntity(pos)));
             ((SieveBlockEntity) world.getBlockEntity(pos)).clearContent();
         }
-        super.neighborChanged(state, world, pos, sourceBlock, sourcePos, notify);
+        super.neighborChanged(state, world, pos, sourceBlock, orientation, notify);
     }
 }

@@ -4,8 +4,8 @@ import net.dehydration.api.DehydrationAPI;
 import net.dehydration.api.FluidBehavior;
 import net.earlystage.EarlyStageMain;
 import net.earlystage.init.ItemInit;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +21,8 @@ public class EarlyStageDehydrationIntegration implements DehydrationAPI {
     public void registerFluidBehaviors() {
         EarlyStageDehydrationItems.init();
 
-        ResourceManagerHelper.registerBuiltinResourcePack(EarlyStageMain.identifierOf("dehydration_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
-                ResourcePackActivationType.DEFAULT_ENABLED);
+        ResourceLoader.registerBuiltinPack(EarlyStageMain.identifierOf("dehydration_earlystage_compat"), FabricLoader.getInstance().getModContainer("earlystage").orElseThrow(),
+                PackActivationType.DEFAULT_ENABLED);
         FluidBehavior.registerWaterBucketForCauldron(ItemInit.WOODEN_BUCKET, ItemInit.WATER_WOODEN_BUCKET);
         FluidBehavior.registerWaterBucketForCauldron(ItemInit.BRICK_BUCKET, ItemInit.WATER_BRICK_BUCKET);
         FluidBehavior.registerWaterBucketForCopperCauldron(ItemInit.BRICK_BUCKET, ItemInit.WATER_BRICK_BUCKET);

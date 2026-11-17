@@ -87,6 +87,11 @@
 
     "tag.item.earlystage.bark_items": "Bark Items",
     "tag.item.earlystage.rock_items": "Rock Items",
+    "tag.item.earlystage.flint_tool_materials": "Flint Tool Materials",
+    "tag.item.earlystage.steel_tool_materials": "Steel Tool Materials",
+    "tag.item.earlystage.damascus_steel_tool_materials": "Damascus Steel Tool Materials",
+    "tag.item.earlystage.repairs_steel_armor": "Repairs Steel Armor",
+    "tag.item.earlystage.repairs_damascus_steel_armor": "Repairs Damascus Steel Armor",
     "tag.block.earlystage.rock_feature_blocks": "Rock Feature Blocks",
     "tag.biome.earlystage.rock_feature_biomes": "Rock Feature Biomes",
 

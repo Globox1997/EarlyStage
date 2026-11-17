@@ -4,11 +4,11 @@
     "cookingtime": 600,
     "experience": 0.5,
     "ingredient": {
-        "item": "earlystage:steel_ingot",
+        "ingredient": "earlystage:steel_ingot",
         "count": 2
     },
     "extraingredient": {
-        "item": "minecraft:coal",
+        "ingredient": "minecraft:coal",
         "count": 4
     },
     "result": {

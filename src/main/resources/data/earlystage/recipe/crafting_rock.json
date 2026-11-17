@@ -4,9 +4,7 @@
         "dd"
     ],
     "key": {
-        "d": {
-            "item": "earlystage:rock"
-        }
+        "d": "earlystage:rock"
     },
     "result": {
         "id": "earlystage:crafting_rock"

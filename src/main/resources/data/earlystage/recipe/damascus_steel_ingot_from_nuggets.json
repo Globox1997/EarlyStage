@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "damascus_steel_ingot",
   "key": {
-    "#": {
-      "item": "earlystage:damascus_steel_nugget"
-    }
+    "#": "earlystage:damascus_steel_nugget"
   },
   "pattern": [
     "###",

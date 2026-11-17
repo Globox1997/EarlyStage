@@ -6,12 +6,8 @@
         " d "
     ],
     "key": {
-        "d": {
-            "tag": "minecraft:planks"
-        },
-        "e": {
-            "tag": "minecraft:logs"
-        }
+        "d": "#minecraft:planks",
+        "e": "#minecraft:logs"
     },
     "result": {
         "id": "earlystage:wooden_shield"

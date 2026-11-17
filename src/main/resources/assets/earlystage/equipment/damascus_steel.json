@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "horse_body": [
+      {
+        "texture": "earlystage:damascus_steel"
+      }
+    ],
+    "humanoid": [
+      {
+        "texture": "earlystage:damascus_steel"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "earlystage:damascus_steel"
+      }
+    ]
+  }
+}

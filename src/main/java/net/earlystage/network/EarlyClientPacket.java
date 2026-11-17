@@ -5,6 +5,7 @@ import net.earlystage.init.ConfigInit;
 import net.earlystage.network.packet.BeginnerDeathPacket;
 import net.earlystage.network.packet.ConfigSyncPacket;
 import net.earlystage.network.packet.CraftingRockItemsPacket;
+import net.earlystage.network.packet.ExtraBlastingRecipesPacket;
 import net.earlystage.network.packet.SieveDropPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +38,12 @@ public class EarlyClientPacket {
             if (!context.client().hasSingleplayerServer()) {
                 EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.clear();
                 payload.recipeItems().forEach((output, inputs) -> EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.put(output, new ArrayList<>(inputs)));
-                EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(payload.recipeIds());
+                EarlyStageMain.CRAFTING_ROCK_RECIPES = List.copyOf(payload.recipes());
+            }
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ExtraBlastingRecipesPacket.PACKET_ID, (payload, context) -> {
+            if (!context.client().hasSingleplayerServer()) {
+                EarlyStageMain.EXTRA_BLASTING_RECIPES = List.copyOf(payload.recipes());
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_ID, (payload, context) -> {

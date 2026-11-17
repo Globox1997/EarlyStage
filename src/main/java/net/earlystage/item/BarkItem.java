@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.earlystage.mixin.access.AxeItemAccessor;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -33,11 +31,14 @@ public class BarkItem extends Item {
     @Nullable
     private Block woodBlock;
 
-    public BarkItem(Properties settings, @Nullable Block logBlock, @Nullable Block woodBlock, int cookTime) {
+    public BarkItem(Properties settings, @Nullable Block logBlock, @Nullable Block woodBlock) {
         super(settings);
-        FuelRegistry.INSTANCE.add(this, cookTime);
         this.setLogBlock(logBlock);
         this.setWoodBlock(woodBlock);
+    }
+
+    public static void addStrippedBlock(Block block, Block strippedBlock) {
+        STRIPPED_LOG_COMPAT.put(block, strippedBlock);
     }
 
     public void setLogBlock(@Nullable Block logBlock) {
@@ -67,7 +68,7 @@ public class BarkItem extends Item {
                 if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
                 }
-                world.playSound(null, blockPos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0f, 1.0f);
+                world.playSound(null, blockPos, SoundEvents.AXE_STRIP.value(), SoundSource.BLOCKS, 1.0f, 1.0f);
 
                 if (!world.isClientSide()) {
                     BlockState blockState2 = unstrippedBlock.defaultBlockState();
@@ -80,7 +81,7 @@ public class BarkItem extends Item {
                         itemStack.shrink(1);
                     }
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide());
+                return InteractionResult.SUCCESS;
             }
 
         }
@@ -99,7 +100,7 @@ public class BarkItem extends Item {
     }
 
     private static boolean isStrippedVersion(Block block, Block strippedBlock) {
-        return AxeItemAccessor.getStrippedBlocks().get(block) == strippedBlock || STRIPPED_LOG_COMPAT.get(block) == strippedBlock;
+        return STRIPPED_LOG_COMPAT.get(block) == strippedBlock;
     }
 
 }

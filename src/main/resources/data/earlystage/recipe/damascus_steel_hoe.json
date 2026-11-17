@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
-      "item": "minecraft:stick"
-    },
-    "X": {
-      "item": "earlystage:damascus_steel_ingot"
-    }
+    "#": "minecraft:stick",
+    "X": "earlystage:damascus_steel_ingot"
   },
   "pattern": [
     "XX",

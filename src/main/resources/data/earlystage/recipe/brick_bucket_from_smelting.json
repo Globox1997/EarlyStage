@@ -3,9 +3,7 @@
     "category": "misc",
     "cookingtime": 200,
     "experience": 0.3,
-    "ingredient": {
-        "item": "earlystage:clay_bucket"
-    },
+    "ingredient": "earlystage:clay_bucket",
     "result": {
         "id": "earlystage:brick_bucket"
     }

@@ -1,185 +1,151 @@
 package net.earlystage.misc;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.earlystage.EarlyStageMain;
 import net.earlystage.init.RecipeInit;
-import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 
-public class ExtraBlastingRecipe implements Recipe<ExtraBlastingRecipeInput> {
-    private final CookingBookCategory category;
-    private final String group;
-    private final Ingredient input;
+public class ExtraBlastingRecipe extends AbstractCookingRecipe {
     private final int inputCount;
     private final Ingredient extraInput;
     private final int extraInputCount;
-    private final ItemStack output;
-    private final float experience;
-    private final int cookTime;
+    @Nullable
+    private PlacementInfo extraPlacementInfo;
 
-    public ExtraBlastingRecipe(String group, CookingBookCategory category, Ingredient input, int inputCount, Ingredient extraInput, int extraInputCount, ItemStack output, float experience,
-            int cookTime) {
-        this.category = category;
-        this.group = group;
-        this.input = input;
+    public ExtraBlastingRecipe(Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient input, int inputCount, Ingredient extraInput, int extraInputCount,
+            ItemStackTemplate result, float experience, int cookTime) {
+        super(commonInfo, bookInfo, input, result, experience, cookTime);
         this.inputCount = Math.max(1, inputCount);
         this.extraInput = extraInput;
         this.extraInputCount = Math.max(1, extraInputCount);
-        this.output = output;
-        this.experience = experience;
-        this.cookTime = cookTime;
     }
 
-    private ExtraBlastingRecipe(String group, CookingBookCategory category, CountedIngredient input, CountedIngredient extraInput, ItemStack output, float experience, int cookTime) {
-        this(group, category, input.ingredient(), input.count(), extraInput.ingredient(), extraInput.count(), output, experience, cookTime);
+    private ExtraBlastingRecipe(Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, CountedIngredient input, CountedIngredient extraInput, ItemStackTemplate result,
+            float experience, int cookTime) {
+        this(commonInfo, bookInfo, input.ingredient(), input.count(), extraInput.ingredient(), extraInput.count(), result, experience, cookTime);
     }
 
     public record CountedIngredient(Ingredient ingredient, int count) {
 
+        private static final MapCodec<Ingredient> OBJECT_INGREDIENT_CODEC = Codec.mapPair(Ingredient.CODEC.optionalFieldOf("ingredient"), Ingredient.CODEC.optionalFieldOf("item")).flatXmap(
+                pair -> pair.getFirst().or(pair::getSecond).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Missing ingredient")),
+                ingredient -> DataResult.success(Pair.of(Optional.of(ingredient), Optional.empty())));
+
         public static final Codec<CountedIngredient> CODEC = Codec.withAlternative(
-                RecordCodecBuilder.<CountedIngredient>mapCodec(instance -> instance.group(MapCodec.assumeMapUnsafe(Ingredient.CODEC_NONEMPTY).forGetter(CountedIngredient::ingredient),
+                RecordCodecBuilder.<CountedIngredient>mapCodec(instance -> instance.group(
+                        OBJECT_INGREDIENT_CODEC.forGetter(CountedIngredient::ingredient),
                         ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(CountedIngredient::count)).apply(instance, CountedIngredient::new)).codec(),
-                Ingredient.CODEC_NONEMPTY, ingredient -> new CountedIngredient(ingredient, 1));
+                Ingredient.CODEC, ingredient -> new CountedIngredient(ingredient, 1));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, CountedIngredient> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, CountedIngredient::ingredient,
+                ByteBufCodecs.VAR_INT, CountedIngredient::count, CountedIngredient::new);
     }
 
-    @Override
-    public ItemStack getToastSymbol() {
-        return new ItemStack(Blocks.BLAST_FURNACE);
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return RecipeInit.EXTRA_BLASTING_SERIALIZER;
+    public static Optional<RecipeHolder<ExtraBlastingRecipe>> getRecipeFor(ServerLevel level, ItemStack input, ItemStack extraInput) {
+        for (RecipeHolder<ExtraBlastingRecipe> recipe : EarlyStageMain.EXTRA_BLASTING_RECIPES) {
+            if (recipe.value().matches(input, extraInput)) {
+                return Optional.of(recipe);
+            }
+        }
+        return Optional.empty();
     }
 
     private static boolean test(@Nullable ItemStack stack, Ingredient ingredient, int count) {
         return stack != null && !stack.isEmpty() && ingredient.test(stack) && stack.getCount() >= count;
     }
 
+    public boolean matches(ItemStack input, ItemStack extraInput) {
+        return test(input, this.input(), this.inputCount) && test(extraInput, this.extraInput, this.extraInputCount);
+    }
+
+    @Override
+    public boolean matches(SingleRecipeInput input, Level level) {
+        return test(input.item(), this.input(), this.inputCount);
+    }
+
     public int getInputCount() {
         return this.inputCount;
+    }
+
+    public Ingredient getExtraInput() {
+        return this.extraInput;
     }
 
     public int getExtraInputCount() {
         return this.extraInputCount;
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return true;
+    public ItemStackTemplate getResult() {
+        return this.result();
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> defaultedList = NonNullList.create();
-        defaultedList.add(this.input);
-        defaultedList.add(this.extraInput);
-        return defaultedList;
-    }
-
-    public float getExperience() {
-        return this.experience;
-    }
-
-    public ItemStack getOutput() {
-        return this.output;
+    public PlacementInfo placementInfo() {
+        if (this.extraPlacementInfo == null) {
+            this.extraPlacementInfo = PlacementInfo.create(List.of(this.input(), this.extraInput));
+        }
+        return this.extraPlacementInfo;
     }
 
     @Override
-    public ItemStack getResultItem(Provider wrapperLookup) {
-        return this.output;
+    protected Item furnaceIcon() {
+        return Items.BLAST_FURNACE;
     }
 
     @Override
-    public String getGroup() {
-        return this.group;
-    }
-
-    public int getCookTime() {
-        return this.cookTime;
+    public RecipeSerializer<ExtraBlastingRecipe> getSerializer() {
+        return RecipeInit.EXTRA_BLASTING_SERIALIZER;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<ExtraBlastingRecipe> getType() {
         return RecipeInit.EXTRA_BLASTING;
     }
 
-    public CookingBookCategory getCategory() {
-        return this.category;
-    }
-
-    public static class Serializer implements RecipeSerializer<ExtraBlastingRecipe> {
-
-        public static final MapCodec<ExtraBlastingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
-                CookingBookCategory.CODEC.fieldOf("category").orElse(CookingBookCategory.MISC).forGetter(recipe -> recipe.category),
-                CountedIngredient.CODEC.fieldOf("ingredient").forGetter(recipe -> new CountedIngredient(recipe.input, recipe.inputCount)),
-                CountedIngredient.CODEC.fieldOf("extraingredient").forGetter(recipe -> new CountedIngredient(recipe.extraInput, recipe.extraInputCount)),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
-                Codec.FLOAT.fieldOf("experience").orElse(Float.valueOf(0.0f)).forGetter(recipe -> Float.valueOf(recipe.experience)),
-                Codec.INT.fieldOf("cookingtime").orElse(100).forGetter(recipe -> recipe.cookTime)).apply(instance, ExtraBlastingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ExtraBlastingRecipe> PACKET_CODEC = StreamCodec.of(Serializer::write, Serializer::read);
-
-        @Override
-        public MapCodec<ExtraBlastingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ExtraBlastingRecipe> streamCodec() {
-            return PACKET_CODEC;
-        }
-
-        private static ExtraBlastingRecipe read(RegistryFriendlyByteBuf buf) {
-            String group = buf.readUtf();
-            CookingBookCategory cookingRecipeCategory = buf.readEnum(CookingBookCategory.class);
-            Ingredient input = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-            int inputCount = buf.readVarInt();
-            Ingredient extraInput = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-            int extraInputCount = buf.readVarInt();
-            ItemStack itemStack = (ItemStack) ItemStack.STREAM_CODEC.decode(buf);
-            float experience = buf.readFloat();
-            int cookTime = buf.readVarInt();
-            return new ExtraBlastingRecipe(group, cookingRecipeCategory, input, inputCount, extraInput, extraInputCount, itemStack, experience, cookTime);
-        }
-
-        private static void write(RegistryFriendlyByteBuf buf, ExtraBlastingRecipe extraBlastingRecipe) {
-            buf.writeUtf(extraBlastingRecipe.group);
-            buf.writeEnum(extraBlastingRecipe.getCategory());
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, extraBlastingRecipe.input);
-            buf.writeVarInt(extraBlastingRecipe.inputCount);
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, extraBlastingRecipe.extraInput);
-            buf.writeVarInt(extraBlastingRecipe.extraInputCount);
-            ItemStack.STREAM_CODEC.encode(buf, extraBlastingRecipe.output);
-            buf.writeFloat(extraBlastingRecipe.experience);
-            buf.writeVarInt(extraBlastingRecipe.cookTime);
-        }
-
-    }
-
     @Override
-    public boolean matches(ExtraBlastingRecipeInput extraBlastingRecipeInput, Level world) {
-        return test(extraBlastingRecipeInput.input(), this.input, this.inputCount) && test(extraBlastingRecipeInput.extraInput(), this.extraInput, this.extraInputCount);
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.BLAST_FURNACE_MISC;
     }
 
-    @Override
-    public ItemStack assemble(ExtraBlastingRecipeInput extraBlastingRecipeInput, Provider wrapperLookup) {
-        return this.output.copy();
-    }
+    public static final MapCodec<ExtraBlastingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Recipe.CommonInfo.MAP_CODEC.forGetter(recipe -> recipe.commonInfo),
+            AbstractCookingRecipe.CookingBookInfo.MAP_CODEC.forGetter(recipe -> recipe.bookInfo),
+            CountedIngredient.CODEC.fieldOf("ingredient").forGetter(recipe -> new CountedIngredient(recipe.input(), recipe.inputCount)),
+            CountedIngredient.CODEC.fieldOf("extraingredient").forGetter(recipe -> new CountedIngredient(recipe.extraInput, recipe.extraInputCount)),
+            ItemStackTemplate.CODEC.fieldOf("result").forGetter(ExtraBlastingRecipe::result), Codec.FLOAT.optionalFieldOf("experience", 0.0f).forGetter(AbstractCookingRecipe::experience),
+            Codec.INT.optionalFieldOf("cookingtime", 100).forGetter(AbstractCookingRecipe::cookingTime)).apply(instance, ExtraBlastingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ExtraBlastingRecipe> STREAM_CODEC = StreamCodec.composite(Recipe.CommonInfo.STREAM_CODEC, recipe -> recipe.commonInfo,
+            AbstractCookingRecipe.CookingBookInfo.STREAM_CODEC, recipe -> recipe.bookInfo, CountedIngredient.STREAM_CODEC, recipe -> new CountedIngredient(recipe.input(), recipe.inputCount),
+            CountedIngredient.STREAM_CODEC, recipe -> new CountedIngredient(recipe.extraInput, recipe.extraInputCount), ItemStackTemplate.STREAM_CODEC, ExtraBlastingRecipe::result,
+            ByteBufCodecs.FLOAT, AbstractCookingRecipe::experience, ByteBufCodecs.VAR_INT, AbstractCookingRecipe::cookingTime, ExtraBlastingRecipe::new);
 
 }

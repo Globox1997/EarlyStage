@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "earlystage:steel_ingot"
-    }
+    "#": "earlystage:steel_ingot"
   },
   "pattern": [
     "###",

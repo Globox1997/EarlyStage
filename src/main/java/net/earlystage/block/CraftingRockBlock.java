@@ -5,28 +5,25 @@ import net.earlystage.block.entity.CraftingRockBlockEntity;
 import net.earlystage.block.inventory.CraftingRockInventory;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.init.TagInit;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.*;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -36,17 +33,16 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 import java.util.Optional;
 
 public class CraftingRockBlock extends Block implements EntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape BOTTOM_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
 
     public CraftingRockBlock(Properties settings) {
@@ -90,7 +86,7 @@ public class CraftingRockBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CraftingRockBlockEntity craftingRockBlockEntity) {
@@ -106,9 +102,9 @@ public class CraftingRockBlock extends Block implements EntityBlock {
                             }
                         }
                         world.playSound(player, pos, SoundEvents.STONE_HIT, SoundSource.BLOCKS, 1.0f, 1.0f);
-                        return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                        return InteractionResult.SUCCESS;
                     }
-                    return ItemInteractionResult.FAIL;
+                    return InteractionResult.FAIL;
                 }
                 double xPos = hit.getLocation().x() < 0D ? 1.0D + hit.getLocation().x() % 1 : hit.getLocation().x() % 1;
                 double zPos = hit.getLocation().z() < 0D ? 1.0D + hit.getLocation().z() % 1 : hit.getLocation().z() % 1;
@@ -123,27 +119,27 @@ public class CraftingRockBlock extends Block implements EntityBlock {
                                 }
                                 craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                             }
-                            return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                            return InteractionResult.SUCCESS;
                         } else {
-                            player.displayClientMessage(Component.translatable("block.earlystage.crafting_rock.unusable"), true);
+                            player.sendOverlayMessage(Component.translatable("block.earlystage.crafting_rock.unusable"));
                         }
                     }
-                    return ItemInteractionResult.FAIL;
+                    return InteractionResult.FAIL;
                 } else if (!craftingRockBlockEntity.getItem(slot).isEmpty()) {
                     if (!world.isClientSide()) {
                         if (!player.isCreative()) {
-                            player.getInventory().placeItemBackInInventory(craftingRockBlockEntity.getItem(slot));
+                            player.getInventory().placeItemBackInInventory(craftingRockBlockEntity.getItem(slot), Prediction.SERVER_ONLY);
                         }
                         world.playSeededSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.2F,
                                 ((world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F, world.getRandom().nextLong());
                         craftingRockBlockEntity.setItem(slot, ItemStack.EMPTY);
                         craftingRockBlockEntity.setCraftHits(getRandomCraftHits(world));
                     }
-                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     private static int getRandomCraftHits(Level world) {
@@ -165,52 +161,30 @@ public class CraftingRockBlock extends Block implements EntityBlock {
     }
 
     private void tryCraftItem(Level world, Player player, CraftingRockBlockEntity blockEntity) {
-        if (!world.isClientSide()) {
+        if (world instanceof ServerLevel serverLevel) {
             CraftingRockInventory craftingInventory = null;
             Optional<RecipeHolder<CraftingRecipe>> optional = Optional.empty();
             for (int i = 0; i < 4; i++) {
                 craftingInventory = new CraftingRockInventory(blockEntity, i);
-                optional = world.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), world);
+                optional = serverLevel.recipeAccess().getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), serverLevel);
                 if (optional.isPresent()) {
                     break;
                 }
             }
-            if (optional.isPresent() && (optional.get().value().isSpecial() || !world.getGameRules().getBoolean(GameRules.RULE_LIMITED_CRAFTING) || ((ServerPlayer) player).getRecipeBook().contains(optional.get()))) {
-                if (isAllowedOutputItem(optional.get().value().assemble(craftingInventory.asCraftInput(), world.registryAccess()).getItem())) {
+            if (optional.isPresent() && (optional.get().value().isSpecial() || !serverLevel.getGameRules().get(GameRules.LIMITED_CRAFTING) || ((ServerPlayer) player).getRecipeBook().contains(optional.get().id()))) {
+                if (isAllowedOutputItem(optional.get().value().assemble(craftingInventory.asCraftInput()).getItem())) {
                     blockEntity.clearContent();
-                    blockEntity.setItem(4, optional.get().value().assemble(craftingInventory.asCraftInput(), world.registryAccess()));
+                    blockEntity.setItem(4, optional.get().value().assemble(craftingInventory.asCraftInput()));
                 } else {
-                    player.displayClientMessage(Component.translatable("block.earlystage.crafting_rock.uncraftable"), true);
+                    player.sendOverlayMessage(Component.translatable("block.earlystage.crafting_rock.uncraftable"));
                 }
             } else {
-                player.displayClientMessage(Component.translatable("block.earlystage.crafting_rock.uncraftable"), true);
+                player.sendOverlayMessage(Component.translatable("block.earlystage.crafting_rock.uncraftable"));
             }
         }
     }
 
-    @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.is(newState.getBlock())) {
-            return;
-        }
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CraftingRockBlockEntity craftingRockBlockEntity) {
-            Containers.dropContents(world, pos, craftingRockBlockEntity);
-        }
-        super.onRemove(state, world, pos, newState, moved);
-    }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        if (ConfigInit.CONFIG.infoTooltips) {
-            tooltip.add(Component.translatable("earlystage.moreinfo.tooltip"));
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340)) {
-                tooltip.remove(Component.translatable("earlystage.moreinfo.tooltip"));
-                tooltip.add(Component.translatable("block.earlystage.crafting_rock.tooltip"));
-            }
-        }
-        super.appendHoverText(stack, context, tooltip, options);
-    }
 
     private boolean isAllowedInputItem(Item item) {
         for (List<Item> items : EarlyStageMain.CRAFTING_ROCK_RECIPE_ITEMS.values()) {

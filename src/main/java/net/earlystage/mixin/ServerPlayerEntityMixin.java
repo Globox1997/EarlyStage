@@ -4,14 +4,14 @@ import com.mojang.authlib.GameProfile;
 import net.earlystage.init.ConfigInit;
 import net.earlystage.network.packet.BeginnerDeathPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.ServerStatsCounter;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -28,13 +28,13 @@ public abstract class ServerPlayerEntityMixin extends Player {
     @Final
     private ServerStatsCounter stats;
 
-    public ServerPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ServerPlayerEntityMixin(Level world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
     @Inject(method = "restoreFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerPlayer;enchantmentSeed:I", ordinal = 0))
     private void copyFromMixin(ServerPlayer oldPlayer, boolean alive, CallbackInfo info) {
-        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && !oldPlayer.isSpectator()
+        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !((ServerLevel) this.level()).getGameRules().get(GameRules.KEEP_INVENTORY) && !oldPlayer.isSpectator()
                 && stats.getValue(Stats.CUSTOM.get(Stats.DEATHS)) <= ConfigInit.CONFIG.beginnerDeathCount) {
             this.getInventory().replaceWith(oldPlayer.getInventory());
             this.experienceLevel = oldPlayer.experienceLevel;
@@ -46,7 +46,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
 
     @Inject(method = "die", at = @At("HEAD"))
     private void onDeathMixin(DamageSource damageSource, CallbackInfo info) {
-        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (ConfigInit.CONFIG.beginnerDeathCount > 0 && !((ServerLevel) this.level()).getGameRules().get(GameRules.KEEP_INVENTORY)) {
             ServerPlayNetworking.send((ServerPlayer) (Object) this, new BeginnerDeathPacket(this.getId(), stats.getValue(Stats.CUSTOM.get(Stats.DEATHS))));
         }
     }

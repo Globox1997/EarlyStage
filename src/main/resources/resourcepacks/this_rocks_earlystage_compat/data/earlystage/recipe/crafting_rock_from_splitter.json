@@ -4,9 +4,7 @@
         "dd"
     ],
     "key": {
-        "d": {
-            "item": "rocks:cobblestone_splitter"
-        }
+        "d": "rocks:cobblestone_splitter"
     },
     "result": {
         "id": "earlystage:crafting_rock"

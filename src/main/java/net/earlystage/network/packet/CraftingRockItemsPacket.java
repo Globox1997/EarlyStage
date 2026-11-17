@@ -1,18 +1,18 @@
 package net.earlystage.network.packet;
 
 import net.earlystage.EarlyStageMain;
+import net.earlystage.data.CraftingRockRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems, List<ResourceLocation> recipeIds) implements CustomPacketPayload {
+public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems, List<CraftingRockRecipe> recipes) implements CustomPacketPayload {
 
     public static final Type<CraftingRockItemsPacket> PACKET_ID = new Type<>(EarlyStageMain.identifierOf("crafting_rock_items_packet"));
 
@@ -27,9 +27,9 @@ public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems, List<Re
                 buf.writeInt(BuiltInRegistries.ITEM.getId(item));
             }
         }
-        buf.writeInt(payload.recipeIds().size());
-        for (ResourceLocation recipeId : payload.recipeIds()) {
-            buf.writeResourceLocation(recipeId);
+        buf.writeInt(payload.recipes().size());
+        for (CraftingRockRecipe recipe : payload.recipes()) {
+            CraftingRockRecipe.STREAM_CODEC.encode(buf, recipe);
         }
     }
 
@@ -45,12 +45,12 @@ public record CraftingRockItemsPacket(Map<Item, List<Item>> recipeItems, List<Re
             }
             recipeItems.put(output, inputs);
         }
-        int recipeIdCount = buf.readInt();
-        List<ResourceLocation> recipeIds = new ArrayList<>();
-        for (int i = 0; i < recipeIdCount; i++) {
-            recipeIds.add(buf.readResourceLocation());
+        int recipeCount = buf.readInt();
+        List<CraftingRockRecipe> recipes = new ArrayList<>();
+        for (int i = 0; i < recipeCount; i++) {
+            recipes.add(CraftingRockRecipe.STREAM_CODEC.decode(buf));
         }
-        return new CraftingRockItemsPacket(recipeItems, recipeIds);
+        return new CraftingRockItemsPacket(recipeItems, recipes);
     }
 
     @Override

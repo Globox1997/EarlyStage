@@ -5,9 +5,7 @@
         " d "
     ],
     "key": {
-        "d": {
-            "item": "minecraft:clay_ball"
-        }
+        "d": "minecraft:clay_ball"
     },
     "result": {
         "id": "earlystage:clay_bucket"

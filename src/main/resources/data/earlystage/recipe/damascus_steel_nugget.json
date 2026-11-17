@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "earlystage:damascus_steel_ingot"
-    }
+    "earlystage:damascus_steel_ingot"
   ],
   "result": {
     "count": 9,

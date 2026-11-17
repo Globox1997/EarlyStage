@@ -4,36 +4,16 @@
   "cookingtime": 100,
   "experience": 0.1,
   "ingredient": [
-    {
-      "item": "earlystage:damascus_steel_pickaxe"
-    },
-    {
-      "item": "earlystage:damascus_steel_shovel"
-    },
-    {
-      "item": "earlystage:damascus_steel_axe"
-    },
-    {
-      "item": "earlystage:damascus_steel_hoe"
-    },
-    {
-      "item": "earlystage:damascus_steel_sword"
-    },
-    {
-      "item": "earlystage:damascus_steel_helmet"
-    },
-    {
-      "item": "earlystage:damascus_steel_chestplate"
-    },
-    {
-      "item": "earlystage:damascus_steel_leggings"
-    },
-    {
-      "item": "earlystage:damascus_steel_boots"
-    },
-    {
-      "item": "earlystage:damascus_steel_horse_armor"
-    }
+    "earlystage:damascus_steel_pickaxe",
+    "earlystage:damascus_steel_shovel",
+    "earlystage:damascus_steel_axe",
+    "earlystage:damascus_steel_hoe",
+    "earlystage:damascus_steel_sword",
+    "earlystage:damascus_steel_helmet",
+    "earlystage:damascus_steel_chestplate",
+    "earlystage:damascus_steel_leggings",
+    "earlystage:damascus_steel_boots",
+    "earlystage:damascus_steel_horse_armor"
   ],
   "result": {
     "id": "earlystage:damascus_steel_nugget"

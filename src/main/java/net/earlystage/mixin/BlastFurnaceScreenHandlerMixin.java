@@ -1,8 +1,10 @@
 package net.earlystage.mixin;
 
 import net.earlystage.init.ConfigInit;
+import net.earlystage.misc.ExtraBlastingRecipe;
 import net.earlystage.misc.InputSlotFillerExtra;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,19 +12,24 @@ import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BlastFurnaceMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.List;
 
 @Mixin(BlastFurnaceMenu.class)
 public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceMenu {
 
-    public BlastFurnaceScreenHandlerMixin(MenuType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookType category, int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate) {
-        super(type, recipeType, category, syncId, playerInventory, inventory, propertyDelegate);
+    public BlastFurnaceScreenHandlerMixin(MenuType<?> type, ResourceKey<RecipePropertySet> allowedInputs, RecipeBookType category, int syncId, Inventory playerInventory, Container inventory,
+            ContainerData propertyDelegate) {
+        super(type, allowedInputs, category, syncId, playerInventory, inventory, propertyDelegate);
     }
 
     @Override
@@ -60,31 +67,21 @@ public abstract class BlastFurnaceScreenHandlerMixin extends AbstractFurnaceMenu
         return itemStack;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void clearCraftingContent() {
-        super.clearCraftingContent();
-        if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            this.getSlot(3).set(ItemStack.EMPTY);
+    public RecipeBookMenu.PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level, Inventory inventory) {
+        if (!ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
+            return super.handlePlacement(useMaxItems, allowDroppingItemsToClear, recipe, level, inventory);
         }
-    }
-
-    @Override
-    public int getGridWidth() {
-        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 2 : super.getGridWidth();
-    }
-
-    @Override
-    public int getSize() {
-        return ConfigInit.isBlastFurnaceExtraSlotEnabled() ? 4 : super.getSize();
-    }
-
-    @Override
-    public void handlePlacement(boolean craftAll, RecipeHolder<?> recipe, ServerPlayer player) {
-        if (ConfigInit.isBlastFurnaceExtraSlotEnabled()) {
-            new InputSlotFillerExtra(this).recipeClicked(player, recipe, craftAll);
-        } else {
-            super.handlePlacement(craftAll, recipe, player);
+        Slot inputSlot = this.getSlot(0);
+        Slot extraSlot = this.getSlot(3);
+        List<Slot> slotsToClear = List.of(inputSlot, this.getSlot(2), extraSlot);
+        if (recipe.value() instanceof ExtraBlastingRecipe) {
+            return InputSlotFillerExtra.placeRecipe(this, 2, List.of(inputSlot, extraSlot), slotsToClear, (RecipeHolder<ExtraBlastingRecipe>) recipe,
+                    extraRecipe -> extraRecipe.value().matches(inputSlot.getItem(), extraSlot.getItem()), useMaxItems, allowDroppingItemsToClear, inventory);
         }
+        return InputSlotFillerExtra.placeRecipe(this, 1, List.of(inputSlot), slotsToClear, (RecipeHolder<AbstractCookingRecipe>) recipe,
+                cookingRecipe -> cookingRecipe.value().matches(new SingleRecipeInput(inputSlot.getItem()), level), useMaxItems, allowDroppingItemsToClear, inventory);
     }
 
 }

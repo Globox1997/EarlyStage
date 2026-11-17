@@ -10,12 +10,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,7 +47,7 @@ public class RedstoneSieveBlock extends SieveBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation orientation, boolean notify) {
         if (!world.isClientSide()) {
             boolean bl = state.getValue(POWERED);
             if (bl != world.hasNeighborSignal(pos)) {
@@ -57,7 +58,7 @@ public class RedstoneSieveBlock extends SieveBlock {
                 }
             }
         }
-        super.neighborChanged(state, world, pos, sourceBlock, sourcePos, notify);
+        super.neighborChanged(state, world, pos, sourceBlock, orientation, notify);
 
     }
 
@@ -75,7 +76,7 @@ public class RedstoneSieveBlock extends SieveBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity != null) {
@@ -89,20 +90,20 @@ public class RedstoneSieveBlock extends SieveBlock {
                         if (!player.isCreative())
                             itemStack.shrink(1);
                     }
-                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             } else {
                 if (itemStack.isEmpty()) {
                     if (!world.isClientSide()) {
                         player.setItemInHand(hand, blockStack);
                         inventory.clearContent();
                     }
-                    return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
-        return ItemInteractionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @SuppressWarnings("unchecked")
