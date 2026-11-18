@@ -1,0 +1,7 @@
+{
+  "type": "earlystage:rocks",
+  "features": [
+    "earlystage:rock",
+    "earlystage:flint"
+  ]
+}
